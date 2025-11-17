@@ -28,4 +28,19 @@ public function vehicles()
     return view('masterfiles.vehicles');
 }
 
+public function drivers()
+{
+    return view('masterfiles.drivers');
+}
+
+public function helpers()
+{
+    return view('masterfiles.helpers');
+} 
+
+public function securities()
+{
+    return view('masterfiles.securities');
+}
+
 }

@@ -69,27 +69,27 @@
 
                         <!-- Drivers -->
                         <li class="nav-item">
-                            <a href="./widgets/cards.html"
-                                class="nav-link {{ request()->is('widgets/cards.html') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-circle {{ request()->is('widgets/cards.html') ? 'text-primary' : 'text-muted' }}"></i>
+                            <a href="{{ route('Masterfile.drivers') }}"
+                                class="nav-link {{ request()->routeIs('Masterfile.drivers') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.drivers') ? 'text-primary' : 'text-muted' }}"></i>
                                 <p>Drivers</p>
                             </a>
                         </li>
 
                         <!-- Helpers -->
                         <li class="nav-item">
-                            <a href="./widgets/cards.html"
-                                class="nav-link {{ request()->is('widgets/cards.html') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-circle {{ request()->is('widgets/cards.html') ? 'text-primary' : 'text-muted' }}"></i>
+                            <a href="{{ route('Masterfile.helpers') }}"
+                                class="nav-link {{ request()->routeIs('Masterfile.helpers') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.helpers') ? 'text-primary' : 'text-muted' }}"></i>
                                 <p>Helpers</p>
                             </a>
                         </li>
 
                         <!-- Security -->
                         <li class="nav-item">
-                            <a href="./widgets/cards.html"
-                                class="nav-link {{ request()->is('widgets/cards.html') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-circle {{ request()->is('widgets/cards.html') ? 'text-primary' : 'text-muted' }}"></i>
+                            <a href="{{ route('Masterfile.securities') }}"
+                                class="nav-link {{ request()->routeIs('Masterfile.securities') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.securities') ? 'text-primary' : 'text-muted' }}"></i>
                                 <p>Security</p>
                             </a>
                         </li>
