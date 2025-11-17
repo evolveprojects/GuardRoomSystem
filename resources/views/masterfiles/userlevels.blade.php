@@ -27,9 +27,33 @@
 
                 <div class="row">
                     <div class="col-md-12">
+                        @include('common.alerts')
                         <div class="card mb-4">
-                            <div class="" style="padding-left: 16px;padding-top: 10px;">
-                                @include('masterfiles.components.add_userlevel')
+
+
+                            <div class="row">
+                                <div class="col-md-2" style="padding-left: 28px;padding-top: 10px;">
+                                    {{-- @if (Auth::user()->hasPermission('create_vendor')) --}}
+                                    @include('masterfiles.components.add_userlevel')
+                                    {{-- @endif --}}
+                                </div>
+                                <div class="col-md-4">
+
+                                </div>
+                                <div class="col-md-6"style="padding-top: 10px;padding-right: 28px;">
+                                    <form action="" method="get">
+                                        <div class="input-group">
+                                            <input type="search" class="form-control" name="searchKey"
+                                                placeholder="level Name" value="{{ $searchKey }}">
+
+                                            <button type="submit" class="btn btn-primary">
+                                                search
+                                            </button>
+
+                                        </div>
+
+                                    </form>
+                                </div>
                             </div>
 
                             <!-- /.card-header -->
@@ -37,65 +61,75 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th style="width: 10px">#</th>
-                                            <th>Task</th>
-                                            <th>Progress</th>
-                                            <th style="width: 40px">Label</th>
+                                            <th style="width: 15px">#</th>
+                                            <th>Level Code</th>
+                                            <th>Level Name</th>
+                                            <th>Status</th>
+                                            <th style="width: 40px">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="align-middle">
-                                            <td>1.</td>
-                                            <td>Update software</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge text-bg-danger">55%</span></td>
-                                        </tr>
-                                        <tr class="align-middle">
-                                            <td>2.</td>
-                                            <td>Clean database</td>
-                                            <td>
-                                                <div class="progress progress-xs">
-                                                    <div class="progress-bar text-bg-warning" style="width: 70%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge text-bg-warning">70%</span></td>
-                                        </tr>
-                                        <tr class="align-middle">
-                                            <td>3.</td>
-                                            <td>Cron job running</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar text-bg-primary" style="width: 30%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge text-bg-primary">30%</span></td>
-                                        </tr>
-                                        <tr class="align-middle">
-                                            <td>4.</td>
-                                            <td>Fix and squish bugs</td>
-                                            <td>
-                                                <div class="progress progress-xs progress-striped active">
-                                                    <div class="progress-bar text-bg-success" style="width: 90%"></div>
-                                                </div>
-                                            </td>
-                                            <td><span class="badge text-bg-success">90%</span></td>
-                                        </tr>
+                                        @foreach ($getuserlevels as $index => $userl)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+
+                                                <td>{{ $userl->level_code }}</td>
+
+                                                <td>{{ $userl->level_name }}</td>
+
+                                                <td>
+                                                    @if ($userl->status == 1)
+                                                        <span class="badge bg-success">Active</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Inactive</span>
+                                                    @endif
+                                                </td>
+
+                                                <td>
+                                                    <div class="accordion accordion-flush"
+                                                        id="accordionFlush{{ $userl->id }}">
+                                                        <div class="accordion-item">
+                                                            <h2 class="accordion-header"
+                                                                id="flush-heading{{ $userl->id }}">
+                                                                <button class="accordion-button collapsed" type="button"
+                                                                    style="padding-top: unset;padding-bottom: unset;"
+                                                                    data-bs-toggle="collapse"
+                                                                    data-bs-target="#flush-collapse{{ $userl->id }}"
+                                                                    aria-expanded="false"
+                                                                    aria-controls="flush-collapse{{ $userl->id }}">
+                                                                    Actions
+                                                                </button>
+                                                            </h2>
+                                                            <div id="flush-collapse{{ $userl->id }}"
+                                                                class="accordion-collapse collapse"
+                                                                aria-labelledby="flush-heading{{ $userl->id }}"
+                                                                data-bs-parent="#accordionFlush{{ $userl->id }}">
+                                                                <div class="accordion-body"
+                                                                    style="padding-top: 8px;padding-bottom: unset;">
+                                                                    @include('masterfiles.components.edit_userlevel') <br>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                        @endforeach
                                     </tbody>
+
                                 </table>
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer clearfix">
-                                <ul class="pagination pagination-sm m-0 float-end">
-                                    <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                                </ul>
+                                <div class="d-felx justify-content-center">
+
+
+
+                                    {{ $getuserlevels->links() }}
+
+
+
+                                </div>
                             </div>
                         </div>
                     </div>

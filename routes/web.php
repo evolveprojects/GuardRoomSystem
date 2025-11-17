@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,9 +19,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // masterfiles
-  Route::get('/userlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'userlevel'])->name('Masterfile.userlevel');
-
-
+Route::get('/userlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'userlevel'])->name('Masterfile.userlevel');
+Route::post('/createuserlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'adduserlevel'])->name('Masterfile.adduserlevel');
+Route::post('/updateuserlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateuserlevel'])->name('Masterfile.updateuserlevel');

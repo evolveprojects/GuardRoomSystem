@@ -1,42 +1,40 @@
-
-
-
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-<button type="button" class="btn btn-primary btn-sm text-white actions-buttons" data-bs-toggle="modal"
-    data-bs-target="#add-modal">
-    <i class="ri-add-circle-line align-bottom"></i> Add New
+<button type="button" class="btn btn-success btn-sm text-white w-100" data-bs-toggle="modal"
+    data-bs-target="{{ '#edit-modal-' . $userl->id }}">
+    <i class="ri-add-circle-line align-bottom"></i> Edit
 </button>
 
 {{-- <div class="modal fade" id="add-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"> --}}
-    <div class="modal fade " id="add-modal" tabindex="-1" role="dialog">
+<div class="modal fade " id="{{ 'edit-modal-' . $userl->id }}" tabindex="-1" role="dialog">
 
     <div class="modal-dialog" role="document" style="max-width:500px;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add New Userlevel</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Edit Userlevel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-bs-label="Close"></button>
             </div>
-            <form action="{{route('Masterfile.adduserlevel')}}" method="post">
+            <form action="{{ route('Masterfile.updateuserlevel') }}" method="post">
                 {{ csrf_field() }}
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="form-group">
                             <label for="">Level Code <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="level_code" value="" required
-                               >
+                            <input type="text" class="form-control" name="level_code"
+                                value="{{ $userl->level_code }}" required>
                             <p class="text-danger"></p>
                         </div>
                         <div class="form-group">
                             <label for="">Level Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="level_name" required>
+                            <input type="text" class="form-control" name="level_name" required
+                                value="{{ $userl->level_name }}">
                             <p class="text-danger"></p>
                         </div>
                         <div class="form-group">
                             <label for="">Description <span class="text-danger">*</span></label>
-                           <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="3">{{ $userl->description }}</textarea>
 
                         </div>
 
@@ -44,13 +42,17 @@
                             <label for="status">Status<span class="text-danger">*</span></label>
                             <select name="status" id="status" class="form-control-sm select2"
                                 style="width: 100%; height: 30px;" required>
-                                <option value="1">Active</option>
-
-                                <option value="0">Inactive</option>
+                                @if ($userl->status == 1)
+                                    <option selected value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                @else
+                                    <option selected value="0">Inactive</option>
+                                    <option value="1">Active</option>
+                                @endif
 
                             </select>
                         </div>
-
+                        <input type="text" hidden name="id" value="{{ $userl->id }}" />
                     </div>
                 </div>
 
