@@ -23,10 +23,11 @@ require __DIR__ . '/auth.php';
 
 // masterfiles
 Route::get('/userlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'userlevel'])->name('Masterfile.userlevel');
-  Route::get('/users', [App\Http\Controllers\Admin\MasterfilesController::class, 'users'])->name('Masterfile.users');
-  Route::get('/centers', [App\Http\Controllers\Admin\MasterfilesController::class, 'centers'])->name('Masterfile.centers');
-  Route::get('/vehicles', [App\Http\Controllers\Admin\MasterfilesController::class, 'vehicles'])->name('Masterfile.vehicles');
-  Route::get('/drivers', [App\Http\Controllers\Admin\MasterfilesController::class, 'drivers'])->name('Masterfile.drivers');
-  Route::get('/helpers', [App\Http\Controllers\Admin\MasterfilesController::class, 'helpers'])->name('Masterfile.helpers');
-   Route::get('/securities', [App\Http\Controllers\Admin\MasterfilesController::class, 'securities'])->name('Masterfile.securities');Route::post('/createuserlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'adduserlevel'])->name('Masterfile.adduserlevel');
+Route::get('/users', [App\Http\Controllers\Admin\MasterfilesController::class, 'users'])->name('Masterfile.users');
+Route::get('/centers', [App\Http\Controllers\Admin\MasterfilesController::class, 'centers'])->name('Masterfile.centers');
+Route::get('/vehicles', [App\Http\Controllers\Admin\MasterfilesController::class, 'vehicles'])->name('Masterfile.vehicles');
+Route::get('/drivers', [App\Http\Controllers\Admin\MasterfilesController::class, 'drivers'])->name('Masterfile.drivers');
+Route::get('/helpers', [App\Http\Controllers\Admin\MasterfilesController::class, 'helpers'])->name('Masterfile.helpers');
+Route::get('/securities', [App\Http\Controllers\Admin\MasterfilesController::class, 'securities'])->name('Masterfile.securities');
+Route::post('/createuserlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'adduserlevel'])->name('Masterfile.adduserlevel');
 Route::post('/updateuserlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateuserlevel'])->name('Masterfile.updateuserlevel');
