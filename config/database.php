@@ -101,7 +101,7 @@ return [
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', '192.168.11.55'),
             'port' => env('DB_PORT', '1433'),
             'database' => env('DB_DATABASE', 'Test'),
             'username' => env('DB_USERNAME', 'sa'),

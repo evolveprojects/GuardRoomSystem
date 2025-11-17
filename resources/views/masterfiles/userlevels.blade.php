@@ -12,7 +12,7 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                             <li class="breadcrumb-item"><a href="/dashboard"><i class="bi bi-house"></i> Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">userlevels</li>
                         </ol>
                     </div>
