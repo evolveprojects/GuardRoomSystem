@@ -22,5 +22,7 @@ require __DIR__.'/auth.php';
 
 // masterfiles
   Route::get('/userlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'userlevel'])->name('Masterfile.userlevel');
-
+  Route::get('/users', [App\Http\Controllers\Admin\MasterfilesController::class, 'users'])->name('Masterfile.users');
+  Route::get('/centers', [App\Http\Controllers\Admin\MasterfilesController::class, 'centers'])->name('Masterfile.centers');
+  Route::get('/vehicles', [App\Http\Controllers\Admin\MasterfilesController::class, 'vehicles'])->name('Masterfile.vehicles');
 
