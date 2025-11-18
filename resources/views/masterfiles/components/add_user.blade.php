@@ -9,7 +9,7 @@
             </div>
 
             <!-- Form -->
-            <form method="post" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('register') }}" >
                 @csrf
 
                 <div class="modal-body">
