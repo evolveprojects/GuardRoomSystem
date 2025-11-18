@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Userlevel;
+use App\Models\User;
 use App\Models\Center;
 use App\Models\Vehicle;
+use App\Models\Permission;
 use Illuminate\Support\Facades\Auth;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 
@@ -23,17 +25,24 @@ class MasterfilesController extends Controller
         return view('masterfiles.userlevels', compact(['getuserlevels', 'searchKey']));
     }
 
-    public function users()
+    public function users(Request $request)
     {
-        return view('masterfiles.users');
+        $searchKey = $request->searchKey;
+        $user = User::where('name', 'like', '%' . $searchKey . '%')
+            ->orderBy('created_at', 'ASC')
+            ->paginate(env("RECORDS_PER_PAGE"));
+
+          $permissions = Permission::get()->groupBy('permission_type')->toArray();
+
+        return view('masterfiles.users', compact(['user', 'searchKey','permissions']));
     }
 
     public function centers(Request $request)
     {
         $searchKey = $request->searchKey;
         $centers = Center::where('center_name', 'like', '%' . $searchKey . '%')
-         ->orderBy('created_at', 'DESC')
-         ->paginate(env("RECORDS_PER_PAGE"));
+            ->orderBy('created_at', 'DESC')
+            ->paginate(env("RECORDS_PER_PAGE"));
 
         return view('masterfiles.centers', compact(['centers', 'searchKey']));
     }
@@ -127,7 +136,7 @@ class MasterfilesController extends Controller
         //     return redirect("admin/not_allowed");
         // }
     }
- 
+
     public function addCenter(Request $request)
     {
         $validated = $request->validate([
@@ -147,28 +156,28 @@ class MasterfilesController extends Controller
     }
 
     public function updateCenter(Request $request)
-{
-    $validated = $request->validate([
-        'id' => ['required'],
-        'center_id' => ['required', 'string'],
-        'center_name' => ['required', 'string'],
-        'status' => ['required'],
-    ]);
+    {
+        $validated = $request->validate([
+            'id' => ['required'],
+            'center_id' => ['required', 'string'],
+            'center_name' => ['required', 'string'],
+            'status' => ['required'],
+        ]);
 
-    $center = Center::find($request->id);
+        $center = Center::find($request->id);
 
-    if (!$center) {
-        return back()->with('error', 'Center not found.');
+        if (!$center) {
+            return back()->with('error', 'Center not found.');
+        }
+
+        $center->center_id = $request->center_id;
+        $center->center_name = $request->center_name;
+        $center->status = $request->status;
+        $center->updated_by = Auth::id();
+        $center->save();
+
+        return back()->with('success', 'Center updated successfully!');
     }
-
-    $center->center_id = $request->center_id;
-    $center->center_name = $request->center_name;
-    $center->status = $request->status;
-    $center->updated_by = Auth::id();
-    $center->save();
-
-    return back()->with('success', 'Center updated successfully!');
-}
 
     public function addVehicle(Request $request)
     {
@@ -221,7 +230,4 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Vehicle updated successfully!');
     }
-
-
-    
 }

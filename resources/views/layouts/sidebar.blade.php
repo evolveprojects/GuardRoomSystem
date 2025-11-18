@@ -29,7 +29,15 @@
                                 class="nav-link {{ request()->routeIs('permissions.view') ? 'active' : '' }}">
                                 <i
                                     class="nav-icon bi bi-circle {{ request()->routeIs('permissions.view') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Permission</p>
+                                <p>Permission Settings</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('permissions.type') }}"
+                                class="nav-link {{ request()->routeIs('permissions.type') ? 'active' : '' }}">
+                                <i
+                                    class="nav-icon bi bi-circle {{ request()->routeIs('permissions.type') ? 'text-primary' : 'text-muted' }}"></i>
+                                <p>Permission Type</p>
                             </a>
                         </li>
                     </ul>
