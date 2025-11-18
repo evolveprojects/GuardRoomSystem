@@ -71,8 +71,11 @@
 
                 <!-- Modal Footer -->
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-save">Save</button>
+                   
+                     <button type="reset" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </button>
                 </div>
 
             </form>

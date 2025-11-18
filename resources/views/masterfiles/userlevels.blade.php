@@ -30,13 +30,13 @@
                         @include('common.alerts')
                         <div class="card mb-4">
 
-
                             <div class="row">
                                 <div class="col-md-2" style="padding-left: 28px;padding-top: 10px;">
                                     {{-- @if (Auth::user()->hasPermission('create_vendor')) --}}
                                     @include('masterfiles.components.add_userlevel')
                                     {{-- @endif --}}
                                 </div>
+                                
                                 <div class="col-md-4">
 
                                 </div>
