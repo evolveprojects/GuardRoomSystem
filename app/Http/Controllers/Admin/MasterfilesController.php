@@ -17,6 +17,7 @@ class MasterfilesController extends Controller
 
     public function userlevel(Request $request)
     {
+        
         $searchKey = $request->searchKey;
         $getuserlevels = Userlevel::where('level_name', 'like', '%' . $searchKey . '%')
             ->orderBy('created_at', 'DESC')
@@ -32,9 +33,16 @@ class MasterfilesController extends Controller
             ->orderBy('created_at', 'ASC')
             ->paginate(env("RECORDS_PER_PAGE"));
 
-          $permissions = Permission::get()->groupBy('permission_type')->toArray();
+        $permissions = Permission::select(
+            'permissions.*',
+            'permission_types.type_name'
+        )
+            ->leftJoin('permission_types', 'permissions.permission_type', '=', 'permission_types.id')
+            ->get()
+            ->groupBy('permission_type')
+            ->toArray();
 
-        return view('masterfiles.users', compact(['user', 'searchKey','permissions']));
+        return view('masterfiles.users', compact(['user', 'searchKey', 'permissions']));
     }
 
     public function centers(Request $request)

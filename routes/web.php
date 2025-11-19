@@ -45,4 +45,10 @@ Route::post('/updatepermission', [App\Http\Controllers\Admin\PermissionControlle
 Route::get('/permission_type', [App\Http\Controllers\Admin\PermissionController::class, 'permissions_type'])->name('permissions.type');
 Route::post('/createpermission_type', [App\Http\Controllers\Admin\PermissionController::class, 'addpermission_type'])->name('permissions.addpermission_type');
 Route::post('/updatepermission_type', [App\Http\Controllers\Admin\PermissionController::class, 'updatepermission_type'])->name('permissions.updatepermission_type');
+Route::post('/permissions_change', [App\Http\Controllers\Admin\PermissionController::class, 'updateUserPermissions'])->name('permissions.edit');
 
+
+//not allowed route
+ Route::get('/not_allowed', function () {
+        return view('errors.not_allowed');
+    });

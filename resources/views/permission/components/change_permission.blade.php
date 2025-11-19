@@ -33,13 +33,9 @@
 
             </div>
 
-            <form action="" method="post">
+            <form action="{{route('permissions.edit')}}" method="post">
 
                 <div class="modal-body">
-
-
-
-
 
                     {{ csrf_field() }}
 
@@ -51,44 +47,42 @@
 
 
 
-                         @foreach ($permissions as $permission_type => $permissions)
+                        @foreach ($permissions as $permission_type => $group)
+                            @php
+                                // Type name comes from first item inside group
+                                $type_name = $group[0]['type_name'] ?? $permission_type;
+                                $type_name = str_replace('_', ' ', $type_name);
+                            @endphp
+
                             <div class="col-md-4">
-
                                 <div class="card" style="width: 18rem;">
-
                                     <div class="card-body">
 
-                                        <h5 class="card-title">{{ ucfirst($permission_type) }}</h5>
+                                        <h5 class="card-title">{{ ucfirst($type_name) }}</h5><br>
+
                                         <hr />
 
-
-
-                                        @foreach ($permissions as $permission)
+                                        @foreach ($group as $permission)
                                             <div class="permission-div">
 
 
-
-
-
-
-{{--
                                                 @if (in_array($permission['id'], $user->permissions->pluck('id')->toArray()))
                                                     <input type="checkbox" name="permissions[]"
                                                         value="{{ $permission['id'] }}" checked />
 
 
 
-                                                    @foreach (explode('_', $permission['name']) as $name)
-                                                        {{ ucfirst($name) . ' ' }}
-                                                    @endforeach
-                                                @else --}}
-                                                    <input type="checkbox" name="permissions[]"
-                                                        value="{{ $permission['id'] }}" />
-
                                                     @foreach (explode('_', $permission['permission_name']) as $name)
                                                         {{ ucfirst($name) . ' ' }}
                                                     @endforeach
-                                                {{-- @endif --}}
+                                                @else
+                                                <input type="checkbox" name="permissions[]"
+                                                    value="{{ $permission['id'] }}" />
+
+                                                @foreach (explode('_', $permission['permission_name']) as $name)
+                                                    {{ ucfirst($name) . ' ' }}
+                                                @endforeach
+                                                @endif
 
                                             </div>
                                         @endforeach

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Permission;
 use App\Models\Permission_type;
+use App\Models\User;
+use App\Models\ErrorLogger;
 
 class PermissionController extends Controller
 {
@@ -19,7 +21,7 @@ class PermissionController extends Controller
         )
             ->leftJoin('permission_types', 'permissions.permission_type', '=', 'permission_types.id')
             ->where('permissions.permission_name', 'LIKE', '%' . $searchKey . '%')
-            ->orderBy('permissions.created_at', 'DESC')
+            ->orderBy('permissions.permission_type', 'ASC')
             ->paginate(env('RECORDS_PER_PAGE'));
 
         $permission_type = Permission_type::all();
@@ -102,9 +104,9 @@ class PermissionController extends Controller
     public function addpermission_type(Request $request)
     {
 
-        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+        $hasPermission = (Auth::user()->hasPermission("Add Permission Type")|| Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'type_name' => ['required', 'string', 'unique:permissions,permission_name'],
@@ -122,8 +124,43 @@ class PermissionController extends Controller
 
 
         return back()->with('success', 'Permission Type added  successfully !');
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
+    }
+
+
+     public function updateUserPermissions(Request $request){
+
+
+
+        // $hasPermission = Auth::user()->hasPermission('add_permissions');
+
+
+
+        // if($hasPermission){
+
+
+
+            try{
+
+                $permissions = $request->permissions;
+                $user = User::find($request->user_id);
+
+                if($user != null){
+                    $user->permissions()->detach();
+                    $user->permissions()->attach($permissions);
+                    return back()->with('success','User permissions updated successfully !');
+                }else{
+
+                    return back()->with('error','Could not find the user !');
+                }
+            }catch(\Exception $exception){
+                ErrorLogger::logAdminError($exception);
+                return back()->with('error','Error occured - '.$exception->getMessage().' - line - '.$exception->getLine());
+            }
+    //     }else{
+    //         return redirect('admin/not_allowed');
+    //    }
     }
 }
