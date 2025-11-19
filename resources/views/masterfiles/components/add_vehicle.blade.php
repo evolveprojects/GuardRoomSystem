@@ -8,8 +8,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form >
-                @csrf
+            <form action="{{route('Masterfile.addvehicle')}}" method="post">
+                {{ csrf_field() }}
 
                 <div class="modal-body">
 
@@ -73,9 +73,13 @@
                         </div>
                 </div>
 
+                <!-- Modal Footer -->
                 <div class="modal-footer">
-                    <button class="btn btn-success px-4">Save</button>
-                    <button class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-save">Save</button>
+                   
+                     <button type="reset" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i> Cancel
+                    </button>
                 </div>
 
             </form>

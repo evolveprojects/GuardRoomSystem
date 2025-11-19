@@ -24,14 +24,27 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <!-- User Levels -->
-                        <li class="nav-item">
-                            <a href="{{ route('permissions.view') }}"
-                                class="nav-link {{ request()->routeIs('permissions.view') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->routeIs('permissions.view') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Permission</p>
-                            </a>
-                        </li>
+
+                        @if (Auth::user()->hasPermission('View Permission Type') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('permissions.type') }}"
+                                    class="nav-link {{ request()->routeIs('permissions.type') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('permissions.type') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Permission Type</p>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::user()->hasPermission('View Permission Settings') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('permissions.view') }}"
+                                    class="nav-link {{ request()->routeIs('permissions.view') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('permissions.view') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Permission Settings</p>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </li>
 
@@ -48,25 +61,27 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <!-- User Levels -->
-                        <li class="nav-item">
-                            <a href="{{ route('Masterfile.userlevel') }}"
-                                class="nav-link {{ request()->routeIs('Masterfile.userlevel') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.userlevel') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>User Levels</p>
-                            </a>
-                        </li>
-
+                        @if (Auth::user()->hasPermission('view userlevel master') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.userlevel') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.userlevel') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.userlevel') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>User Levels</p>
+                                </a>
+                            </li>
+                        @endif
                         <!-- Users -->
-                        <li class="nav-item">
-                            <a href="{{ route('Masterfile.users') }}"
-                                class="nav-link {{ request()->routeIs('Masterfile.users') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.users') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Users</p>
-                            </a>
-                        </li>
-
+                        @if (Auth::user()->hasPermission('view user master') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.users') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.users') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.users') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Users</p>
+                                </a>
+                            </li>
+                        @endif
                         <!-- Centers -->
                         <li class="nav-item">
                             <a href="{{ route('Masterfile.centers') }}"

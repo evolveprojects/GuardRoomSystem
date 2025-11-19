@@ -7,28 +7,36 @@
             </div>
      
        
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="centerID" class="form-label">Center ID<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="centerID" name="id" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="centerName" class="form-label">Center Name<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="centerName" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="centerStatus" class="form-label">Status<span class="text-danger">*</span></label>
-                        <select class="form-select" id="centerStatus" name="status" required>
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Center</button>
-                </div>
-   
+            <form action="{{ route('Masterfile.addcenter') }}" method="POST">
+    @csrf
+    <div class="modal-body">
+        <div class="mb-3">
+            <label for="centerID" class="form-label">Center ID<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="centerID" name="center_id" required>
+        </div>
+        <div class="mb-3">
+            <label for="centerName" class="form-label">Center Name<span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="centerName" name="center_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="centerStatus" class="form-label">Status<span class="text-danger">*</span></label>
+            <select class="form-select" id="centerStatus" name="status" required>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="card-footer text-end">
+        <button type="submit" class="btn btn-save">
+            <i class="bi bi-check-circle me-1"></i> Save
+        </button>
+        <button type="reset" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-1"></i> Cancel
+        </button>
+    </div>
+</form>
+
         </div>
     </div>
 </div>

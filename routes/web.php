@@ -31,6 +31,24 @@ Route::get('/helpers', [App\Http\Controllers\Admin\MasterfilesController::class,
 Route::get('/securities', [App\Http\Controllers\Admin\MasterfilesController::class, 'securities'])->name('Masterfile.securities');
 Route::post('/createuserlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'adduserlevel'])->name('Masterfile.adduserlevel');
 Route::post('/updateuserlevel', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateuserlevel'])->name('Masterfile.updateuserlevel');
+Route::post('/create-center', [App\Http\Controllers\Admin\MasterfilesController::class, 'addCenter'])->name('Masterfile.addcenter');
+Route::post('/update-center', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateCenter'])->name('Masterfile.updatecenter');
+Route::post('/create-vehicle', [App\Http\Controllers\Admin\MasterfilesController::class, 'addVehicle'])->name('Masterfile.addvehicle');
+Route::post('/update-vehicle', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateVehicle'])->name('Masterfile.updatevehicle');
+Route::post('/create-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'addDriver'])->name('Masterfile.adddriver');
+Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateDriver'])->name('Masterfile.updatedriver');
 
 //permission routes
 Route::get('/permission', [App\Http\Controllers\Admin\PermissionController::class, 'permissions'])->name('permissions.view');
+Route::post('/createpermission', [App\Http\Controllers\Admin\PermissionController::class, 'addpermission'])->name('permissions.addpermission');
+Route::post('/updatepermission', [App\Http\Controllers\Admin\PermissionController::class, 'updatepermission'])->name('permissions.updatepermission');
+Route::get('/permission_type', [App\Http\Controllers\Admin\PermissionController::class, 'permissions_type'])->name('permissions.type');
+Route::post('/createpermission_type', [App\Http\Controllers\Admin\PermissionController::class, 'addpermission_type'])->name('permissions.addpermission_type');
+Route::post('/updatepermission_type', [App\Http\Controllers\Admin\PermissionController::class, 'updatepermission_type'])->name('permissions.updatepermission_type');
+Route::post('/permissions_change', [App\Http\Controllers\Admin\PermissionController::class, 'updateUserPermissions'])->name('permissions.edit');
+
+
+//not allowed route
+ Route::get('/not_allowed', function () {
+        return view('errors.not_allowed');
+    });

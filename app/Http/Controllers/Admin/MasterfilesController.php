@@ -5,13 +5,19 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Userlevel;
+use App\Models\User;
+use App\Models\Center;
+use App\Models\Vehicle;
+use App\Models\Permission;
 use Illuminate\Support\Facades\Auth;
+use SebastianBergmann\CodeCoverage\Driver\Driver;
 
 class MasterfilesController extends Controller
 {
 
     public function userlevel(Request $request)
     {
+        
         $searchKey = $request->searchKey;
         $getuserlevels = Userlevel::where('level_name', 'like', '%' . $searchKey . '%')
             ->orderBy('created_at', 'DESC')
@@ -20,22 +26,47 @@ class MasterfilesController extends Controller
         return view('masterfiles.userlevels', compact(['getuserlevels', 'searchKey']));
     }
 
-    public function users()
+    public function users(Request $request)
     {
-        return view('masterfiles.users');
+        $searchKey = $request->searchKey;
+        $user = User::where('name', 'like', '%' . $searchKey . '%')
+            ->orderBy('created_at', 'ASC')
+            ->paginate(env("RECORDS_PER_PAGE"));
+
+        $permissions = Permission::select(
+            'permissions.*',
+            'permission_types.type_name'
+        )
+            ->leftJoin('permission_types', 'permissions.permission_type', '=', 'permission_types.id')
+            ->get()
+            ->groupBy('permission_type')
+            ->toArray();
+
+        return view('masterfiles.users', compact(['user', 'searchKey', 'permissions']));
     }
 
-    public function centers()
+    public function centers(Request $request)
     {
-        return view('masterfiles.centers');
+        $searchKey = $request->searchKey;
+        $centers = Center::where('center_name', 'like', '%' . $searchKey . '%')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(env("RECORDS_PER_PAGE"));
+
+        return view('masterfiles.centers', compact(['centers', 'searchKey']));
     }
 
-    public function vehicles()
+    public function vehicles(Request $request)
     {
-        return view('masterfiles.vehicles');
+        $searchKey = $request->searchKey;
+        $vehicles = Vehicle::where('vehicle_no', 'like', '%' . $searchKey . '%')
+            ->orWhere('type', 'like', '%' . $searchKey . '%')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(env("RECORDS_PER_PAGE"));
+
+        return view('masterfiles.vehicles', compact(['vehicles', 'searchKey']));
     }
 
-    public function drivers()
+    public function drivers(Request $request)
     {
         return view('masterfiles.drivers');
     }
@@ -49,6 +80,8 @@ class MasterfilesController extends Controller
     {
         return view('masterfiles.securities');
     }
+
+
     public function adduserlevel(Request $request)
     {
 
@@ -110,5 +143,99 @@ class MasterfilesController extends Controller
         // } else {
         //     return redirect("admin/not_allowed");
         // }
+    }
+
+    public function addCenter(Request $request)
+    {
+        $validated = $request->validate([
+            'center_id' => ['required', 'string'],
+            'center_name' => ['required', 'string'],
+            'status' => ['required', 'string'],
+        ]);
+
+        $center = new Center();
+        $center->center_id = $request->center_id;
+        $center->center_name = $request->center_name;
+        $center->status = $request->status;
+        $center->created_by = Auth::id();
+        $center->save();
+
+        return back()->with('success', 'Center added successfully!');
+    }
+
+    public function updateCenter(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => ['required'],
+            'center_id' => ['required', 'string'],
+            'center_name' => ['required', 'string'],
+            'status' => ['required'],
+        ]);
+
+        $center = Center::find($request->id);
+
+        if (!$center) {
+            return back()->with('error', 'Center not found.');
+        }
+
+        $center->center_id = $request->center_id;
+        $center->center_name = $request->center_name;
+        $center->status = $request->status;
+        $center->updated_by = Auth::id();
+        $center->save();
+
+        return back()->with('success', 'Center updated successfully!');
+    }
+
+    public function addVehicle(Request $request)
+    {
+        $validated = $request->validate([
+            'vehicle_no' => ['required', 'string', 'unique:vehicles,vehicle_no'],
+            'type' => ['required', 'string'],
+            'fuel_type' => ['required', 'string'],
+            'status' => ['required', 'string'],
+        ]);
+
+        $vehicle = new Vehicle();
+        $vehicle->vehicle_no = $request->vehicle_no;
+        $vehicle->type = $request->type;
+        $vehicle->brand = $request->brand;
+        $vehicle->model = $request->model;
+        $vehicle->color = $request->color;
+        $vehicle->fuel_type = $request->fuel_type;
+        $vehicle->status = $request->status;
+        $vehicle->created_by = Auth::id();
+        $vehicle->save();
+
+        return back()->with('success', 'Vehicle added successfully!');
+    }
+
+    public function updateVehicle(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => ['required', 'exists:vehicles,id'], // corrected 'exits' → 'exists'
+            'vehicle_no' => ['required', 'string', 'unique:vehicles,vehicle_no,' . $request->id], // exclude current id
+            'type' => ['required', 'string'],
+            'fuel_type' => ['required', 'string'],
+            'status' => ['required', 'string'],
+        ]);
+
+        $vehicle = Vehicle::find($request->id);
+
+        if (!$vehicle) {
+            return back()->with('error', 'Vehicle not found.');
+        }
+
+        $vehicle->vehicle_no = $request->vehicle_no;
+        $vehicle->type = $request->type;
+        $vehicle->brand = $request->brand;
+        $vehicle->model = $vehicle->model;
+        $vehicle->color = $vehicle->color;
+        $vehicle->fuel_type = $request->fuel_type;
+        $vehicle->status = $request->status;
+        $vehicle->updated_by = Auth::id();
+        $vehicle->save();
+
+        return back()->with('success', 'Vehicle updated successfully!');
     }
 }
