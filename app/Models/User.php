@@ -6,6 +6,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use App\Models\Permission;
+use App\Models\UserPermission;
+use App\Models\Role;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -45,4 +50,53 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+      public function permissions(){
+
+        return $this->belongsToMany(Permission::class, 'user_has_permissions');
+
+    }
+
+    public function hasPermission($permission) {
+
+
+
+        $userHasPermission = null;
+
+
+
+        $permissionRec = Permission::where('permission_name',$permission)->get()->first();
+
+
+
+        if($permissionRec != null){
+
+
+
+            $userHasPermission = UserPermission::where('permission_id',$permissionRec->id)
+
+            ->where('user_id',Auth::user()->id)->get()->first();
+
+        }
+
+
+
+
+
+        return $userHasPermission != null ? true : false;
+
+
+
+    }
+
+
+
+    public static function getUserPermissions($userId){
+
+
+
+        return UserPermission::where('user_id',$userId)->pluck('permission_id')->toArray();
+
+    }
+
 }
