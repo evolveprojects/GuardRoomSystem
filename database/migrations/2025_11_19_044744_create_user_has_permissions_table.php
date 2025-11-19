@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('userlevels', function (Blueprint $table) {
-
-            $table->id(); // Auto-increment primary key
-            $table->string('level_name');
-            $table->string('level_code');
-            $table->string('description');
-            $table->tinyInteger('status')->default(1);
+        Schema::create('user_has_permissions', function (Blueprint $table) {
+            $table->id();
+             $table->string('user_id');
+            $table->string('permission_id');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
-
             $table->timestamps();
+          
         });
     }
 
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('userlevels');
+        Schema::dropIfExists('user_has_permissions');
     }
 };
