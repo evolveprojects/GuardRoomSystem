@@ -41,3 +41,7 @@ Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController:
 //permission routes
 Route::get('/permission', [App\Http\Controllers\Admin\PermissionController::class, 'permissions'])->name('permissions.view');
 
+Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateDriver'])->name('Masterfile.updateDriver');
+
+Route::post('/create-helper', [App\Http\Controllers\Admin\MasterfilesController::class, 'addHelper'])->name('Masterfile.addhelper');
+Route::post('/update-helper', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateHelper'])->name('Masterfile.updateHelper');

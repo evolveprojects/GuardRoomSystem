@@ -9,9 +9,8 @@
             </div>
 
             <!-- Form -->
-            <form method="post" enctype="multipart/form-data">
-                @csrf
-
+            <form action="{{ route('Masterfile.adddriver') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
                 <div class="modal-body">
 
                     <div class="form-group mb-2">

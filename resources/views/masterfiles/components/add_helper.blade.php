@@ -9,8 +9,8 @@
             </div>
 
             <!-- Form -->
-            <form method="post" enctype="multipart/form-data">
-                @csrf
+            <form action="{{ route('Masterfile.addhelper') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
 
                 <div class="modal-body">
 

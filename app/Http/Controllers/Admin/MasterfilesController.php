@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Userlevel;
 use App\Models\Center;
 use App\Models\Vehicle;
+use App\Models\Driver;
+use App\Models\Helper;
 use Illuminate\Support\Facades\Auth;
-use SebastianBergmann\CodeCoverage\Driver\Driver;
+// use SebastianBergmann\CodeCoverage\Driver\Driver;
 
 class MasterfilesController extends Controller
 {
@@ -51,12 +53,22 @@ class MasterfilesController extends Controller
 
     public function drivers(Request $request)
     {
-        return view('masterfiles.drivers');
+        $searchKey = $request->get('searchKey', '');
+        $drivers = Driver::where('name', 'like', "%$searchKey%")
+            ->orWhere('epf_number', 'like', "%$searchKey%")
+            ->paginate(10);
+
+        return view('masterfiles.drivers', compact('drivers', 'searchKey'));
     }
 
-    public function helpers()
+    public function helpers(Request $request)
     {
-        return view('masterfiles.helpers');
+        $searchKey = $request->get('searchKey', '');
+        $helpers = Helper::where('name', 'like', "%$searchKey%")
+            ->orWhere('epf_number', 'like', "%$searchKey%")
+            ->paginate(10);
+
+        return view('masterfiles.helpers', compact('helpers', 'searchKey'));
     }
 
     public function securities()
@@ -64,6 +76,10 @@ class MasterfilesController extends Controller
         return view('masterfiles.securities');
     }
 
+
+    /* ============================================================
+       USERLEVEL MANAGEMENT
+       ============================================================ */
 
     public function adduserlevel(Request $request)
     {
@@ -127,9 +143,17 @@ class MasterfilesController extends Controller
         //     return redirect("admin/not_allowed");
         // }
     }
- 
+
+    /* ============================================================
+       CENTER MANAGEMENT
+       ============================================================ */
+
     public function addCenter(Request $request)
     {
+        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+
+        // if ($hasPermission) {
+
         $validated = $request->validate([
             'center_id' => ['required', 'string'],
             'center_name' => ['required', 'string'],
@@ -144,11 +168,19 @@ class MasterfilesController extends Controller
         $center->save();
 
         return back()->with('success', 'Center added successfully!');
+
+        // } else {
+        //     return redirect("admin/not_allowed");
+        // }
     }
 
     public function updateCenter(Request $request)
 {
-    $validated = $request->validate([
+        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+
+        // if ($hasPermission) {
+
+        $validated = $request->validate([
         'id' => ['required'],
         'center_id' => ['required', 'string'],
         'center_name' => ['required', 'string'],
@@ -168,10 +200,21 @@ class MasterfilesController extends Controller
     $center->save();
 
     return back()->with('success', 'Center updated successfully!');
-}
 
+        // } else {
+        //     return redirect("admin/not_allowed");
+        // }
+    }
+
+    /* ============================================================
+       VEHICLE MANAGEMENT
+       ============================================================ */
     public function addVehicle(Request $request)
     {
+        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+
+        // if ($hasPermission) {
+
         $validated = $request->validate([
             'vehicle_no' => ['required', 'string', 'unique:vehicles,vehicle_no'],
             'type' => ['required', 'string'],
@@ -191,10 +234,18 @@ class MasterfilesController extends Controller
         $vehicle->save();
 
         return back()->with('success', 'Vehicle added successfully!');
+
+        // } else {
+        //     return redirect("admin/not_allowed");
+        // }
     }
 
     public function updateVehicle(Request $request)
     {
+        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+
+        // if ($hasPermission) {
+
         $validated = $request->validate([
             'id' => ['required', 'exists:vehicles,id'], // corrected 'exits' → 'exists'
             'vehicle_no' => ['required', 'string', 'unique:vehicles,vehicle_no,' . $request->id], // exclude current id
@@ -220,8 +271,172 @@ class MasterfilesController extends Controller
         $vehicle->save();
 
         return back()->with('success', 'Vehicle updated successfully!');
+
+        // } else {
+        //     return redirect("admin/not_allowed");
+        // }
     }
 
+    /* ============================================================
+       DRIVER MANAGEMENT
+       ============================================================ */
+    public function addDriver(Request $request)
+    {
+        // $hasPermission = Auth::user()->hasPermission("create_vendor");
 
+        // if ($hasPermission) {
+
+        $validated = $request->validate([
+            'name' => ['required', 'string'],
+            'epf_number' => ['required', 'string', 'unique:drivers,epf_number'],
+            'email' => ['nullable', 'email'],
+            'phone' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'max:2048'],
+        ]);
+
+        $driver = new Driver();
+        $driver->name = $request->name;
+        $driver->epf_number = $request->epf_number;
+        $driver->email = $request->email;
+        $driver->phone = $request->phone;
+
+        if ($request->hasFile('image')) {
+            $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('uploads/drivers'), $fileName);
+            $driver->image = $fileName;
+        }
+
+        $driver->created_by = Auth::id();
+        $driver->save();
+
+        return back()->with('success', 'Driver added successfully!');
+
+        // } else {
+        //     return redirect("admin/not_allowed");
+        // }
+    }
+
+    public function updateDriver(Request $request)
+    {
+        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+
+        // if ($hasPermission) {
+
+        $validated = $request->validate([
+            'id' => ['required', 'exists:drivers,id'],
+            'name' => ['required', 'string'],
+            'epf_number' => ['required', 'string', 'unique:drivers,epf_number,' . $request->id],
+            'email' => ['nullable', 'email'],
+            'phone' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'max:2048'],
+        ]);
+
+        $driver = Driver::find($request->id);
+
+        if (!$driver) {
+            return back()->with('error', 'Driver not found.');
+        }
+
+        $driver->name = $request->name;
+        $driver->epf_number = $request->epf_number;
+        $driver->email = $request->email;
+        $driver->phone = $request->phone;
+
+        if ($request->hasFile('image')) {
+            $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('uploads/drivers'), $fileName);
+            $driver->image = $fileName;
+        }
+
+        $driver->updated_by = Auth::id();
+        $driver->save();
+
+        return back()->with('success', 'Driver updated successfully!');
+
+        // } else {
+        //     return redirect("admin/not_allowed");
+        // }
+    }
+
+    /* ============================================================
+       Helper MANAGEMENT
+       ============================================================ */
+    public function addHelper(Request $request)
+    {
+        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+
+        // if ($hasPermission) {
+
+        $validated = $request->validate([
+            'name' => ['required', 'string'],
+            'epf_number' => ['required', 'string', 'unique:helpers,epf_number'],
+            'email' => ['nullable', 'email'],
+            'phone' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'max:2048'],
+        ]);
+
+        $helper = new Helper();
+        $helper->name = $request->name;
+        $helper->epf_number = $request->epf_number;
+        $helper->email = $request->email;
+        $helper->phone = $request->phone;
+
+        if ($request->hasFile('image')) {
+            $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('uploads/helpers'), $fileName);
+            $helper->image = $fileName;
+        }
+
+        $helper->created_by = Auth::id();
+        $helper->save();
+
+        return back()->with('success', 'Helper added successfully!');
+
+        // } else {
+        //     return redirect("admin/not_allowed");
+        // }
+    }
+
+    public function updateHelper(Request $request)
+    {
+        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+
+        // if ($hasPermission) {
+
+        $validated = $request->validate([
+            'id' => ['required', 'exists:helpers,id'],
+            'name' => ['required', 'string'],
+            'epf_number' => ['required', 'string', 'unique:helpers,epf_number,' . $request->id],
+            'email' => ['nullable', 'email'],
+            'phone' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'max:2048'],
+        ]);
+
+        $helper = Helper::find($request->id);
+
+        if (!$helper) {
+            return back()->with('error', 'Helper not found.');
+        }
+
+        $helper->name = $request->name;
+        $helper->epf_number = $request->epf_number;
+        $helper->email = $request->email;
+        $helper->phone = $request->phone;
+
+        if ($request->hasFile('image')) {
+            $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('uploads/helpers'), $fileName);
+            $helper->image = $fileName;
+        }
+
+        $helper->updated_by = Auth::id();
+        $helper->save();
+
+        return back()->with('success', 'Helper updated successfully!');
+
+        // } else {
+        //     return redirect("admin/not_allowed");
+        // }
+    }
     
 }
