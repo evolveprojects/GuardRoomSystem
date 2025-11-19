@@ -298,7 +298,7 @@ class MasterfilesController extends Controller
         $vehicle->save();
 
         return back()->with('success', 'Vehicle updated successfully!');
-    }
+    
 
         // } else {
         //     return redirect("admin/not_allowed");
