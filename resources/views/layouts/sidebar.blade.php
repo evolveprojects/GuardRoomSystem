@@ -82,7 +82,9 @@
                                 </a>
                             </li>
                         @endif
+                       
                         <!-- Centers -->
+                        @if (Auth::user()->hasPermission('view center master') || Auth::user()->id == '1')
                         <li class="nav-item">
                             <a href="{{ route('Masterfile.centers') }}"
                                 class="nav-link {{ request()->routeIs('Masterfile.centers') ? 'active' : '' }}">
@@ -91,8 +93,9 @@
                                 <p>Centers</p>
                             </a>
                         </li>
-
+                        @endif
                         <!-- Vehicles -->
+                        @if (Auth::user()->hasPermission('view vehicle master') || Auth::user()->id == '1')
                         <li class="nav-item">
                             <a href="{{ route('Masterfile.vehicles') }}"
                                 class="nav-link {{ request()->routeIs('Masterfile.vehicles') ? 'active' : '' }}">
@@ -101,8 +104,9 @@
                                 <p>Vehicles</p>
                             </a>
                         </li>
-
+                        @endif
                         <!-- Drivers -->
+                        @if (Auth::user()->hasPermission('view driver master') || Auth::user()->id == '1')
                         <li class="nav-item">
                             <a href="{{ route('Masterfile.drivers') }}"
                                 class="nav-link {{ request()->routeIs('Masterfile.drivers') ? 'active' : '' }}">
@@ -111,8 +115,9 @@
                                 <p>Drivers</p>
                             </a>
                         </li>
-
+                        @endif
                         <!-- Helpers -->
+                         @if (Auth::user()->hasPermission('view helper master') || Auth::user()->id == '1')
                         <li class="nav-item">
                             <a href="{{ route('Masterfile.helpers') }}"
                                 class="nav-link {{ request()->routeIs('Masterfile.helpers') ? 'active' : '' }}">
@@ -121,8 +126,9 @@
                                 <p>Helpers</p>
                             </a>
                         </li>
-
+                        @endif
                         <!-- Security -->
+                        @if (Auth::user()->hasPermission('view security master') || Auth::user()->id == '1')
                         <li class="nav-item">
                             <a href="{{ route('Masterfile.securities') }}"
                                 class="nav-link {{ request()->routeIs('Masterfile.securities') ? 'active' : '' }}">
@@ -131,7 +137,7 @@
                                 <p>Security</p>
                             </a>
                         </li>
-
+                        @endif
                         <!-- Incentive -->
                         <li class="nav-item">
                             <a href="./widgets/cards.html"

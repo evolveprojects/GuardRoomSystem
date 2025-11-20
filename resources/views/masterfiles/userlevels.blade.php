@@ -121,7 +121,7 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer clearfix">
-                                <div class="d-felx justify-content-center">
+                                <div class="d-flex justify-content-center">
 
 
 
