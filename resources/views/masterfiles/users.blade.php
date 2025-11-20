@@ -6,19 +6,21 @@
     <main class="app-main">
 
         <!-- Header -->
-        <div class="app-content-header mb-4">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h1 class="h3 mb-1 fw-bold">User Management</h1>
+        <div class="app-content-header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h3 class="mb-0">User Management</h3>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end">
+                            <li class="breadcrumb-item">
+                                <a href="/dashboard"><i class="bi bi-house"></i> Home</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                        </ol>
+                    </div>
                 </div>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item">
-                            <a href="/dashboard"><i class="bi bi-house"></i> Home</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Users</li>
-                    </ol>
-                </nav>
             </div>
         </div>
 
@@ -28,20 +30,35 @@
 
                 <div class="row">
                     <div class="col-md-12">
-
+                        @include('common.alerts')
                         <!-- Card -->
                         <div class="card shadow-sm border-0 mb-4">
                             <div class="card-body">
+                                
+                                <!-- Add User Button and Search Bar in Same Row -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6 d-flex align-items-center">
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-user-modal">
+                                            <i class="bi bi-plus-lg"></i> Add User
+                                        </button>
+                                    </div>
 
-                                <!-- Add User Button -->
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-user-modal">
-                                        <i class="bi bi-plus-lg"></i> Add User
-                                    </button>
+                                    <div class="col-md-6">
+                                        <form action="{{ route('Masterfile.users') }}" method="get">
+                                            <div class="input-group">
+                                                <input type="search"
+                                                       class="form-control"
+                                                       name="searchKey"
+                                                       placeholder="User Name"
+                                                       value="{{ $searchKey ?? '' }}">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <!-- Add User Modal (Component Included) -->
-                                <div class="p-3">
+                                <div class="p-1">
                                     @include('masterfiles.components.add_user')
                                 </div>
 
@@ -66,7 +83,6 @@
                                             @foreach ($user as $index => $user)
                                                 <tr>
                                                     <td>{{ $user->id }}</td>
-
                                                     <td>{{ $user->name }}</td>
                                                     <td></td>
                                                     <td></td>
@@ -74,8 +90,6 @@
                                                     <td>{{ $user->email }}</td>
                                                     <td></td>
                                                     <td></td>
-
-
 
                                                     <td>
                                                         <div class="accordion accordion-flush"
@@ -114,6 +128,14 @@
                                 </div>
                                 <!-- End Users Table -->
 
+
+                                {{-- <!-- Pagination -->
+                            <div class="d-flex justify-content-end mt-4">
+                                <div class="pagination-wrapper">
+                                    {{ $users->onEachSide(1)->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div> --}}
+
                             </div>
                         </div>
                         <!-- End Card -->
@@ -126,3 +148,23 @@
 
     </main>
 @endsection
+{{-- <style>
+.pagination-wrapper nav {
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    /* padding: 8px ; */
+    background: #fff;
+}
+
+.pagination-wrapper .page-link {
+    border-radius: 6px !important;
+    padding: 6px 12px;
+}
+
+.pagination-wrapper .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+</style> --}}

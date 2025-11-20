@@ -137,16 +137,17 @@
                                 </table>
                             </div>
 
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-end mt-4">
+                                <div class="pagination-wrapper">
+                                    {{ $centers->onEachSide(1)->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     <!-- End Card -->
 
-                    <!-- Pagination -->
-                    <div class="card-footer clearfix">
-                        <div class="d-flex justify-content-center">
-                            {{ $centers->links() }}
-                        </div>
-                    </div>
 
                 </div>
             </div>
@@ -156,3 +157,23 @@
 
 </main>
 @endsection
+<style>
+.pagination-wrapper nav {
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    /* padding: 8px ; */
+    background: #fff;
+}
+
+.pagination-wrapper .page-link {
+    border-radius: 6px !important;
+    padding: 6px 12px;
+}
+
+.pagination-wrapper .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+</style>

@@ -151,6 +151,13 @@
                     </ul>
                 </li>
 
+                <!-- Outward (New) -->
+                <li class="nav-item">
+                    <a href="./widgets/cards.html"class="nav-link {{ request()->is('widgets/cards.html') ? 'active' : '' }}">
+                        <i class="bi-truck {{ request()->is('widgets/cards.html') ? 'text-primary' : 'text-muted' }}"></i>
+                        <p>Outward</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

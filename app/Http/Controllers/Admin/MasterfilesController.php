@@ -108,9 +108,9 @@ class MasterfilesController extends Controller
     public function adduserlevel(Request $request)
     {
 
-        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+        $hasPermission = (Auth::user()->hasPermission("add userlevel") || Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'level_code' => ['required', 'string'],
@@ -130,17 +130,17 @@ class MasterfilesController extends Controller
 
 
         return back()->with('success', 'UserLevel added  successfully !');
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
     public function updateuserlevel(Request $request)
     {
 
-        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+        $hasPermission = (Auth::user()->hasPermission("edit userlevel") || Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'level_code' => ['required', 'string'],
@@ -163,9 +163,9 @@ class MasterfilesController extends Controller
         } else {
             return back()->with("error", "Could not find the Userlevel");
         }
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
 

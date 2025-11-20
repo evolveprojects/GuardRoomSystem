@@ -1,9 +1,11 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Userlevel')
 
 @section('content')
     <main class="app-main">
+
+        <!-- Header -->
         <div class="app-content-header">
             <div class="container-fluid">
                 <div class="row">
@@ -12,65 +14,73 @@
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
-                             <li class="breadcrumb-item"><a href="/dashboard"><i class="bi bi-house"></i> Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">userlevels</li>
+                            <li class="breadcrumb-item">
+                                <a href="/dashboard"><i class="bi bi-house"></i> Home</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Userlevels</li>
                         </ol>
                     </div>
                 </div>
             </div>
-
         </div>
 
-        <div class="app-content">
+            <div class="app-content">
+        <div class="container-fluid">
 
-            <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
 
-                <div class="row">
-                    <div class="col-md-12">
-                        @include('common.alerts')
-                        <div class="card mb-4">
+                    @include('common.alerts')
+                    <!-- Card -->
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-body">
 
-                            <div class="row">
-                                <div class="col-md-2" style="padding-left: 28px;padding-top: 10px;">
-                                    {{-- @if (Auth::user()->hasPermission('create_vendor')) --}}
-                                    @include('masterfiles.components.add_userlevel')
-                                    {{-- @endif --}}
+                            <div class="row mb-3">
+
+                                <!-- Add userlevel Button -->
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-userlevel-modal">
+                                        <i class="bi bi-plus-lg"></i> Add UserLevel
+                                    </button>
                                 </div>
-                                
-                                <div class="col-md-4">
 
-                                </div>
-                                <div class="col-md-6"style="padding-top: 10px;padding-right: 28px;">
-                                    <form action="" method="get">
+                                <!-- Search Bar -->
+                                <div class="col-md-6">
+                                    <form action="{{ route('Masterfile.userlevel') }}" method="get">
                                         <div class="input-group">
-                                            <input type="search" class="form-control" name="searchKey"
-                                                placeholder="level Name" value="{{ $searchKey }}">
-
-                                            <button type="submit" class="btn btn-primary">
-                                                search
-                                            </button>
-
+                                            <input type="search"
+                                                   class="form-control"
+                                                   name="searchKey"
+                                                   placeholder="Level Name"
+                                                   value="{{ $searchKey ?? '' }}">
+                                            <button type="submit" class="btn btn-primary">Search</button>
                                         </div>
-
                                     </form>
                                 </div>
+
                             </div>
 
-                            <!-- /.card-header -->
-                            <div class="card-body" style="padding-top: 10px;">
-                                <table class="table table-bordered">
-                                    <thead>
+                            <!-- Add Userlevel Modal -->
+                            <div class="p-1">
+                                @include('masterfiles.components.add_userlevel') 
+                            </div>
+
+                            <!-- Security Table -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped align-middle mb-0">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th style="width: 15px">#</th>
+                                            <th>#</th>
                                             <th>Level Code</th>
                                             <th>Level Name</th>
                                             <th>Status</th>
-                                            <th style="width: 40px">Action</th>
+                                            <th style="width: 120px;">Actions</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
-                                        @foreach ($getuserlevels as $index => $userl)
-                                            <tr>
+                                        @foreach($getuserlevels as $index => $userl)
+                                              <tr>
                                                 <td>{{ $index + 1 }}</td>
 
                                                 <td>{{ $userl->level_code }}</td>
@@ -91,7 +101,8 @@
                                                         <div class="accordion-item">
                                                             <h2 class="accordion-header"
                                                                 id="flush-heading{{ $userl->id }}">
-                                                                <button class="accordion-button collapsed" type="button"
+                                                                <button class="accordion-button collapsed"
+                                                                    type="button"
                                                                     style="padding-top: unset;padding-bottom: unset;"
                                                                     data-bs-toggle="collapse"
                                                                     data-bs-target="#flush-collapse{{ $userl->id }}"
@@ -100,13 +111,15 @@
                                                                     Actions
                                                                 </button>
                                                             </h2>
+
                                                             <div id="flush-collapse{{ $userl->id }}"
                                                                 class="accordion-collapse collapse"
                                                                 aria-labelledby="flush-heading{{ $userl->id }}"
                                                                 data-bs-parent="#accordionFlush{{ $userl->id }}">
                                                                 <div class="accordion-body"
                                                                     style="padding-top: 8px;padding-bottom: unset;">
-                                                                    @include('masterfiles.components.edit_userlevel') <br>
+                                                                    @include('masterfiles.components.edit_userlevel')
+                                                                    <br>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -119,27 +132,27 @@
 
                                 </table>
                             </div>
-                            <!-- /.card-body -->
-                            <div class="card-footer clearfix">
-                                <div class="d-flex justify-content-center">
 
-
-
-                                    {{ $getuserlevels->links() }}
-
-
-
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-end mt-4">
+                                <div class="pagination-wrapper">
+                                    {{ $getuserlevels->onEachSide(1)->links('pagination::bootstrap-5') }}
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
+                    <!-- End Card -->
                 </div>
             </div>
 
         </div>
+    </div>
 
     </main>
 @endsection
+
 <script>
     (() => {
         'use strict';
@@ -152,7 +165,6 @@
                         event.preventDefault();
                         event.stopPropagation();
                     }
-
                     form.classList.add('was-validated');
                 },
                 false,
@@ -160,3 +172,24 @@
         });
     })();
 </script>
+
+<style>
+.pagination-wrapper nav {
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    /* padding: 8px ; */
+    background: #fff;
+}
+
+.pagination-wrapper .page-link {
+    border-radius: 6px !important;
+    padding: 6px 12px;
+}
+
+.pagination-wrapper .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+</style>

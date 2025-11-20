@@ -3,84 +3,84 @@
 @section('title', 'Permission')
 
 @section('content')
-    <main class="app-main">
+<main class="app-main">
 
-        <!-- Header -->
-        <div class="app-content-header">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h3 class="mb-0">Permission Manager</h3>
-                    </div>
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb float-sm-end">
-                            <li class="breadcrumb-item"><a href="/dashboard"><i class="bi bi-house"></i> Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">userlevels</li>
-                        </ol>
-                    </div>
+    <!-- Header -->
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3 class="mb-0">Permission Manager</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item"><a href="/dashboard"><i class="bi bi-house"></i> Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Permissions</li>
+                    </ol>
                 </div>
             </div>
-
         </div>
+    </div>
 
-        <div class="app-content">
-            <div class="container-fluid">
+    <!-- Content -->
+    <div class="app-content">
+        <div class="container-fluid">
 
-                <div class="row">
-                    <div class="col-md-12">
-                        @include('common.alerts')
-                        <!-- Card -->
-                        <div class="card shadow-sm border-0 mb-4">
-                            <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    @include('common.alerts')
 
-                                <!-- Add permission Button & Search -->
-                                <div class="row mb-3">
-                                    <!-- Add permission Button -->
-                                    <div class="col-md-6 d-flex align-items-permission">
-                                        <button class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#add-permission-modal">
-                                            <i class="bi bi-plus-lg"></i> Add Permission
-                                        </button>
-                                    </div>
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-body">
 
-                                    <!-- Search Bar -->
-                                    <div class="col-md-6">
-                                        <form action="{{ route('permissions.view') }}" method="get">
-                                            <div class="input-group">
-                                                <input type="search" class="form-control" name="searchKey"
-                                                    placeholder="Permission Name" value="{{ $searchKey ?? '' }}">
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                            <!-- Add Permission + Search -->
+                            <div class="row mb-3">
+
+                                <!-- Add Permission Button -->
+                                <div class="col-md-6">
+                                    <button class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#add-permission-modal">
+                                        <i class="bi bi-plus-lg"></i> Add Permission
+                                    </button>
                                 </div>
 
-                                <!-- Add permission Modal -->
-                                <div class="p-1">
-                                    @include('permission.components.createpermission')
+                                <!-- Search -->
+                                <div class="col-md-6">
+                                    <form action="{{ route('permissions.view') }}" method="get">
+                                        <div class="input-group">
+                                            <input type="search" class="form-control" name="searchKey"
+                                                placeholder="Permission Name" value="{{ $searchKey ?? '' }}">
+                                            <button type="submit" class="btn btn-primary">
+                                                Search
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
+                            </div>
 
-                                <!-- permissions Table -->
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-striped align-middle mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                            <tr>
-                                                <th class="w-25">Permission ID</th>
-                                                <th class="w-25">Permission Name</th>
-                                                <th class="w-25">Permission Type</th>
-                                                <th class="w-25">Actions</th>
-                                            </tr>
-                                            </tr>
-                                        </thead>
+                            <!-- Create Permission Modal -->
+                            <div class="p-1">
+                                @include('permission.components.createpermission')
+                            </div>
 
-                                        <tbody>
-                                            @foreach ($permission as $permissions)
+                            <!-- Permission Table -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Permission Name</th>
+                                            <th>Permission Type</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach ($permission as $permissions)
                                             <tr>
-                                                <td>{{ $permissions->id }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $permissions->permission_name }}</td>
                                                 <td>{{ $permissions->type_name }}</td>
-
 
                                                 <td>
                                                     <div class="accordion accordion-flush"
@@ -111,16 +111,46 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
+                                    </tbody>
+                                </table>
                             </div>
+
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-end mt-4">
+                                <div class="pagination-wrapper">
+                                    {{ $permission->onEachSide(1)->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
+
                         </div>
-                        <!-- End Card -->
                     </div>
+
                 </div>
             </div>
+
         </div>
-    </main>
+    </div>
+
+</main>
 @endsection
+
+<style>
+.pagination-wrapper nav {
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    /* padding: 8px ; */
+    background: #fff;
+}
+
+.pagination-wrapper .page-link {
+    border-radius: 6px !important;
+    padding: 6px 12px;
+}
+
+.pagination-wrapper .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+</style>
