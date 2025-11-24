@@ -19,7 +19,7 @@ class MasterfilesController extends Controller
 
     public function userlevel(Request $request)
     {
-        
+
         $searchKey = $request->searchKey;
         $getuserlevels = Userlevel::where('level_name', 'like', '%' . $searchKey . '%')
             ->orderBy('created_at', 'DESC')
@@ -298,7 +298,7 @@ class MasterfilesController extends Controller
         $vehicle->save();
 
         return back()->with('success', 'Vehicle updated successfully!');
-    
+
 
         // } else {
         //     return redirect("admin/not_allowed");
@@ -466,5 +466,5 @@ class MasterfilesController extends Controller
         //     return redirect("admin/not_allowed");
         // }
     }
-    
-}
+
+}   
