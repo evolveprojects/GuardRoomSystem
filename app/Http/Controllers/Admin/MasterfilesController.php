@@ -11,6 +11,7 @@ use App\Models\Vehicle;
 use App\Models\Permission;
 use App\Models\Driver;
 use App\Models\Helper;
+use App\Models\Security;
 use Illuminate\Support\Facades\Auth;
 // use SebastianBergmann\CodeCoverage\Driver\Driver;
 
@@ -88,10 +89,16 @@ class MasterfilesController extends Controller
         return view('masterfiles.helpers', compact('helpers', 'searchKey'));
     }
 
-    public function securities()
+    public function securities(Request $request)
     {
-        return view('masterfiles.securities');
+        $searchKey = $request->get('searchKey', '');
+        $securities = Security::where('name', 'like', "%$searchKey%")
+            ->orWhere('epf_number', 'like', "%$searchKey%")
+            ->paginate(10);
+
+        return view('masterfiles.securities', compact('securities', 'searchKey'));
     }
+
 
 
     /* ============================================================
@@ -101,9 +108,9 @@ class MasterfilesController extends Controller
     public function adduserlevel(Request $request)
     {
 
-        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+        $hasPermission = (Auth::user()->hasPermission("add userlevel") || Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'level_code' => ['required', 'string'],
@@ -123,17 +130,17 @@ class MasterfilesController extends Controller
 
 
         return back()->with('success', 'UserLevel added  successfully !');
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
     public function updateuserlevel(Request $request)
     {
 
-        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+        $hasPermission = (Auth::user()->hasPermission("edit userlevel") || Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'level_code' => ['required', 'string'],
@@ -156,9 +163,9 @@ class MasterfilesController extends Controller
         } else {
             return back()->with("error", "Could not find the Userlevel");
         }
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
 
@@ -168,9 +175,9 @@ class MasterfilesController extends Controller
 
     public function addCenter(Request $request)
     {
-        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+        $hasPermission = (Auth::user()->hasPermission("add center ") || Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'center_id' => ['required', 'string'],
@@ -187,30 +194,26 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Center added successfully!');
 
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
+
 
     public function updateCenter(Request $request)
     {
+        $hasPermission = (Auth::user()->hasPermission("edit center") || Auth::user()->id == 1);
+
+        if (!$hasPermission) {
+            return redirect("/not_allowed");
+        }
+
         $validated = $request->validate([
             'id' => ['required'],
             'center_id' => ['required', 'string'],
             'center_name' => ['required', 'string'],
             'status' => ['required'],
         ]);
-{
-        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
-
-        // if ($hasPermission) {
-
-        $validated = $request->validate([
-        'id' => ['required'],
-        'center_id' => ['required', 'string'],
-        'center_name' => ['required', 'string'],
-        'status' => ['required'],
-    ]);
 
         $center = Center::find($request->id);
 
@@ -226,21 +229,16 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Center updated successfully!');
     }
-    return back()->with('success', 'Center updated successfully!');
 
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
-    }
 
     /* ============================================================
        VEHICLE MANAGEMENT
        ============================================================ */
     public function addVehicle(Request $request)
     {
-        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+        $hasPermission = (Auth::user()->hasPermission("add vehicle")|| Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'vehicle_no' => ['required', 'string', 'unique:vehicles,vehicle_no'],
@@ -262,20 +260,20 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Vehicle added successfully!');
 
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
     public function updateVehicle(Request $request)
     {
-        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+        $hasPermission = (Auth::user()->hasPermission("edit vehicle") || Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
-            'id' => ['required', 'exists:vehicles,id'], // corrected 'exits' → 'exists'
-            'vehicle_no' => ['required', 'string', 'unique:vehicles,vehicle_no,' . $request->id], // exclude current id
+            'id' => ['required', 'exists:vehicles,id'],
+            'vehicle_no' => ['required', 'string', 'unique:vehicles,vehicle_no,' . $request->id],
             'type' => ['required', 'string'],
             'fuel_type' => ['required', 'string'],
             'status' => ['required', 'string'],
@@ -300,9 +298,9 @@ class MasterfilesController extends Controller
         return back()->with('success', 'Vehicle updated successfully!');
 
 
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
     /* ============================================================
@@ -310,9 +308,9 @@ class MasterfilesController extends Controller
        ============================================================ */
     public function addDriver(Request $request)
     {
-        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+        $hasPermission = (Auth::user()->hasPermission("add driver")|| Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'name' => ['required', 'string'],
@@ -339,16 +337,16 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Driver added successfully!');
 
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
     public function updateDriver(Request $request)
     {
-        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+        $hasPermission = (Auth::user()->hasPermission("edit driver")|| Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'id' => ['required', 'exists:drivers,id'],
@@ -381,9 +379,9 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Driver updated successfully!');
 
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
     /* ============================================================
@@ -391,9 +389,9 @@ class MasterfilesController extends Controller
        ============================================================ */
     public function addHelper(Request $request)
     {
-        // $hasPermission = Auth::user()->hasPermission("create_vendor");
+        $hasPermission = (Auth::user()->hasPermission("add helper")|| Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'name' => ['required', 'string'],
@@ -420,16 +418,16 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Helper added successfully!');
 
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
     public function updateHelper(Request $request)
     {
-        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+        $hasPermission = (Auth::user()->hasPermission("edit helper")|| Auth::user()->id == '1');
 
-        // if ($hasPermission) {
+        if ($hasPermission) {
 
         $validated = $request->validate([
             'id' => ['required', 'exists:helpers,id'],
@@ -462,9 +460,93 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Helper updated successfully!');
 
-        // } else {
-        //     return redirect("admin/not_allowed");
-        // }
+        } else {
+            return redirect("/not_allowed");
+        }
     }
 
-}   
+    /* ============================================================
+       Security MANAGEMENT
+       ============================================================ */
+    public function addSecurity(Request $request)
+    {
+        $hasPermission = (Auth::user()->hasPermission("add security") || Auth::user()->id == '1');
+
+        if ($hasPermission)
+            {
+
+            $validated = $request->validate([
+                'name' => ['required', 'string'],
+                'epf_number' => ['required', 'string', 'unique:securities,epf_number'],
+                'email' => ['nullable', 'email'],
+                'phone' => ['nullable', 'string'],
+                'image' => ['nullable', 'image', 'max:2048'],
+            ]);
+
+            $security = new Security();
+            $security->name = $request->name;
+            $security->epf_number = $request->epf_number;
+            $security->email = $request->email;
+            $security->phone = $request->phone;
+
+            if ($request->hasFile('image')) {
+                $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
+                $request->file('image')->move(public_path('uploads/securities'), $fileName);
+                $security->image = $fileName;
+            }
+
+            $security->created_by = Auth::id();
+            $security->save();
+
+            return back()->with('success', 'Security added successfully!');
+        }
+        else {
+            return redirect("/not_allowed");
+        }
+    }
+
+    public function updateSecurity(Request $request)
+    {
+        $hasPermission = (Auth::user()->hasPermission("edit security") || Auth::user()->id == '1');
+
+        if ($hasPermission)
+            {
+
+            $validated = $request->validate([
+                'id' => ['required', 'exists:securities,id'],
+                'name' => ['required', 'string'],
+                'epf_number' => ['required', 'string', 'unique:securities,epf_number,' . $request->id],
+                'email' => ['nullable', 'email'],
+                'phone' => ['nullable', 'string'],
+                'image' => ['nullable', 'image', 'max:2048'],
+            ]);
+
+            $security = Security::find($request->id);
+
+            if (!$security) {
+                return back()->with('error', 'Security not found.');
+            }
+
+            $security->name = $request->name;
+            $security->epf_number = $request->epf_number;
+            $security->email = $request->email;
+            $security->phone = $request->phone;
+
+            if ($request->hasFile('image')) {
+                $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
+                $request->file('image')->move(public_path('uploads/securities'), $fileName);
+                $security->image = $fileName;
+            }
+
+            $security->updated_by = Auth::id();
+            $security->save();
+
+            return back()->with('success', 'Security updated successfully!');
+        }
+        else {
+            return redirect("/not_allowed");
+        }
+    }
+
+}
+

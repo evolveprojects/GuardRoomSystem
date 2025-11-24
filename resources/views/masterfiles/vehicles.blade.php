@@ -53,7 +53,7 @@
                                     <form action="{{ route('Masterfile.vehicles') }}" method="get">
                                         <div class="input-group">
                                             <input type="search" name="searchKey" class="form-control"
-                                                placeholder="Search by Vehicle No, Type, or Brand"
+                                                placeholder="Search by Vehicle No or Type "
                                                 value="{{ $searchKey ?? '' }}">
                                             <button type="submit" class="btn btn-primary">Search</button>
                                         </div>
@@ -139,15 +139,14 @@
                                 </table>
                             </div>
 
-                        </div> <!-- end card-body -->
-
-                        <!-- Pagination Footer -->
-                        <div class="card-footer clearfix">
-                            <div class="d-flex justify-content-center">
-                                {{ $vehicles->links() }}
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-end mt-4">
+                                <div class="pagination-wrapper">
+                                    {{  $vehicles->onEachSide(1)->links('pagination::bootstrap-5') }}
+                                </div>
                             </div>
-                        </div>
 
+                        </div> 
                     </div> <!-- end card -->
 
                 </div>
@@ -158,3 +157,23 @@
 
 </main>
 @endsection
+<style>
+.pagination-wrapper nav {
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    /* padding: 8px ; */
+    background: #fff;
+}
+
+.pagination-wrapper .page-link {
+    border-radius: 6px !important;
+    padding: 6px 12px;
+}
+
+.pagination-wrapper .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+</style>

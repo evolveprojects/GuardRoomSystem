@@ -1,17 +1,14 @@
-
-
-
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-<button type="button" class="btn btn-primary btn-sm text-white actions-buttons" data-bs-toggle="modal"
+{{-- <button type="button" class="btn btn-primary btn-sm text-white actions-buttons" data-bs-toggle="modal"
     data-bs-target="#add-modal">
     <i class="ri-add-circle-line align-bottom"></i> Add New
-</button>
+</button> --}}
 
 {{-- <div class="modal fade" id="add-modal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"> --}}
-    <div class="modal fade " id="add-modal" tabindex="-1" role="dialog">
+    <div class="modal fade " id="add-userlevel-modal" tabindex="-1" role="dialog">
 
     <div class="modal-dialog" role="document" style="max-width:500px;">
         <div class="modal-content">
@@ -68,7 +65,7 @@
     </div>
 </div>
 <!-- jQuery -->
-<script src="{{ url('/plugins/jquery/jquery.min.js') }}"></script>
+{{-- <script src="{{ url('/plugins/jquery/jquery.min.js') }}"></script> --}}
 <script>
     $(document).ready(function() {
         // Initialize Select2 when the modal is shown

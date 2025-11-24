@@ -6,17 +6,21 @@
 <main class="app-main">
 
     <!-- Header -->
-    <div class="app-content-header mb-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="h3 mb-1 fw-bold">Security Management</h1>
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3 class="mb-0">Security Management</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-end">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard"><i class="bi bi-house"></i> Home</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Security</li>
+                    </ol>
+                </div>
             </div>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}"><i class="bi bi-house"></i> Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Security</li>
-                </ol>
-            </nav>
         </div>
     </div>
 
@@ -26,15 +30,34 @@
             <div class="row">
                 <div class="col-md-12">
 
+                    @include('common.alerts')
                     <!-- Card -->
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-body">
 
-                            <!-- Add Security Button & Search -->
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-security-modal">
-                                    <i class="bi bi-plus-lg"></i> Add Security
-                                </button>
+                            <div class="row mb-3">
+
+                                <!-- Add Security Button -->
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-security-modal">
+                                        <i class="bi bi-plus-lg"></i> Add Security
+                                    </button>
+                                </div>
+
+                                <!-- Search Bar -->
+                                <div class="col-md-6">
+                                    <form action="{{ route('Masterfile.securities') }}" method="get">
+                                        <div class="input-group">
+                                            <input type="search"
+                                                   class="form-control"
+                                                   name="searchKey"
+                                                   placeholder="Security Name or EPF Number"
+                                                   value="{{ $searchKey ?? '' }}">
+                                            <button type="submit" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </form>
+                                </div>
+
                             </div>
 
                             <!-- Add Security Modal -->
@@ -57,30 +80,55 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Example User</td>
-                                            <td>1212</td>
-                                            <td>demo@mail.com</td>
-                                            <td>0771234567</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary me-1">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-outline-danger">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        @foreach($securities as $index => $security)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $security->name }}</td>
+                                                <td>{{ $security->epf_number }}</td>
+                                                <td>{{ $security->email }}</td>
+                                                <td>{{ $security->phone }}</td>
+                                                <td>
+                                                    <div class="accordion accordion-flush" id="accordionFlush{{ $security->id }}">
+                                                        <div class="accordion-item">
+                                                            <h2 class="accordion-header" id="flush-heading{{ $security->id }}">
+                                                                <button class="accordion-button collapsed"
+                                                                        type="button"
+                                                                        style="padding-top: unset; padding-bottom: unset;"
+                                                                        data-bs-toggle="collapse"
+                                                                        data-bs-target="#flush-collapse{{ $security->id }}"
+                                                                        aria-expanded="false"
+                                                                        aria-controls="flush-collapse{{ $security->id }}">
+                                                                    Actions
+                                                                </button>
+                                                            </h2>
+                                                            <div id="flush-collapse{{ $security->id }}"
+                                                                 class="accordion-collapse collapse"
+                                                                 aria-labelledby="flush-heading{{ $security->id }}"
+                                                                 data-bs-parent="#accordionFlush{{ $security->id }}">
+                                                                <div class="accordion-body" style="padding-top: 8px; padding-bottom: unset;">
+                                                                    @include('masterfiles.components.edit_security')
+                                                                    <br>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
 
                                 </table>
                             </div>
 
+                            <!-- Pagination -->
+                            <div class="d-flex justify-content-end mt-4">
+                                <div class="pagination-wrapper">
+                                    {{$securities->onEachSide(1)->links('pagination::bootstrap-5') }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- End Card -->
-
                 </div>
             </div>
 
@@ -89,3 +137,23 @@
 
 </main>
 @endsection
+<style>
+.pagination-wrapper nav {
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    /* padding: 8px ; */
+    background: #fff;
+}
+
+.pagination-wrapper .page-link {
+    border-radius: 6px !important;
+    padding: 6px 12px;
+}
+
+.pagination-wrapper .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+</style>

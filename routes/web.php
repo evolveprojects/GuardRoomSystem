@@ -56,3 +56,6 @@ Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController:
 
 Route::post('/create-helper', [App\Http\Controllers\Admin\MasterfilesController::class, 'addHelper'])->name('Masterfile.addhelper');
 Route::post('/update-helper', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateHelper'])->name('Masterfile.updateHelper');
+
+Route::post('/create-security', [App\Http\Controllers\Admin\MasterfilesController::class, 'addSecurity'])->name('Masterfile.addSecurity');
+Route::post('/update-security', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateSecurity'])->name('Masterfile.updateSecurity');
