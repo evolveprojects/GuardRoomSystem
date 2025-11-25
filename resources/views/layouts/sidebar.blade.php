@@ -82,7 +82,7 @@
                                 </a>
                             </li>
                         @endif
-                       
+
                         <!-- Centers -->
                         @if (Auth::user()->hasPermission('view center master') || Auth::user()->id == '1')
                         <li class="nav-item">
@@ -152,11 +152,29 @@
                 </li>
 
                 <!-- Outward (New) -->
-                <li class="nav-item">
-                    <a href="./widgets/cards.html"class="nav-link {{ request()->is('widgets/cards.html') ? 'active' : '' }}">
-                        <i class="bi-truck {{ request()->is('widgets/cards.html') ? 'text-primary' : 'text-muted' }}"></i>
-                        <p>Outward</p>
+                <li class="nav-item outward-menu {{ request()->routeIs('outward.*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link outward-toggle {{ request()->routeIs('outward.*') ? 'active' : '' }}">
+                        <i
+                            class="nav-icon bi-truck {{ request()->routeIs('outward.*') ? 'text-primary' : 'text-muted' }}"></i>
+                        <p>
+                            Outward Module
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
                     </a>
+                    <ul class="nav nav-treeview">
+
+                        @if (Auth::user()->hasPermission('View Outward Type1') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('outward.outwardtype1') }}"
+                                    class="nav-link {{ request()->routeIs('outward.outwardtype1') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('outward.outwardtype1') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Type 1</p>
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
                 </li>
             </ul>
         </nav>
@@ -178,6 +196,17 @@
     });
     document.addEventListener('DOMContentLoaded', function() {
         const toggleLinks = document.querySelectorAll('.permissions-toggle');
+
+        toggleLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parentLi = link.parentElement;
+                parentLi.classList.toggle('menu-open');
+            });
+        });
+    });
+     document.addEventListener('DOMContentLoaded', function() {
+        const toggleLinks = document.querySelectorAll('.outward-toggle');
 
         toggleLinks.forEach(link => {
             link.addEventListener('click', function(e) {

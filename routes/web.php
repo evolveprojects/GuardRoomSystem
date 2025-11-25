@@ -59,3 +59,7 @@ Route::post('/update-helper', [App\Http\Controllers\Admin\MasterfilesController:
 
 Route::post('/create-security', [App\Http\Controllers\Admin\MasterfilesController::class, 'addSecurity'])->name('Masterfile.addSecurity');
 Route::post('/update-security', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateSecurity'])->name('Masterfile.updateSecurity');
+
+
+//outward module
+Route::get('/outwardtype1', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_t1'])->name('outward.outwardtype1');
