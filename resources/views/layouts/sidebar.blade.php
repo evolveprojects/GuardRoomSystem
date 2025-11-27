@@ -175,7 +175,28 @@
                             </li>
                         @endif
                     </ul>
+                    <ul class="nav nav-treeview">
+
+                        @if (Auth::user()->hasPermission('View Outward Type2') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('outward.outwardtype2') }}"
+                                    class="nav-link {{ request()->routeIs('outward.outwardtype2') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('outward.outwardtype2') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Type 2</p>
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
                 </li>
+                <li class="nav-item">
+    <a href="{{ route('inward.view') }}"
+        class="nav-link {{ request()->routeIs('inward.view') ? 'active' : '' }}">
+        <i class="nav-icon bi bi-box-arrow-in-down {{ request()->routeIs('inward.view') ? 'text-primary' : 'text-muted' }}"></i>
+        <p>Inward Module</p>
+    </a>
+</li>
+
             </ul>
         </nav>
     </div>

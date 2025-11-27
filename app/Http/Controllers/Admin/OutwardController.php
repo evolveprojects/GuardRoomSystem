@@ -18,6 +18,33 @@ class OutwardController extends Controller
 {
     public function outward_view_t1(Request $request)
     {
-        return view('outward.outwardtype1');
+        // fetch all centers (active first, for example)
+        $centers = Center::orderBy('center_name', 'ASC')->get();
+        // fetch all vehicles (active first, for example)
+        $vehicles = Vehicle::orderBy('vehicle_no', 'ASC')->get();
+        // fetch all vehicles (active first, for example)
+        $vehicles = Vehicle::orderBy('type', 'ASC')->get();
+        // fetch all Helpers (active first, for example)
+        $helpers = Helper::orderBy('name', 'ASC')->get();
+        // fetch all Drivers (active first, for example)
+        $drivers = Driver::orderBy('name', 'ASC')->get();
+
+        return view('outward.outwardtype1', compact('centers' , 'vehicles', 'helpers', 'drivers'));
+    }
+
+    public function outward_view_t2(Request $request)
+    {
+        // fetch all centers (active first, for example)
+        $centers = Center::orderBy('center_name', 'ASC')->get();
+        // fetch all vehicles (active first, for example)
+        $vehicles = Vehicle::orderBy('vehicle_no', 'ASC')->get();
+        // fetch all vehicles (active first, for example)
+        $vehicles = Vehicle::orderBy('type', 'ASC')->get();
+        // fetch all Drivers (active first, for example)
+        $drivers = Driver::orderBy('name', 'ASC')->get();
+        // fetch all Helpers (active first, for example)
+        $helpers = Helper::orderBy('name', 'ASC')->get();
+
+        return view('outward.outwardtype2', compact('centers', 'vehicles', 'helpers', 'drivers'));
     }
 }

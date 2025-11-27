@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Userlevel')
+@section('title', 'Inward')
 
 @section('content')
 <main class="app-main">
@@ -10,14 +10,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="mb-0">Outward Module Type 1</h3>
+                    <h3 class="mb-0">Inward Module</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item">
                             <a href="/dashboard"><i class="bi bi-house"></i> Home</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Outward Module</li>
+                        <li class="breadcrumb-item active" aria-current="page">Inward Module</li>
                     </ol>
                 </div>
             </div>
@@ -45,7 +45,7 @@
 
                             <div class="row">
 
-                                <!-- Outward No -->
+                                <!-- Inward No -->
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
                                         <label for="phone">Outward NO&nbsp;<span style="color:red;">*</span></label>
@@ -66,16 +66,11 @@
                                     </div>
                                 </div>
 
-                                <!-- Vehicle No -->
+                                <!-- Type -->
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
-                                        <label>Vehicle No&nbsp;<span style="color:red;">*</span></label>
-                                        <select name="vehicle_no" id="vehicle_no" required class="form-control selectize">
-                                            <option value="">Select Vehicle No:</option>
-                                            @foreach($vehicles as $v)
-                                                <option value="{{ $v->id }}">{{ $v->vehicle_no }}</option>
-                                            @endforeach
-                                        </select>
+                                        <label for="type">Type<span style="color:red;">*</span></label>
+                                        <input type="type" id="type" name="type" class="form-control">
                                     </div>
                                 </div>
 
@@ -116,9 +111,20 @@
                                     </div>
                                 </div>
 
-                                <input type="hidden" name="rowCount1" id="rowCount1" class="form-control">
+                                <!-- Vehicle No -->
+                                <div class="col-sm-3">
+                                    <div class="form-group-sm">
+                                        <label>Vehicle No&nbsp;<span style="color:red;">*</span></label>
+                                        <select name="vehicle_no" id="vehicle_no" required class="form-control selectize">
+                                            <option value="">Select Vehicle No:</option>
+                                            @foreach($vehicles as $v)
+                                                <option value="{{ $v->id }}">{{ $v->vehicle_no }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
-                                <!-- Vehicle Type -->
+                                 <!-- Vehicle Type -->
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
                                         <label>Vehicle Type&nbsp;<span style="color:red;">*</span></label>
@@ -130,40 +136,45 @@
                                         </select>
                                     </div>
                                 </div>
-
-                                <!-- Time In / Time Out / Meter R/In / Meter R/Out -->
-                                <div class="row mt-3 w-100">
-                                    <div class="col-sm-3">
-                                        <div class="form-group-sm">
-                                            <label for="time_in">Time In&nbsp;<span style="color:red;">*</span></label>
-                                            <input type="time" id="time_in" name="time_in" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group-sm">
-                                            <label for="time_out">Time Out&nbsp;<span style="color:red;">*</span></label>
-                                            <input type="time" id="time_out" name="time_out" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group-sm">
-                                            <label for="meter_in">Meter R/In&nbsp;<span style="color:red;">*</span></label>
-                                            <input type="number" id="meter_in" name="meter_in" class="form-control" min="0">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group-sm">
-                                            <label for="meter_out">Meter R/Out&nbsp;<span style="color:red;">*</span></label>
-                                            <input type="number" id="meter_out" name="meter_out" class="form-control" min="0">
-                                        </div>
+                                <!-- Bill no -->
+                                <div class="col-sm-3">
+                                    <div class="form-group-sm">
+                                        <label for="bill">Bill no:<span style="color:red;">*</span></label>
+                                        <input type="number" id="bill" name="bill" class="form-control">
                                     </div>
                                 </div>
 
+                                <!-- Supplier-->
+                                <div class="col-sm-3">
+                                    <div class="form-group-sm">
+                                        <label for="supplier">Supplier:<span style="color:red;">*</span></label>
+                                        <input type="name" id="supplier" name="supplier" class="form-control">
+                                    </div>
+                                </div>
+
+                                <!-- Goods in no -->
+                                <div class="col-sm-3">
+                                    <div class="form-group-sm">
+                                        <label for="goods">Goods in no:<span style="color:red;">*</span></label>
+                                        <input type="number" id="goods" name="goods" class="form-control">
+                                    </div>
+                                </div>
+
+                                <!-- To Member-->
+                                <div class="col-sm-3">
+                                    <div class="form-group-sm">
+                                        <label for="member">To Member:<span style="color:red;">*</span></label>
+                                        <input type="name" id="member" name="member" class="form-control">
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="rowCount1" id="rowCount1" class="form-control">
+ 
                             </div>
                             <br>
 
                             <!-- Outward Table -->
-                                                    <div class="table-responsive">
+                                                   <div class="table-responsive">
                                                             <table id="my_data_table_3inv"
                                                                 name="my_data_table_3invoice"
                                                                 class="table table-responsive"
@@ -172,7 +183,7 @@
                                             <thead style="background-color: white;" class="form-group-sm">
                                                 <tr>
                                                     <!-- <th style="width: 200px !important;">Item Code</th> -->
-                                                    <th style="">AOD No</th>
+                                                    <th style="">No</th>
                                                     <!-- <th style="width: 90px !important;">GSM</th> -->
                                                     <th style="">Items</th>
                                                     <th style="">Quantity</th>
@@ -320,7 +331,7 @@ function addRow() {
     row.innerHTML = `
         <td id="aod_t${index}">
             <select name="aod_td${index}" class="form-control items selectize" id="aod_td${index}" style="width:100%;height:35px;" onchange="getDataTblOtherDetails(${index});">
-                <option value="">Select AOD</option>
+                <option value="">Select No</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
             </select>
@@ -396,3 +407,4 @@ function deleteTableRow(index) {
     background-color: #c82333;
 }
 </style>
+

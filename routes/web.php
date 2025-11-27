@@ -63,3 +63,7 @@ Route::post('/update-security', [App\Http\Controllers\Admin\MasterfilesControlle
 
 //outward module
 Route::get('/outwardtype1', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_t1'])->name('outward.outwardtype1');
+Route::get('/outwardtype2', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_t2'])->name('outward.outwardtype2');
+
+// inward module
+Route::get('/inward', [App\Http\Controllers\Admin\InwardController::class, 'inward_view'])->name('inward.view');
