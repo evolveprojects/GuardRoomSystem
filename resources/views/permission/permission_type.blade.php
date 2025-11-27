@@ -68,6 +68,7 @@
                                             <tr>
                                                 <th class="w-25">#</th>
                                                 <th class="w-25">Permission Type</th>
+                                                <th class="w-25">Status</th>
                                                 <th class="w-25">Actions</th>
                                             </tr>
                                             </tr>
@@ -85,7 +86,7 @@
                                                         <span class="badge bg-danger">Inactive</span>
                                                     @endif
                                                 </td>
-
+{{-- 
                                                 <td>
                                                     <div class="accordion accordion-flush"
                                                         id="accordionFlush{{ $permissions->id }}">
@@ -107,12 +108,49 @@
                                                                 data-bs-parent="#accordionFlush{{ $permissions->id }}">
                                                                 <div class="accordion-body"
                                                                     style="padding-top: 8px;padding-bottom: unset;">
-                                                                    {{-- @include('permission.components.edit_permission') <br> --}}
+                                                                    @include('permission.components.edit_permission_type', ['permissionType' => $permissions])
+
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </td>
+                                                </td> --}}
+                                                <td>
+    <div class="accordion accordion-flush" id="accordionFlush{{ $permissions->id }}">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="flush-heading{{ $permissions->id }}">
+                <button class="accordion-button collapsed" type="button"
+                    style="padding-top: unset;padding-bottom: unset;"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#flush-collapse{{ $permissions->id }}"
+                    aria-expanded="false"
+                    aria-controls="flush-collapse{{ $permissions->id }}">
+                    Actions
+                </button>
+            </h2>
+            <div id="flush-collapse{{ $permissions->id }}"
+                class="accordion-collapse collapse"
+                aria-labelledby="flush-heading{{ $permissions->id }}"
+                data-bs-parent="#accordionFlush{{ $permissions->id }}">
+                <div class="accordion-body" style="padding-top: 8px; padding-bottom: unset;">
+                    <!-- Edit button now triggers modal -->
+                    <button type="button"
+    class="btn btn-success btn-sm w-100"
+    data-bs-toggle="modal"
+    data-bs-target="#editPermissionTypeModal{{ $permissions->id }}">
+    Edit
+</button>
+
+           
+
+                    <!-- Include Edit Modal -->
+                    @include('permission.components.edit_permission_type', ['permissionType' => $permissions])
+                </div>
+            </div>
+        </div>
+    </div>
+</td>
+
                                             </tr>
                                         @endforeach
                                         </tbody>

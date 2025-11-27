@@ -9,6 +9,8 @@ use App\Models\Permission;
 use App\Models\Permission_type;
 use App\Models\User;
 use App\Models\ErrorLogger;
+use Illuminate\Validation\Rule;
+
 
 class PermissionController extends Controller
 {
@@ -62,7 +64,7 @@ class PermissionController extends Controller
     public function updatepermission(Request $request)
     {
 
-        // $hasPermission = Auth::user()->hasPermission("edit_userlevel");
+        // $hasPermission = (Auth::user()->hasPermission("edit permission") || Auth::user()->id == '1');
 
         // if ($hasPermission) {
 
@@ -97,9 +99,12 @@ class PermissionController extends Controller
             ->orderBy('created_at', 'DESC')
             ->paginate(env("RECORDS_PER_PAGE"));
 
-        // return view('masterfiles.userlevels', compact(['getuserlevels', 'searchKey']));
-        return view('permission.permission_type', compact(['permission', 'searchKey']));
+        // Pass all permission types for edit dropdown
+        $permission_type = Permission_type::all();
+
+        return view('permission.permission_type', compact(['permission', 'searchKey', 'permission_type']));
     }
+
 
     public function addpermission_type(Request $request)
     {
@@ -129,8 +134,43 @@ class PermissionController extends Controller
         }
     }
 
+ 
 
-     public function updateUserPermissions(Request $request){
+    public function updatepermission_type(Request $request)
+    {
+        // Check Permission
+        $hasPermission = (Auth::user()->hasPermission("Edit Permission Type") || Auth::user()->id == 1);
+
+        if ($hasPermission) {
+
+            // Get the record using request id
+            $permission = Permission_type::findOrFail($request->id);
+
+            // Validate input
+            $validated = $request->validate([
+                'type_name' => [
+                    'required',
+                    'string',
+                    Rule::unique('permission_types', 'type_name')->ignore($permission->id),
+                ],
+                'status' => ['required'],
+            ]);
+
+            // Update record
+            $permission->type_name = $request->type_name;
+            $permission->status = $request->status;
+            $permission->updated_by = Auth::id();
+            $permission->save();
+
+            return back()->with('success', 'Permission Type updated successfully!');
+        } else {
+            return redirect("/not_allowed");
+        }
+    }
+
+
+
+    public function updateUserPermissions(Request $request){
 
 
 
