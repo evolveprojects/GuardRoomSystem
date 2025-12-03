@@ -11,6 +11,7 @@ class Helper extends Model
         'epf_number',
         'email',
         'phone',
-        'image'
+        'image',
+        'status'
     ];
 }

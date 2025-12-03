@@ -78,8 +78,8 @@
                                             <th>Brand</th>
                                             <th>Model</th>
                                             <th>Color</th>
-                                            <th>Status</th>
                                             <th>Fuel Type</th>
+                                            <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -94,6 +94,9 @@
                                                 <td>{{ $vehicle->model }}</td>
                                                 <td>{{ $vehicle->color }}</td>
 
+                                                
+
+                                                <td>{{ $vehicle->fuel_type }}</td>
                                                 <td>
                                                     @if($vehicle->status == 'Active')
                                                         <span class="badge bg-success">Active</span>
@@ -103,8 +106,6 @@
                                                         <span class="badge bg-warning text-dark">Maintenance</span>
                                                     @endif
                                                 </td>
-
-                                                <td>{{ $vehicle->fuel_type }}</td>
 
                                                 <td style="min-width:110px; vertical-align: middle;">
                                                     <div class="accordion accordion-flush" id="accordionVehicle{{ $vehicle->id }}">
