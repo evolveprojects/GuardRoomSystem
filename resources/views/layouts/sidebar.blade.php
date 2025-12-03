@@ -164,12 +164,12 @@
                     </a>
                     <ul class="nav nav-treeview">
 
-                        @if (Auth::user()->hasPermission('View Outward Type1') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('View Outward all') || Auth::user()->id == '1')
                             <li class="nav-item">
-                                <a href="{{ route('outward.outwardtype1') }}"
-                                    class="nav-link {{ request()->routeIs('outward.outwardtype1') ? 'active' : '' }}">
+                                <a href="{{ route('outward.outward_view_All') }}"
+                                    class="nav-link {{ request()->routeIs('outward.outward_view_All') ? 'active' : '' }}">
                                     <i
-                                        class="nav-icon bi bi-circle {{ request()->routeIs('outward.outwardtype1') ? 'text-primary' : 'text-muted' }}"></i>
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('outward.outward_view_All') ? 'text-primary' : 'text-muted' }}"></i>
                                     <p>Type 1</p>
                                 </a>
                             </li>

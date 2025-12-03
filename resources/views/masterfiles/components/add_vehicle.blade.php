@@ -60,9 +60,9 @@
                                 <option>Electric</option>
                             </select>
                         </div>
-                    
 
-                  
+
+
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Status <span class="text-danger">*</span></label>
                             <select name="status" class="form-control" required>
@@ -76,7 +76,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-save">Save</button>
-                   
+
                      <button type="reset" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
                         <i class="bi bi-x-circle me-1"></i> Cancel
                     </button>

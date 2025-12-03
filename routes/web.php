@@ -64,6 +64,9 @@ Route::post('/update-security', [App\Http\Controllers\Admin\MasterfilesControlle
 //outward module
 Route::get('/outwardtype1', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_t1'])->name('outward.outwardtype1');
 Route::get('/outwardtype2', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_t2'])->name('outward.outwardtype2');
+Route::post('/saveoutward_type_1', [App\Http\Controllers\Admin\OutwardController::class, 'saveoutward_type_1'])->name('outward.saveoutward_type_1');
+Route::get('/outward_view_All', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_All'])->name('outward.outward_view_All');
+Route::post('/vehicledata', [App\Http\Controllers\Admin\OutwardController::class, 'vehicledata'])->name('vehicledata');
 
 // inward module
 Route::get('/inward', [App\Http\Controllers\Admin\InwardController::class, 'inward_view'])->name('inward.view');

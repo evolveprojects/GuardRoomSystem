@@ -33,7 +33,7 @@ class MasterfilesController extends Controller
     {
         $searchKey = $request->searchKey;
         $user = User::where('name', 'like', '%' . $searchKey . '%')
-            ->orderBy('created_at', 'ASC')
+            ->orderBy('created_at', 'DESC')
             ->paginate(env("RECORDS_PER_PAGE"));
 
         $permissions = Permission::select(
