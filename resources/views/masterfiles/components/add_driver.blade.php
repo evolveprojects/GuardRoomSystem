@@ -39,6 +39,16 @@
                     </div>
 
                     <div class="form-group mb-2">
+                    <label>Status <span class="text-danger">*</span></label>
+                    <select name="status" class="form-control" required>
+                        <option value="">Select Status</option>
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
+
+
+                    <div class="form-group mb-2">
                         <label>Image</label>
                         <input type="file" name="image" class="form-control">
                     </div>

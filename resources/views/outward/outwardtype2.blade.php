@@ -38,27 +38,31 @@
 
                             <div class="col-md-6 d-flex align-items-center">
                                 <button class="btn btn-primary">
-                                    <i class="bi bi-plus-lg"></i> All Outwards
+                                    <i class="bi bi-chevron-left"></i> All Outwards
                                 </button>
                             </div>
 
                             <br>
 
+                            <form action="{{ route('outward.type2.store') }}" method="POST">
+                            @csrf
+
                             <div class="row">
 
                                 <!-- Outward No -->
-                                <div class="col-sm-3">
-                                    <div class="form-group-sm">
+                                <div class="col-sm-3 mb-3">
+                                    <div class="form-group-sm" >
                                         <label>Outward NO <span class="text-danger">*</span></label>
-                                        <input type="text" readonly class="form-control">
+                                        <input type="text" name="outward_no" value="{{ $outward_no }}" class="form-control" readonly style="height:30px;">
                                     </div>
                                 </div>
+
 
                                 <!-- Center -->
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
                                         <label>Center <span class="text-danger">*</span></label>
-                                        <select name="center" id="center" class="form-control selectize" required>
+                                        <select name="center_id" id="center" class="form-control selectize" required>
                                             <option value="">Select Center:</option>
                                             @foreach($centers as $c)
                                                 <option value="{{ $c->id }}">{{ $c->center_name }}</option>
@@ -68,10 +72,10 @@
                                 </div>
 
                                 <!-- Type -->
-                                <div class="col-sm-3">
+                                <div class="col-sm-3" >
                                     <div class="form-group-sm">
                                         <label for="type">Type<span style="color:red;">*</span></label>
-                                        <input type="type" id="type" name="type" class="form-control">
+                                        <input type="type" id="type" name="type" class="form-control" style="height:30px;">
                                     </div>
                                 </div>
 
@@ -80,7 +84,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
                                         <label>Vehicle No <span class="text-danger">*</span></label>
-                                        <select name="vehicle_no" id="vehicle_no" class="form-control selectize" required>
+                                        <select name="vehicle_id" id="vehicle_no" class="form-control selectize" required>
                                             <option value="">Select Vehicle No:</option>
                                             @foreach ($vehicles as $v)
                                                 <option value="{{ $v->id }}">{{ $v->vehicle_no }}</option>
@@ -96,7 +100,7 @@
                                         <div class="input-group">
                                             <input type="date" name="date" id="date"
                                                 value="{{ date('Y-m-d') }}"
-                                                class="form-control date-picker">
+                                                class="form-control date-picker" style="height:30px;">
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +109,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
                                         <label>Driver <span class="text-danger">*</span></label>
-                                        <select name="driver" id="driver" class="form-control selectize" required>
+                                        <select name="driver_id" id="driver" class="form-control selectize" required>
                                             <option value="">Select Driver:</option>
                                             @foreach ($drivers as $d)
                                                 <option value="{{ $d->id }}">{{ $d->name }}</option>
@@ -118,7 +122,7 @@
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
                                         <label>Helper <span class="text-danger">*</span></label>
-                                        <select name="helper" id="helper" class="form-control selectize" required>
+                                        <select name="helper_id" id="helper" class="form-control selectize" required>
                                             <option value="">Select Helper:</option>
                                             @foreach ($helpers as $h)
                                                 <option value="{{ $h->id }}">{{ $h->name }}</option>
@@ -130,73 +134,74 @@
                                 <input type="hidden" id="rowCount1" name="rowCount1" class="form-control">
 
                                 <!-- Vehicle Type -->
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 mb-3">
                                     <div class="form-group-sm">
                                         <label>Vehicle Type <span class="text-danger">*</span></label>
-                                        <select class="form-control selectize" required>
+                                        <select name="vehicle_type" class="form-control selectize" required>
                                             <option value="">Select Vehicle Type:</option>
-                                            @foreach ($vehicles as $v)
-                                                <option value="{{ $v->id }}">{{ $v->type }}</option>
-                                            @endforeach
+                                            <option value="Car">Car</option>
+                                            <option value="Van">Van</option>
+                                            <option value="Bus">Bus</option>
+                                            <option value="Lorry">Lorry</option>
+                                            <option value="Bike">Bike</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                 <!-- Time In -->
-                                <div class="col-sm-3">
-                                    <div class="form-group-sm">
-                                        <label for="time_in">Time In&nbsp;<span style="color:red;">*</span></label>
-                                        <input type="time" id="time_in" name="time_in" class="form-control">
-                                    </div>
-                                </div>
-
-                                 <!-- Time Out -->
+                      
+                                <!-- Time Out -->
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
                                         <label for="time_in">Time Out&nbsp;<span style="color:red;">*</span></label>
-                                        <input type="time" id="time_out" name="time_out" class="form-control">
+                                        <input type="time" id="time_out" name="time_out" class="form-control" style="height:30px;">
                                     </div>
                                 </div>
 
-                                <!-- Meter R/In -->
-
-                                <div class="col-sm-3">
+                                {{-- <!-- Time In -->
+                                <div class="col-sm-3" >
                                     <div class="form-group-sm">
-                                        <label for="meter_in">Meter R/In&nbsp;<span style="color:red;">*</span></label>
-                                        <input type="number" id="meter_in" name="meter_in" class="form-control" min="0">
+                                        <label for="time_in">Time In</label>
+                                        <input  type="time" id="time_in" name="time_in" class="form-control" value="" readonly style="height:30px;" >
                                     </div>
-                                </div>
+                                </div> --}}
 
                                  <!-- Meter R/out -->
 
                                 <div class="col-sm-3">
                                     <div class="form-group-sm">
                                         <label for="meter_in">Meter R/Out&nbsp;<span style="color:red;">*</span></label>
-                                        <input type="number" id="meter_out" name="meter_out" class="form-control" min="0">
+                                        <input type="number" id="meter_out" name="meter_out" class="form-control" min="0" style="height:30px;">
                                     </div>
                                 </div>
 
-
-
+                                <!-- Meter R/In -->
+                                {{-- <div class="col-sm-3">
+                                    <div class="form-group-sm">
+                                        <label for="meter_in">Meter R/In</label>
+                                        <input type="number" id="meter_in" name="meter_in" class="form-control"  min="0" value = "0" readonly style="height:30px;">
+                                    </div>
+                                </div> --}}
                             </div>
-
+                            
 
                             <!-- Comment Section -->
                             <div class="card shadow-sm border-0 mt-4">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="comment"><strong>Comments</strong></label>
-                                        <textarea id="comment" rows="4" class="form-control" placeholder="Enter your comments here..."></textarea>
+                                        <textarea name="comments" id="comment" rows="4" class="form-control" placeholder="Enter your comments here..."></textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Page Buttons -->
                             <div class="mt-3 d-flex justify-content-end gap-2">
-                                <button class="btn btn-primary">Save</button>
-                                <button class="btn btn-success">Save & Close</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="submit" name="close" value="1" class="btn btn-success">Save & Close</button>
                                 <button class="btn btn-secondary" onclick="window.close();">Close</button>
                             </div>
+
+                            </form>
 
                         </div>
                     </div>

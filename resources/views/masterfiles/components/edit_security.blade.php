@@ -52,6 +52,20 @@
                     </div>
 
                     <div class="form-group mb-2">
+                        <label for="securityStatus">Status <span class="text-danger">*</span></label>
+                        <select name="status" id="securityStatus" class="form-control-sm select2" 
+                                style="width: 100%; height: 30px;" required>
+                            @if($security->status == 1)
+                                <option selected value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            @else
+                                <option selected value="0">Inactive</option>
+                                <option value="1">Active</option>
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-2">
                         <label>Image</label>
                         <input type="file" name="image" class="form-control">
                         @if($security->image)

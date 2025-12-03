@@ -75,6 +75,7 @@
                                             <th>EPF Number</th>
                                             <th>Email</th>
                                             <th>Phone</th>
+                                            <th>Status</th>
                                             <th style="width: 120px;">Actions</th>
                                         </tr>
                                     </thead>
@@ -87,6 +88,13 @@
                                                 <td>{{ $security->epf_number }}</td>
                                                 <td>{{ $security->email }}</td>
                                                 <td>{{ $security->phone }}</td>
+                                                <td>
+                                                    @if($security->status == 1)
+                                                        <span class="badge bg-success">Active</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Inactive</span>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <div class="accordion accordion-flush" id="accordionFlush{{ $security->id }}">
                                                         <div class="accordion-item">

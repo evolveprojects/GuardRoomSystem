@@ -77,6 +77,7 @@
                                             <th>EPF Number</th>
                                             <th>Email</th>
                                             <th>Phone</th>
+                                            <th>Status</th>
                                             <th style="width: 120px;">Actions</th>
                                         </tr>
                                     </thead>
@@ -89,6 +90,13 @@
                                                 <td>{{ $driver->epf_number }}</td>
                                                 <td>{{ $driver->email }}</td>
                                                 <td>{{ $driver->phone }}</td>
+                                                <td>
+                                                    @if($driver->status == 1)
+                                                        <span class="badge bg-success">Active</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Inactive</span>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <div class="accordion accordion-flush" id="accordionFlush{{ $driver->id }}">
                                                         <div class="accordion-item">

@@ -318,15 +318,19 @@ class MasterfilesController extends Controller
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'max:2048'],
-        ]);
+            'status' => ['required', 'in:0,1'],
+
+            ]);
 
         $driver = new Driver();
         $driver->name = $request->name;
         $driver->epf_number = $request->epf_number;
         $driver->email = $request->email;
         $driver->phone = $request->phone;
+        $driver->status = $request->status;
 
-        if ($request->hasFile('image')) {
+
+            if ($request->hasFile('image')) {
             $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
             $request->file('image')->move(public_path('uploads/drivers'), $fileName);
             $driver->image = $fileName;
@@ -355,7 +359,9 @@ class MasterfilesController extends Controller
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'max:2048'],
-        ]);
+            'status' => ['required', 'in:0,1'],
+
+            ]);
 
         $driver = Driver::find($request->id);
 
@@ -367,8 +373,10 @@ class MasterfilesController extends Controller
         $driver->epf_number = $request->epf_number;
         $driver->email = $request->email;
         $driver->phone = $request->phone;
+        $driver->status = $request->status;
 
-        if ($request->hasFile('image')) {
+
+            if ($request->hasFile('image')) {
             $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
             $request->file('image')->move(public_path('uploads/drivers'), $fileName);
             $driver->image = $fileName;
@@ -399,15 +407,19 @@ class MasterfilesController extends Controller
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'max:2048'],
-        ]);
+            'status' => ['required', 'in:0,1'],
+
+            ]);
 
         $helper = new Helper();
         $helper->name = $request->name;
         $helper->epf_number = $request->epf_number;
         $helper->email = $request->email;
         $helper->phone = $request->phone;
+        $helper->status = $request->status;
 
-        if ($request->hasFile('image')) {
+
+            if ($request->hasFile('image')) {
             $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
             $request->file('image')->move(public_path('uploads/helpers'), $fileName);
             $helper->image = $fileName;
@@ -436,7 +448,9 @@ class MasterfilesController extends Controller
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'max:2048'],
-        ]);
+            'status' => ['required', 'in:0,1'],
+
+            ]);
 
         $helper = Helper::find($request->id);
 
@@ -448,6 +462,7 @@ class MasterfilesController extends Controller
         $helper->epf_number = $request->epf_number;
         $helper->email = $request->email;
         $helper->phone = $request->phone;
+        $helper->status = $request->status;
 
         if ($request->hasFile('image')) {
             $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
@@ -481,6 +496,7 @@ class MasterfilesController extends Controller
                 'email' => ['nullable', 'email'],
                 'phone' => ['nullable', 'string'],
                 'image' => ['nullable', 'image', 'max:2048'],
+                'status' => ['required', 'in:0,1'],
             ]);
 
             $security = new Security();
@@ -488,6 +504,7 @@ class MasterfilesController extends Controller
             $security->epf_number = $request->epf_number;
             $security->email = $request->email;
             $security->phone = $request->phone;
+            $security->status = $request->status;
 
             if ($request->hasFile('image')) {
                 $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
@@ -519,6 +536,7 @@ class MasterfilesController extends Controller
                 'email' => ['nullable', 'email'],
                 'phone' => ['nullable', 'string'],
                 'image' => ['nullable', 'image', 'max:2048'],
+                'status' => ['required', 'in:0,1'],
             ]);
 
             $security = Security::find($request->id);
@@ -531,6 +549,7 @@ class MasterfilesController extends Controller
             $security->epf_number = $request->epf_number;
             $security->email = $request->email;
             $security->phone = $request->phone;
+            $security->status = $request->status;
 
             if ($request->hasFile('image')) {
                 $fileName = time() . '_' . $request->file('image')->getClientOriginalName();
