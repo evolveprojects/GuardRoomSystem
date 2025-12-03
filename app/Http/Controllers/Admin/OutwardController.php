@@ -17,11 +17,12 @@ use App\Models\OutwardType2;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Outwardmodel_type1_t1;
 use App\Models\Outwardmodel_type1_t2;
+use App\Http\Controllers\Admin\ShipmentController;
 use DB;
 
 class OutwardController extends Controller
 {
-    public function outward_view_t1(Request $request)
+    public function outward_view_t1(Request $request, ShipmentController $shipmentController)
     {
         // fetch all centers (active first, for example)
         $centers = Center::orderBy('center_name', 'ASC')->get();
@@ -35,7 +36,10 @@ class OutwardController extends Controller
         $drivers = Driver::orderBy('name', 'ASC')->get();
         $outno = Outwardmodel_type1_t1::generateoutno();
 
-        return view('outward.outwardtype1', compact('centers', 'vehicles', 'helpers', 'drivers', 'outno'));
+
+        $AOD_no = $shipmentController->getShipmentsData();
+
+        return view('outward.outwardtype1', compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no'));
     }
 
     public function outward_view_t2(Request $request)
@@ -47,7 +51,7 @@ class OutwardController extends Controller
         // fetch all centers (active first, for example)
         $centers = Center::orderBy('center_name', 'ASC')->where('status', 1)->get();
         // fetch all vehicles (active first, for example)
-        $vehicles = Vehicle::where('status', 1)
+        $vehicles = Vehicle::where('status', 'Active')
             ->orderBy('vehicle_no', 'ASC')
             ->get();
         // fetch all vehicles (active first, for example)
@@ -263,4 +267,3 @@ class OutwardController extends Controller
         return redirect()->back()->with('success', 'Outward Type 2 saved successfully!');
     }
 }
-

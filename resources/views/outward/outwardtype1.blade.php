@@ -197,21 +197,20 @@
                                                     <tr id="row_{{ $i }}">
 
                                                         <td id="aod_t{{ $i }}">
-
-
                                                             <select name="aod_td{{ $i }}"
-                                                                class="form-control  selectize"
+                                                                class="form-control selectize"
                                                                 id="aod_td{{ $i }}"
                                                                 style="width:100%;height:30px;"
                                                                 onchange="getDataTblOtherDetails('{{ $i }}');">
                                                                 <option value="">Select AOD</option>
-                                                                <option value="1">1</option>
-                                                                <option value="2">2</option>
-
-
+                                                                @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
+                                                                    @foreach ($AOD_no['value'] as $aod)
+                                                                        <option value="{{ $aod['SequenceNumber'] }}">
+                                                                            {{ $aod['ShipmentNumber'] }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                @endif
                                                             </select>
-
-
                                                         </td>
                                                         <td id="item_td{{ $i }}">
 
@@ -334,8 +333,44 @@
                 addRow();
             }
             countRows();
+            getother_details(index);
 
         }
+
+
+
+        function getother_details(index) {
+            var cmbSelectVal = document.getElementById('aod_td' + index).value;
+
+                    $.ajax({
+
+                        url: "{{ route('sage300_aoddata') }}",
+                        type: 'POST',
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            cmbSelectVal: cmbSelectVal,
+
+
+                        },
+                        success: function(data) {
+
+                            console.log(data);
+                            // Update fields with the retrieved data
+                            // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
+
+
+
+                            // Refresh Select2 dropdowns
+                            $(".selectize").select2();
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("AJAX Error: ", status, error); // Handle AJAX errors
+                        }
+                    });
+
+            }
+
 
         // Add new row dynamically
         function addRow() {
@@ -442,7 +477,7 @@
 
                     if (response.status === 'success' && response.vehicle) {
 
-                       $('#vehicle_type').val(response.vehicle.vehicle_type).trigger('change');
+                        $('#vehicle_type').val(response.vehicle.vehicle_type).trigger('change');
 
                     } else {
                         alert("Vehicle not found.");

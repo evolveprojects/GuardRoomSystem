@@ -67,9 +67,12 @@ Route::get('/outwardtype2', [App\Http\Controllers\Admin\OutwardController::class
 Route::post('/saveoutward_type_1', [App\Http\Controllers\Admin\OutwardController::class, 'saveoutward_type_1'])->name('outward.saveoutward_type_1');
 Route::get('/outward_view_All', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_All'])->name('outward.outward_view_All');
 Route::post('/vehicledata', [App\Http\Controllers\Admin\OutwardController::class, 'vehicledata'])->name('vehicledata');
-
 Route::post('/outward/type2/store', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_store'])->name('outward.type2.store');
+
 
 
 // inward module
 Route::get('/inward', [App\Http\Controllers\Admin\InwardController::class, 'inward_view'])->name('inward.view');
+
+//sage300 Api
+Route::post('/sage300_aoddata', [App\Http\Controllers\Admin\ShipmentController::class, 'show_data_seq'])->name('sage300_aoddata');
