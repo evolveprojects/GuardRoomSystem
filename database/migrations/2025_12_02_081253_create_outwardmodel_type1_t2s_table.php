@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('outwardmodel_type1_t2s', function (Blueprint $table) {
             $table->id();
             $table->string('aod_td')->nullable();
+            $table->string('outward_id')->nullable();
             $table->string('seq_td')->nullable();
             $table->string('item_se')->nullable();
             $table->string('qty_se')->nullable();
+            $table->string('customer_se')->nullable();
             $table->string('amount_se')->unique();
 
             $table->unsignedBigInteger('created_by')->nullable();

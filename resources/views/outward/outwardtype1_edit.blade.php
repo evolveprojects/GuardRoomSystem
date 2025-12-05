@@ -10,7 +10,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="mb-0">Outward Module Type 1</h3>
+                        <h3 class="mb-0">Outward Type 1 Edit-{{ $item1->outward_number }}</h3>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
@@ -34,7 +34,7 @@
 
                         <!-- Card -->
                         <div class="card shadow-sm border-0 mb-4">
-                            <form action="{{ route('outward.saveoutward_type_1') }}" method="POST">
+                            <form action="{{ route('outward.editoutward_type_1') }}" method="POST">
                                 @csrf
                                 <div class="card-body">
 
@@ -55,7 +55,7 @@
                                                         style="color:red;">*</span></label>
                                                 <input type="text" class="form-control" name="outward_number"
                                                     style="width:100%;height:30px;text-align: left;"
-                                                    value="{{ $outno }}" readonly>
+                                                    value="{{ $item1->outward_number }}" readonly>
                                             </div>
                                         </div>
 
@@ -67,8 +67,12 @@
                                                     class="form-control selectize">
                                                     <option value="">Select Center:</option>
                                                     @foreach ($centers as $c)
-                                                        <option value="{{ $c->id }}">{{ $c->center_name }}</option>
+                                                        <option value="{{ $c->id }}"
+                                                            {{ isset($item1->center) && $item1->center == $c->id ? 'selected' : '' }}>
+                                                            {{ $c->center_name }}
+                                                        </option>
                                                     @endforeach
+
                                                 </select>
                                             </div>
                                         </div>
@@ -81,7 +85,10 @@
                                                     onchange="getvehicle_type()" class="form-control selectize">
                                                     <option value="">Select Vehicle No:</option>
                                                     @foreach ($vehicles as $v)
-                                                        <option value="{{ $v->id }}">{{ $v->vehicle_no }}</option>
+                                                        <option value="{{ $v->id }}"
+                                                            {{ isset($item1->vehicle_no) && $item1->vehicle_no == $v->id ? 'selected' : '' }}>
+                                                            {{ $v->vehicle_no }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -92,8 +99,9 @@
                                             <label for="_Expectdate">Date&nbsp;<span style="color:red;">*</span></label>
                                             <div class="input-group">
                                                 <input type="date" class="form-control date-picker"
-                                                    value="<?php echo date('Y-m-d'); ?>" data-date-format="yyyy-mm-dd" name="date"
-                                                    id="date" style="width:100%;height:30px;text-align: left;">
+                                                    value="{{ $item1->date }}" data-date-format="yyyy-mm-dd"
+                                                    name="date" id="date"
+                                                    style="width:100%;height:30px;text-align: left;">
                                             </div>
                                         </div>
 
@@ -105,7 +113,10 @@
                                                     required>
                                                     <option value="">Select Driver:</option>
                                                     @foreach ($drivers as $d)
-                                                        <option value="{{ $d->id }}">{{ $d->name }}</option>
+                                                        <option value="{{ $d->id }}"
+                                                            {{ isset($item1->driver) && $item1->driver == $d->id ? 'selected' : '' }}>
+                                                            {{ $d->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -119,13 +130,19 @@
                                                     class="form-control selectize">
                                                     <option value="">Select Helper:</option>
                                                     @foreach ($helpers as $h)
-                                                        <option value="{{ $h->id }}">{{ $h->name }}</option>
+                                                        <option value="{{ $h->id }}"
+                                                            {{ isset($item1->helper) && $item1->helper == $h->id ? 'selected' : '' }}>
+                                                            {{ $h->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
 
-                                        <input type="hidden" name="rowCount1" id="rowCount1" class="form-control">
+                                        <input type="hidden" name="rowCount1" id="rowCount1" class="form-control"
+                                            value="{{ count($item2) }}">
+                                        <input type="hidden" name="id" id="id" class="form-control"
+                                            value="{{ $item1->id }}">
 
                                         <!-- Vehicle Type -->
                                         <div class="col-sm-3 mb-3">
@@ -134,11 +151,21 @@
                                                 <select name="vehicle_type" id="vehicle_type" required
                                                     class="form-control selectize">
                                                     <option value="">Select Vehicle Type:</option>
-                                                    <option value="Car">Car</option>
-                                                    <option value="Van">Van</option>
-                                                    <option value="Bus">Bus</option>
-                                                    <option value="Lorry">Lorry</option>
-                                                    <option value="Bike">Bike</option>
+                                                    <option value="Car"
+                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Car' ? 'selected' : '' }}>
+                                                        Car</option>
+                                                    <option value="Van"
+                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Van' ? 'selected' : '' }}>
+                                                        Van</option>
+                                                    <option value="Bus"
+                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Bus' ? 'selected' : '' }}>
+                                                        Bus</option>
+                                                    <option value="Lorry"
+                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Lorry' ? 'selected' : '' }}>
+                                                        Lorry</option>
+                                                    <option value="Bike"
+                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Bike' ? 'selected' : '' }}>
+                                                        Bike</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -152,7 +179,8 @@
                                                 <label for="time_out">Time Out&nbsp;<span
                                                         style="color:red;">*</span></label>
                                                 <input type="time" id="time_out" name="time_out"
-                                                    class="form-control" style="width:100%;height:30px;text-align: left;">
+                                                    value="{{ $item1->time_out }}" class="form-control"
+                                                    style="width:100%;height:30px;text-align: left;">
                                             </div>
                                         </div>
 
@@ -161,11 +189,28 @@
                                                 <label for="meter_out">Meter R/Out&nbsp;<span
                                                         style="color:red;">*</span></label>
                                                 <input type="number" id="meter_out" name="meter_out"
-                                                    class="form-control" min="0"
+                                                    value="{{ $item1->meter_out }}" class="form-control" min="0"
                                                     style="width:100%;height:30px;text-align: left;">
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
+                                            <div class="form-group-sm">
+                                                <label for="time_in">Time in&nbsp;<span
+                                                        style="color:red;">*</span></label>
+                                                <input type="time" id="time_in" name="time_in"
+                                                    value="{{ $item1->time_in }}" class="form-control"
+                                                    style="width:100%;height:30px;text-align: left;">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                            <div class="form-group-sm">
+                                                <label for="meter_in">Meter R/in&nbsp;<span
+                                                        style="color:red;">*</span></label>
+                                                <input type="number" id="meter_in" name="meter_in"
+                                                    value="{{ $item1->meter_in }}" class="form-control" min="0"
+                                                    style="width:100%;height:30px;text-align: left;">
+                                            </div>
                                         </div>
 
                                     </div>
@@ -190,68 +235,95 @@
 
                                                 </tr>
                                             </thead>
+                                            @if (count($item2) > 0)
+                                                <tbody>
+                                                    @php
 
+                                                        $row = count($item2) > 0 ? count($item2) : 2;
+                                                    @endphp
+                                                    @for ($i = 0; $i < $row; $i++)
+                                                        <tr id="row_{{ $i }}">
 
-                                            <tbody>
-                                                @for ($i = 0; $i < 2; $i++)
-                                                    <tr id="row_{{ $i }}">
+                                                            <td id="aod_t{{ $i }}">
+                                                                <select name="aod_td{{ $i }}"
+                                                                    class="form-control selectize"
+                                                                    id="aod_td{{ $i }}"
+                                                                    style="width:100%;height:30px;"
+                                                                    onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                    <option value="">Select AOD</option>
+                                                                    @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
+                                                                        @foreach ($AOD_no['value'] as $aod)
+                                                                            <option value="{{ $aod['SequenceNumber'] }}"
+                                                                                {{ isset($item2[$i]->aod_td) && $item2[$i]->aod_td == $aod['SequenceNumber'] ? 'selected' : '' }}>
+                                                                                {{ $aod['ShipmentNumber'] }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    @endif
+                                                                </select>
+                                                            </td>
+                                                            <td id="item_td{{ $i }}">
 
-                                                        <td id="aod_t{{ $i }}">
-                                                            <select name="aod_td{{ $i }}"
-                                                                class="form-control selectize"
-                                                                id="aod_td{{ $i }}"
-                                                                style="width:100%;height:30px;"
-                                                                onchange="getDataTblOtherDetails('{{ $i }}');">
-                                                                <option value="">Select AOD</option>
-                                                                @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
-                                                                    @foreach ($AOD_no['value'] as $aod)
-                                                                        <option value="{{ $aod['SequenceNumber'] }}">
-                                                                            {{ $aod['ShipmentNumber'] }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                @endif
-                                                            </select>
-                                                        </td>
-                                                        <td id="item_td{{ $i }}">
+                                                                <input type="text" class="form-control"
+                                                                    name="item_se{{ $i }}"
+                                                                    id="item_se{{ $i }}"
+                                                                    style="width:100%;height:30px;text-align: left;"
+                                                                    value="{{ $item2[$i]->item_se }}">
+                                                            </td>
+                                                            <td id="customer_td{{ $i }}">
 
-                                                            <input type="text" class="form-control"
-                                                                name="item_se{{ $i }}"
-                                                                id="item_se{{ $i }}"
-                                                                style="width:100%;height:30px;text-align: left;">
-                                                        </td>
-                                                        <td id="customer_td{{ $i }}">
+                                                                <input type="text" class="form-control"
+                                                                    value="{{ $item2[$i]->customer_se }}"
+                                                                    name="customer_se{{ $i }}"
+                                                                    id="customer_se{{ $i }}"
+                                                                    style="width:100%;height:30px;text-align: left;">
+                                                            </td>
 
-                                                            <input type="text" class="form-control"
-                                                                name="customer_se{{ $i }}"
-                                                                id="customer_se{{ $i }}"
-                                                                style="width:100%;height:30px;text-align: left;">
-                                                        </td>
+                                                            <td id="qty_td{{ $i }}">
+                                                                <input type="text" class="form-control"
+                                                                    value="{{ $item2[$i]->qty_se }}"
+                                                                    name="qty_se{{ $i }}"
+                                                                    id="qty_se{{ $i }}"
+                                                                    style="width:100%;height:30px;text-align:left;">
+                                                            </td>
 
-                                                        <td id="qty_td{{ $i }}">
-                                                            <input type="text" class="form-control"
-                                                                name="qty_se{{ $i }}"
-                                                                id="qty_se{{ $i }}"
-                                                                style="width:100%;height:30px;text-align:left;">
-                                                        </td>
+                                                            <td id="amount_td{{ $i }}">
+                                                                <input type="text" class="form-control"
+                                                                    value="{{ $item2[$i]->amount_se }}"
+                                                                    name="amount_se{{ $i }}"
+                                                                    id="amount_se{{ $i }}"
+                                                                    style="width:100%;height:30px;text-align:left;"
+                                                                    onblur="formatAmount(this)">
+                                                            </td>
+                                                            <td class="text-blue ">
+                                                                <button class="btn btn-danger btn-sm" type="button"
+                                                                    onclick="deleteTableRow('{{ $i }}')">Delete
+                                                                    <i class="fa fa-trash fa-lg"></i>
+                                                                </button>
+                                                            </td>
 
-                                                        <td id="amount_td{{ $i }}">
-                                                            <input type="text" class="form-control"
-                                                                name="amount_se{{ $i }}"
-                                                                id="amount_se{{ $i }}"
-                                                                style="width:100%;height:30px;text-align:left;"
-                                                                onblur="formatAmount(this)">
-                                                        </td>
-                                                        <td class="text-blue ">
-                                                            <button class="btn btn-danger btn-sm" type="button"
-                                                                onclick="deleteTableRow('{{ $i }}')">Delete
-                                                                <i class="fa fa-trash fa-lg"></i>
-                                                            </button>
-                                                        </td>
-
-                                                    </tr>
-                                                @endfor
-                                            </tbody>
+                                                        </tr>
+                                                    @endfor
+                                                </tbody>
+                                            @endif
                                         </table>
+                                    </div>
+
+                                    <div class="col-sm-12 row ">
+
+                                        <div class="col-sm-2">
+                                            <div class="form-group-sm col-sm-12">
+
+                                                <button type="button" value="addLines" id="addLines"
+                                                    onclick="addRow(); this.disabled = true;" name="addLines"
+                                                    class="btn btn-sm btn-success pull-right">
+                                                    <i class="fa fa-eraser"></i> Add Lines
+                                                </button>
+                                                <!--<button type="button" value="addLines" id="addLines" name="addLines" class="btn btn-sm btn-success pull-right " onclick="refreshPage()"><i class="fa fa-eraser"></i> Refesh</button>-->
+
+
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <!-- Comment Section -->
@@ -260,6 +332,15 @@
                                             <div class="form-group">
                                                 <label for="comment"><strong>Comments</strong></label>
                                                 <textarea class="form-control" id="comment" name="comment" rows="4"
+                                                    placeholder="Enter your comments here...">{{ $item1->comment }}</textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card shadow-sm border-0 mt-4">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="inward_items"><strong>Inward Items</strong></label>
+                                                <textarea class="form-control" id="inward_items" name="inward_items" rows="4"
                                                     placeholder="Enter your comments here..."></textarea>
                                             </div>
                                         </div>
@@ -267,10 +348,10 @@
 
                                     <!-- Page-level Buttons -->
                                     <div class="mt-3 d-flex justify-content-end gap-2">
-                                        <button type="submit" class="btn btn-primary" value="save"
-                                            name="save">Save</button>
-                                        <button type="submit" class="btn btn-success" value="save_close"
-                                            name="save_close">Save & Close</button>
+                                        <button type="submit" class="btn btn-primary" value="update"
+                                            name="update">Update</button>
+                                        <button type="submit" class="btn btn-success" value="update_close"
+                                            name="update_close">Update & Close</button>
                                         <button type="button" class="btn btn-secondary"
                                             onclick="window.close();">Close</button>
                                     </div>
@@ -342,34 +423,34 @@
         function getother_details(index) {
             var cmbSelectVal = document.getElementById('aod_td' + index).value;
 
-                    $.ajax({
+            $.ajax({
 
-                        url: "{{ route('sage300_aoddata') }}",
-                        type: 'POST',
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            cmbSelectVal: cmbSelectVal,
-
-
-                        },
-                        success: function(data) {
-
-                            console.log(data);
-                            // Update fields with the retrieved data
-                            // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
+                url: "{{ route('sage300_aoddata') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    cmbSelectVal: cmbSelectVal,
 
 
+                },
+                success: function(data) {
 
-                            // Refresh Select2 dropdowns
-                            $(".selectize").select2();
+                    console.log(data);
+                    // Update fields with the retrieved data
+                    // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
 
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("AJAX Error: ", status, error); // Handle AJAX errors
-                        }
-                    });
 
-            }
+
+                    // Refresh Select2 dropdowns
+                    $(".selectize").select2();
+
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: ", status, error); // Handle AJAX errors
+                }
+            });
+
+        }
 
 
         // Add new row dynamically
@@ -378,12 +459,12 @@
             const index = rowCount;
 
             const row = document.createElement('tr');
-            row.id = `row_${index}`;
+            row.id = `row_${index-1}`;
             row.innerHTML = `
-        <td id="aod_t${index}">
-            <select name="aod_td${index}" class="form-control selectize" id="aod_td${index}" style="width:100%;height:35px;" onchange="getDataTblOtherDetails(${index});">
+        <td id="aod_t${index-1}">
+            <select name="aod_td${index-1}" class="form-control selectize" id="aod_td${index-1}" style="width:100%;height:35px;" onchange="getDataTblOtherDetails(${index-1});">
                 <option value="">Select AOD</option>
-                @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
+               @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
                                                                     @foreach ($AOD_no['value'] as $aod)
                                                                         <option value="{{ $aod['SequenceNumber'] }}">
                                                                             {{ $aod['ShipmentNumber'] }}
@@ -392,27 +473,27 @@
                                                                 @endif
             </select>
         </td>
-        <td id="item_td${index}">
-            <input type="text" class="form-control" name="item_se${index}" id="item_se${index}" style="width:100%;height:30px;">
+        <td id="item_td${index-1}">
+            <input type="text" class="form-control" name="item_se${index-1}" id="item_se${index-1}" style="width:100%;height:30px;">
         </td>
-         <td id="customer_td${index}">
+         <td id="customer_td${index-1}">
 
                                                             <input type="text" class="form-control"
-                                                                name="customer_se${index}"
-                                                                id="customer_se${index}"
+                                                                name="customer_se${index-1}"
+                                                                id="customer_se${index-1}"
                                                                 style="width:100%;height:30px;text-align: left;">
                                                         </td>
-        <td id="qty_td${index}">
+        <td id="qty_td${index-1}">
            <input type="text" class="form-control"
-                                                                name="qty_se${index}"
-                                                                id="qty_se${index}"
+                                                                name="qty_se${index-1}"
+                                                                id="qty_se${index-1}"
                                                                 style="width:100%;height:30px;text-align:left;">
         </td>
-        <td id="amount_td${index}">
-            <input type="text" class="form-control" name="amount_se${index}" id="amount_se${index}" style="width:100%;height:30px;text-align:left;"  onblur="formatAmount(this)">
+        <td id="amount_td${index-1}">
+            <input type="text" class="form-control" name="amount_se${index-1}" id="amount_se${index-1}" style="width:100%;height:30px;text-align:left;"  onblur="formatAmount(this)">
         </td>
         <td class="text-blue">
-        <button class="btn btn-danger btn-sm" type="button" onclick="deleteTableRow(${index})">
+        <button class="btn btn-danger btn-sm" type="button" onclick="deleteTableRow(${index-1})">
         Delete
         </button>
 
@@ -439,7 +520,8 @@
 
             document.getElementById('aod_td' + num).selectedIndex = 0; // Clear textarea
             document.getElementById('item_se' + num).value = ''; // Clear input
-            document.getElementById('qty_se' + num).selectedIndex = 0; // Reset select to default option
+            document.getElementById('qty_se' + num).value = '';
+            document.getElementById('customer_se' + num).value = ''; // Reset select to default option
             document.getElementById('amount_se' + num).value = ''; // Clear input
 
             // countRows()

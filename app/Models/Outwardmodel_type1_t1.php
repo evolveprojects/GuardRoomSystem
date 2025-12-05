@@ -19,6 +19,7 @@ class Outwardmodel_type1_t1 extends Model
         'meter_in',
         'meter_out',
         'status',
+        'type',
         'comment',
         'created_by',
         'updated_by',

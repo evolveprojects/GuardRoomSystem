@@ -68,6 +68,8 @@ Route::post('/saveoutward_type_1', [App\Http\Controllers\Admin\OutwardController
 Route::get('/outward_view_All', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_All'])->name('outward.outward_view_All');
 Route::post('/vehicledata', [App\Http\Controllers\Admin\OutwardController::class, 'vehicledata'])->name('vehicledata');
 Route::post('/outward/type2/store', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_store'])->name('outward.type2.store');
+Route::get('/edit_type1/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'outward_edit_t1'])->name('outward.outward_edit_type1');
+Route::post('/editoutward_type_1', [App\Http\Controllers\Admin\OutwardController::class, 'editoutward_type_1'])->name('outward.editoutward_type_1');
 
 
 
