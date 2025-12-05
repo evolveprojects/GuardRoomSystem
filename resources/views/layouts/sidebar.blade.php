@@ -199,6 +199,14 @@
                         <p>Inward Module</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href=""
+                        class="nav-link {{ request()->routeIs('inward.view') ? 'active' : '' }}">
+                        <i
+                            class="nav-icon bi bi-cash-coin {{ request()->routeIs('inward.view') ? 'text-primary' : 'text-muted' }}"></i>
+                        <p>Incentive Module</p>
+                    </a>
+                </li>
 
             </ul>
         </nav>
