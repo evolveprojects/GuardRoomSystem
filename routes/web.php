@@ -37,6 +37,7 @@ Route::post('/create-vehicle', [App\Http\Controllers\Admin\MasterfilesController
 Route::post('/update-vehicle', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateVehicle'])->name('Masterfile.updatevehicle');
 Route::post('/create-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'addDriver'])->name('Masterfile.adddriver');
 Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateDriver'])->name('Masterfile.updatedriver');
+Route::get('/incentive', [App\Http\Controllers\Admin\MasterfilesController::class, 'incentive'])->name('Masterfile.incentive');
 
 //permission routes
 Route::get('/permission', [App\Http\Controllers\Admin\PermissionController::class, 'permissions'])->name('permissions.view');

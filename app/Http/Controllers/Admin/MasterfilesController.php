@@ -567,5 +567,17 @@ class MasterfilesController extends Controller
         }
     }
 
+
+    public function incentive(Request $request)
+    {
+        $searchKey = $request->searchKey;
+        $vehicles = Vehicle::where('vehicle_no', 'like', '%' . $searchKey . '%')
+            ->orWhere('type', 'like', '%' . $searchKey . '%')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(env("RECORDS_PER_PAGE"));
+
+        return view('masterfiles.incentive', compact(['vehicles', 'searchKey']));
+    }
+
 }
 
