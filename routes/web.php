@@ -37,6 +37,7 @@ Route::post('/create-vehicle', [App\Http\Controllers\Admin\MasterfilesController
 Route::post('/update-vehicle', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateVehicle'])->name('Masterfile.updatevehicle');
 Route::post('/create-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'addDriver'])->name('Masterfile.adddriver');
 Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateDriver'])->name('Masterfile.updatedriver');
+Route::get('/incentive', [App\Http\Controllers\Admin\MasterfilesController::class, 'incentive'])->name('Masterfile.incentive');
 
 //permission routes
 Route::get('/permission', [App\Http\Controllers\Admin\PermissionController::class, 'permissions'])->name('permissions.view');
@@ -67,7 +68,6 @@ Route::get('/outwardtype2', [App\Http\Controllers\Admin\OutwardController::class
 Route::post('/saveoutward_type_1', [App\Http\Controllers\Admin\OutwardController::class, 'saveoutward_type_1'])->name('outward.saveoutward_type_1');
 Route::get('/outward_view_All', [App\Http\Controllers\Admin\OutwardController::class, 'outward_view_All'])->name('outward.outward_view_All');
 Route::post('/vehicledata', [App\Http\Controllers\Admin\OutwardController::class, 'vehicledata'])->name('vehicledata');
-
 Route::post('/outward/type2/store', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_store'])->name('outward.type2.store');
 Route::get('/all-outwards', [App\Http\Controllers\Admin\OutwardController::class, 'allOutwards'])->name('outward.all');
 // Route::post('/outward/type2/update', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_update'])
@@ -79,7 +79,13 @@ Route::get('/outward/type2/edit/{id}', [App\Http\Controllers\Admin\OutwardContro
 
 // Use the comprehensive update method
 Route::post('/outward/type2/update', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_update'])
-    ->name('outward.type2.update');
+    ->name('outward.type2.update');Route::get('/edit_type1/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'outward_edit_t1'])->name('outward.outward_edit_type1');
+Route::post('/editoutward_type_1', [App\Http\Controllers\Admin\OutwardController::class, 'editoutward_type_1'])->name('outward.editoutward_type_1');
+
+
 
 // inward module
 Route::get('/inward', [App\Http\Controllers\Admin\InwardController::class, 'inward_view'])->name('inward.view');
+
+//sage300 Api
+Route::post('/sage300_aoddata', [App\Http\Controllers\Admin\ShipmentController::class, 'show_data_seq'])->name('sage300_aoddata');

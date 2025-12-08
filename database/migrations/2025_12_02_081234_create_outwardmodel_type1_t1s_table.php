@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('meter_in')->nullable();
             $table->string('meter_out')->nullable();
             $table->string('status')->nullable();
+             $table->string('type')->nullable();
             $table->string('comment')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

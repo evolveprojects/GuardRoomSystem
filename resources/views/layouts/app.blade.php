@@ -38,8 +38,7 @@
         crossorigin="anonymous" />
     <!--end::Third Party Plugin(Bootstrap Icons)-->
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="{{ asset('css/adminlte.css') }}" />
-
+    <link rel="stylesheet" href="./css/adminlte.css" />
     <!--end::Required Plugin(AdminLTE)-->
     <!-- apexcharts -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
@@ -149,4 +148,16 @@
             maximumFractionDigits: 2
         });
     }
+
+
+    function setCurrentTime(elementId) {
+        const now = new Date();
+        const timeString = now.toTimeString().slice(0, 5); // Gets "HH:MM" format
+        document.getElementById(elementId).value = timeString;
+    }
+
+    // Call on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        setCurrentTime('time_out');
+    });
 </script>

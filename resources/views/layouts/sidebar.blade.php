@@ -85,68 +85,70 @@
 
                         <!-- Centers -->
                         @if (Auth::user()->hasPermission('view center master') || Auth::user()->id == '1')
-                        <li class="nav-item">
-                            <a href="{{ route('Masterfile.centers') }}"
-                                class="nav-link {{ request()->routeIs('Masterfile.centers') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.centers') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Centers</p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.centers') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.centers') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.centers') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Centers</p>
+                                </a>
+                            </li>
                         @endif
                         <!-- Vehicles -->
                         @if (Auth::user()->hasPermission('view vehicle master') || Auth::user()->id == '1')
-                        <li class="nav-item">
-                            <a href="{{ route('Masterfile.vehicles') }}"
-                                class="nav-link {{ request()->routeIs('Masterfile.vehicles') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.vehicles') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Vehicles</p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.vehicles') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.vehicles') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.vehicles') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Vehicles</p>
+                                </a>
+                            </li>
                         @endif
                         <!-- Drivers -->
                         @if (Auth::user()->hasPermission('view driver master') || Auth::user()->id == '1')
-                        <li class="nav-item">
-                            <a href="{{ route('Masterfile.drivers') }}"
-                                class="nav-link {{ request()->routeIs('Masterfile.drivers') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.drivers') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Drivers</p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.drivers') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.drivers') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.drivers') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Drivers</p>
+                                </a>
+                            </li>
                         @endif
                         <!-- Helpers -->
-                         @if (Auth::user()->hasPermission('view helper master') || Auth::user()->id == '1')
-                        <li class="nav-item">
-                            <a href="{{ route('Masterfile.helpers') }}"
-                                class="nav-link {{ request()->routeIs('Masterfile.helpers') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.helpers') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Helpers</p>
-                            </a>
-                        </li>
+                        @if (Auth::user()->hasPermission('view helper master') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.helpers') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.helpers') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.helpers') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Helpers</p>
+                                </a>
+                            </li>
                         @endif
                         <!-- Security -->
                         @if (Auth::user()->hasPermission('view security master') || Auth::user()->id == '1')
-                        <li class="nav-item">
-                            <a href="{{ route('Masterfile.securities') }}"
-                                class="nav-link {{ request()->routeIs('Masterfile.securities') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.securities') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Security</p>
-                            </a>
-                        </li>
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.securities') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.securities') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.securities') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Security</p>
+                                </a>
+                            </li>
                         @endif
                         <!-- Incentive -->
-                        <li class="nav-item">
-                            <a href="./widgets/cards.html"
-                                class="nav-link {{ request()->is('widgets/cards.html') ? 'active' : '' }}">
-                                <i
-                                    class="nav-icon bi bi-circle {{ request()->is('widgets/cards.html') ? 'text-primary' : 'text-muted' }}"></i>
-                                <p>Incentive</p>
-                            </a>
-                        </li>
+                        @if (Auth::user()->hasPermission('view payment master') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.incentive') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.incentive') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.incentive') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Payments</p>
+                                </a>
+                            </li>
+                        @endif
 
                     </ul>
                 </li>
@@ -190,12 +192,21 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-    <a href="{{ route('inward.view') }}"
-        class="nav-link {{ request()->routeIs('inward.view') ? 'active' : '' }}">
-        <i class="nav-icon bi bi-box-arrow-in-down {{ request()->routeIs('inward.view') ? 'text-primary' : 'text-muted' }}"></i>
-        <p>Inward Module</p>
-    </a>
-</li>
+                    <a href="{{ route('inward.view') }}"
+                        class="nav-link {{ request()->routeIs('inward.view') ? 'active' : '' }}">
+                        <i
+                            class="nav-icon bi bi-box-arrow-in-down {{ request()->routeIs('inward.view') ? 'text-primary' : 'text-muted' }}"></i>
+                        <p>Inward Module</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href=""
+                        class="nav-link {{ request()->routeIs('inward.view') ? 'active' : '' }}">
+                        <i
+                            class="nav-icon bi bi-cash-coin {{ request()->routeIs('inward.view') ? 'text-primary' : 'text-muted' }}"></i>
+                        <p>Incentive Module</p>
+                    </a>
+                </li>
 
             </ul>
         </nav>
@@ -226,7 +237,7 @@
             });
         });
     });
-     document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const toggleLinks = document.querySelectorAll('.outward-toggle');
 
         toggleLinks.forEach(link => {
