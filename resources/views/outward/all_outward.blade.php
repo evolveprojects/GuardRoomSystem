@@ -53,7 +53,7 @@
                                         <form action="" method="get">
                                             <div class="input-group">
                                                 <input type="search" class="form-control" name="searchKey"
-                                                    placeholder="Center Name" value="{{ $searchKey ?? '' }}">
+                                                    placeholder="Search by Center Name" value="{{ $searchKey ?? '' }}">
                                                 <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
                                         </form>

@@ -69,7 +69,17 @@ Route::get('/outward_view_All', [App\Http\Controllers\Admin\OutwardController::c
 Route::post('/vehicledata', [App\Http\Controllers\Admin\OutwardController::class, 'vehicledata'])->name('vehicledata');
 
 Route::post('/outward/type2/store', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_store'])->name('outward.type2.store');
+Route::get('/all-outwards', [App\Http\Controllers\Admin\OutwardController::class, 'allOutwards'])->name('outward.all');
+// Route::post('/outward/type2/update', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_update'])
+//     ->name('outward.type2.update');
 
+// Keep the edit route
+Route::get('/outward/type2/edit/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'edit'])
+    ->name('outward.type2.edit');
+
+// Use the comprehensive update method
+Route::post('/outward/type2/update', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_update'])
+    ->name('outward.type2.update');
 
 // inward module
 Route::get('/inward', [App\Http\Controllers\Admin\InwardController::class, 'inward_view'])->name('inward.view');

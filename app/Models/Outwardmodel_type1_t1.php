@@ -14,6 +14,7 @@ class Outwardmodel_type1_t1 extends Model
         'helper',
         'driver',
         'vehicle_type',
+        'weight',
         'time_in',
         'time_out',
         'meter_in',

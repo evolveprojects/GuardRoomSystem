@@ -177,12 +177,12 @@
                     </ul>
                     <ul class="nav nav-treeview">
 
-                        @if (Auth::user()->hasPermission('View Outward Type2') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view all outward type 2') || Auth::user()->id == '1')
                             <li class="nav-item">
-                                <a href="{{ route('outward.outwardtype2') }}"
-                                    class="nav-link {{ request()->routeIs('outward.outwardtype2') ? 'active' : '' }}">
+                                <a href="{{ route('outward.all') }}"
+                                    class="nav-link {{ request()->routeIs('outward.all') ? 'active' : '' }}">
                                     <i
-                                        class="nav-icon bi bi-circle {{ request()->routeIs('outward.outwardtype2') ? 'text-primary' : 'text-muted' }}"></i>
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('outward.all') ? 'text-primary' : 'text-muted' }}"></i>
                                     <p>Type 2</p>
                                 </a>
                             </li>

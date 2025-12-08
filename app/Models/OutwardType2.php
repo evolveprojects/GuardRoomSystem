@@ -21,7 +21,9 @@ class OutwardType2 extends Model
         'time_out',
         'meter_in',
         'meter_out',
-        'comments'
+        'comments',
+        'status',
+        'created_by'
     ];
 
     protected static function booted()
@@ -35,5 +37,11 @@ class OutwardType2 extends Model
         }
         return 'OUT-' . str_pad($newId, 5, '0', STR_PAD_LEFT);
     }
+
+    public function t2Items()
+    {
+        return $this->hasMany(\App\Models\OutwardType2T2::class, 'outward_id');
+    }
+
     
 }
