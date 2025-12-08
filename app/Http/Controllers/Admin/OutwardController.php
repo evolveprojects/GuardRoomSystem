@@ -37,9 +37,11 @@ class OutwardController extends Controller
         $outno = Outwardmodel_type1_t1::generateoutno();
 
 
-        $AOD_no = $shipmentController->getShipmentsData();
-
-        return view('outward.outwardtype1', compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no'));
+        $AOD_no = $shipmentController->getShipmentsno();
+        $items = $shipmentController->getShipmentsitems();
+        $customers = $shipmentController->getShipmentscustomers();
+        // dd($items);
+        return view('outward.outwardtype1', compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no','items','customers'));
     }
 
     public function outward_view_t2(Request $request)
@@ -378,7 +380,6 @@ class OutwardController extends Controller
         ];
 
         $job = Outwardmodel_type1_t1::where('id', $request->id)->update($data1);
-
     }
 
     private function jobupdate2(Request $request)
@@ -393,7 +394,7 @@ class OutwardController extends Controller
                     'item_se' => $request->input('item_se' . $i),
                     'qty_se' => $request->input('qty_se' . $i),
                     'amount_se' => $request->input('amount_se' . $i),
-                     'customer_se' => $request->input('customer_se' . $i),
+                    'customer_se' => $request->input('customer_se' . $i),
 
                 ];
                 Outwardmodel_type1_t2::create($data3);

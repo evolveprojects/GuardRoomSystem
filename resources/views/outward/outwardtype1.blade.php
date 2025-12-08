@@ -214,17 +214,44 @@
                                                         </td>
                                                         <td id="item_td{{ $i }}">
 
-                                                            <input type="text" class="form-control"
+                                                            {{-- <input type="text" class="form-control"
                                                                 name="item_se{{ $i }}"
                                                                 id="item_se{{ $i }}"
-                                                                style="width:100%;height:30px;text-align: left;">
+                                                                style="width:100%;height:30px;text-align: left;"> --}}
+
+                                                            <select name="item_se{{ $i }}"
+                                                                class="form-control selectize"
+                                                                id="item_se{{ $i }}"
+                                                                style="width:100%;height:30px;"
+                                                                onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                <option value="">Select Items</option>
+                                                                @if (isset($items['value']) && is_array($items['value']))
+                                                                    @foreach ($items['value'] as $item)
+                                                                        <option value="{{ $item['ItemNumber'] }}">
+                                                                            {{ $item['Description'] }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
                                                         </td>
                                                         <td id="customer_td{{ $i }}">
 
-                                                            <input type="text" class="form-control"
-                                                                name="customer_se{{ $i }}"
+
+
+                                                                <select name="customer_se{{ $i }}"
+                                                                class="form-control selectize"
                                                                 id="customer_se{{ $i }}"
-                                                                style="width:100%;height:30px;text-align: left;">
+                                                                style="width:100%;height:30px;"
+                                                                onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                <option value="">Select Customer</option>
+                                                                @if (isset($customers['value']) && is_array($customers['value']))
+                                                                    @foreach ($customers['value'] as $cus)
+                                                                        <option value="{{ $cus['CustomerNumber'] }}">
+                                                                            {{ $cus['CustomerName'] }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
                                                         </td>
 
                                                         <td id="qty_td{{ $i }}">
@@ -342,34 +369,34 @@
         function getother_details(index) {
             var cmbSelectVal = document.getElementById('aod_td' + index).value;
 
-                    $.ajax({
+            $.ajax({
 
-                        url: "{{ route('sage300_aoddata') }}",
-                        type: 'POST',
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            cmbSelectVal: cmbSelectVal,
-
-
-                        },
-                        success: function(data) {
-
-                            console.log(data);
-                            // Update fields with the retrieved data
-                            // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
+                url: "{{ route('sage300_aoddata') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    cmbSelectVal: cmbSelectVal,
 
 
+                },
+                success: function(data) {
 
-                            // Refresh Select2 dropdowns
-                            $(".selectize").select2();
+                    console.log(data);
+                    // Update fields with the retrieved data
+                    // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
 
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("AJAX Error: ", status, error); // Handle AJAX errors
-                        }
-                    });
 
-            }
+
+                    // Refresh Select2 dropdowns
+                    $(".selectize").select2();
+
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: ", status, error); // Handle AJAX errors
+                }
+            });
+
+        }
 
 
         // Add new row dynamically
@@ -393,7 +420,20 @@
             </select>
         </td>
         <td id="item_td${index}">
-            <input type="text" class="form-control" name="item_se${index}" id="item_se${index}" style="width:100%;height:30px;">
+            <select name="item_se{{ $i }}"
+                                                                class="form-control selectize"
+                                                                id="item_se{{ $i }}"
+                                                                style="width:100%;height:30px;"
+                                                                onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                <option value="">Select Items</option>
+                                                                @if (isset($items['value']) && is_array($items['value']))
+                                                                    @foreach ($items['value'] as $item)
+                                                                        <option value="{{ $item['ItemNumber'] }}">
+                                                                            {{ $item['Description'] }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
         </td>
          <td id="customer_td${index}">
 

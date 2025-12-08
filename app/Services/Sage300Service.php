@@ -50,6 +50,20 @@ class Sage300Service
         return $this->makeRequest('/IC/ICShipments', 'GET', $params);
     }
 
+    public function getICShipmentsitems(array $params = [])
+    {
+        return $this->makeRequest('/AR/ARItems', 'GET', $params);
+    }
+
+
+
+     public function getICShipmentscustomers(array $params = [])
+    {
+        return $this->makeRequest('/AR/ARCustomers', 'GET', $params);
+    }
+
+
+
     /**
      * Get single shipment by ID
      */

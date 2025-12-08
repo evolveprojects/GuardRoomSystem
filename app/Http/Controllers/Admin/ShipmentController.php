@@ -38,7 +38,7 @@ class ShipmentController extends Controller
         return response()->json(['error' => 'Failed to fetch data'], 500);
     }
 
-    public function getShipmentsData()
+    public function getShipmentsno()
     {
         $response = $this->sage300->getICShipments();
 
@@ -48,4 +48,27 @@ class ShipmentController extends Controller
 
         return ['value' => []]; // Return empty array on error
     }
+
+     public function getShipmentsitems()
+    {
+        $response = $this->sage300->getICShipmentsitems();
+
+        if ($response->successful()) {
+            return $response->json(); // Return the array directly
+        }
+
+        return ['value' => []]; // Return empty array on error
+    }
+
+      public function getShipmentscustomers()
+    {
+        $response = $this->sage300->getICShipmentscustomers();
+
+        if ($response->successful()) {
+            return $response->json(); // Return the array directly
+        }
+        return ['value' => []]; // Return empty array on error
+    }
+
+
 }

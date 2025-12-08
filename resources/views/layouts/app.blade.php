@@ -149,4 +149,16 @@
             maximumFractionDigits: 2
         });
     }
+
+
+    function setCurrentTime(elementId) {
+        const now = new Date();
+        const timeString = now.toTimeString().slice(0, 5); // Gets "HH:MM" format
+        document.getElementById(elementId).value = timeString;
+    }
+
+    // Call on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        setCurrentTime('time_out');
+    });
 </script>
