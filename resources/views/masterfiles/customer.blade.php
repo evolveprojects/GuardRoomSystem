@@ -10,14 +10,14 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="mb-0">Payment Management</h3>
+                        <h3 class="mb-0">Customer Management</h3>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
                             <li class="breadcrumb-item">
                                 <a href="/dashboard"><i class="bi bi-house"></i> Home</a>
                             </li>
-                            <li class="breadcrumb-item active" aria-current="page">Payments</li>
+                            <li class="breadcrumb-item active" aria-current="page">Customers</li>
                         </ol>
                     </div>
                 </div>
@@ -43,22 +43,29 @@
                                     <div class="col-md-6">
                                         <div class="mb-2" style="padding-left: 10px;">
                                             <button class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#add-pay-modal">
-                                                <i class="bi bi-plus-lg"></i> Add Payments
+                                                data-bs-target="#add-customer-modal">
+                                                <i class="bi bi-plus-lg"></i> Add Customers
                                             </button>
                                         </div>
                                     </div>
 
                                     <!-- Search Bar -->
                                     <div class="col-md-6">
-
+                                        <form action="{{ route('Masterfile.customers') }}" method="get">
+                                            <div class="input-group">
+                                                <input type="search" name="searchKey" class="form-control"
+                                                    placeholder="Search by Customer No or Type "
+                                                    value="{{ $searchKey ?? '' }}">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                        </form>
                                     </div>
 
                                 </div>
 
                                 <!-- Add Vehicle Modal -->
                                 <div class="p-1">
-                                    @include('masterfiles.components.add_payment_condition')
+                                    @include('masterfiles.components.add_customers', ['customers' => $customers])
                                 </div>
 
                                 <!-- Vehicles Table -->
@@ -67,55 +74,59 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th style="width: 15px">#</th>
-
+                                                <th>Customer No</th>
+                                                <th>Customer Name</th>
+                                                <th>Distance</th>
                                                 <th>Type</th>
-                                                <th>Trip</th>
-                                                <th>Min KM</th>
-                                                <th>Max KM</th>
-                                                <th>Min Weight</th>
-                                                <th>Max Weight</th>
-                                                <th>Driver Amount</th>
-                                                <th>Helper Amount</th>
-
+                                                <th>Assign Value</th>
+                                                <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            @foreach ($payments as $pay)
+                                            @foreach ($customers_local as $lo_cus)
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $pay->type }}</td>
-                                                    <td>{{ $pay->trip }}</td>
-                                                    <td>{{ $pay->km_min }}</td>
-                                                    <td>{{ $pay->km_max }}</td>
-                                                    <td>{{ $pay->weight_min }}</td>
-                                                    <td>{{ $pay->weight_max }}</td>
-                                                    <td>{{ $pay->driver_amount }}</td>
-                                                    <td>{{ $pay->helper_amount }}</td>
+                                                    <td>{{ $lo_cus->customers}}</td>
+                                                    <td>{{ $lo_cus->customers_name }}</td>
+                                                    <td>{{ $lo_cus->distance }} Km</td>
+                                                    <td>{{ $lo_cus->type }}</td>
+                                                    <td>{{ $lo_cus->amount }}</td>
+
+
+
+
+                                                    <td>
+                                                        @if ($lo_cus->status == '1')
+                                                            <span class="badge bg-success">Active</span>
+                                                        @elseif($lo_cus->status == '0')
+                                                            <span class="badge bg-danger">Inactive</span>
+                                                        @endif
+                                                    </td>
 
                                                     <td style="min-width:110px; vertical-align: middle;">
                                                         <div class="accordion accordion-flush"
-                                                            id="accordionpayment{{ $pay->id }}">
+                                                            id="accordioncustomer{{ $lo_cus->id }}">
                                                             <div class="accordion-item">
                                                                 <h2 class="accordion-header"
-                                                                    id="headingpayment{{ $pay->id }}">
+                                                                    id="headingcustomer{{ $lo_cus->id }}">
                                                                     <button class="accordion-button collapsed p-1"
                                                                         type="button" data-bs-toggle="collapse"
-                                                                        data-bs-target="#collapsepayment{{ $pay->id }}"
+                                                                        data-bs-target="#collapsecustomer{{ $lo_cus->id }}"
                                                                         aria-expanded="false"
-                                                                        aria-controls="collapsepayment{{ $pay->id }}">
+                                                                        aria-controls="collapsecustomer{{ $lo_cus->id }}">
                                                                         Actions
                                                                     </button>
                                                                 </h2>
 
-                                                                <div id="collapsepayment{{ $pay->id }}"
+                                                                <div id="collapsecustomer{{ $lo_cus->id }}"
                                                                     class="accordion-collapse collapse"
-                                                                    aria-labelledby="headingpayment{{ $pay->id }}"
-                                                                    data-bs-parent="#accordionpayment{{ $pay->id }}">
+                                                                    aria-labelledby="headingcustomer{{ $lo_cus->id }}"
+                                                                    data-bs-parent="#accordioncustomer{{ $lo_cus->id }}">
 
                                                                     <div class="accordion-body p-1">
-                                                                        @include('masterfiles.components.edit_paymentcon')
+                                                                        @include('masterfiles.components.edit_customers')
                                                                     </div>
 
                                                                 </div>
@@ -132,7 +143,7 @@
                                 <!-- Pagination -->
                                 <div class="d-flex justify-content-end mt-4">
                                     <div class="pagination-wrapper">
-                                        {{ $payments->onEachSide(1)->links('pagination::bootstrap-5') }}
+                                        {{ $customers_local->onEachSide(1)->links('pagination::bootstrap-5') }}
                                     </div>
                                 </div>
 

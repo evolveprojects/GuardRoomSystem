@@ -41,7 +41,7 @@
                                     <div class="col-md-6 d-flex align-items-center">
                                         <a href="{{ route('outward.outward_view_All') }}"><button class="btn btn-primary"
                                                 type="button">
-                                                 <i class="bi bi-chevron-left"></i></i> All Outwards
+                                                <i class="bi bi-chevron-left"></i></i> All Outwards
                                             </button></a>
                                     </div>
                                     <br>
@@ -142,18 +142,18 @@
                                                 </select>
                                             </div>
                                         </div>
-                                         <!-- Weight Field - Added after Vehicle Type -->
+                                        <!-- Weight Field - Added after Vehicle Type -->
                                         <div class="col-sm-3 mb-3">
                                             <div class="form-group-sm">
                                                 <label>Weight (kg)&nbsp;<span style="color:red;">*</span></label>
-                                                <input type="number" class="form-control" name="weight" 
-                                                       id="weight" min="0" step="0.01" 
-                                                       style="width:100%;height:30px;text-align: left;" 
-                                                       placeholder="Enter weight in kg">
+                                                <input type="number" class="form-control" name="weight" id="weight"
+                                                    min="0" step="0.01"
+                                                    style="width:100%;height:30px;text-align: left;"
+                                                    placeholder="Enter weight in kg">
                                             </div>
                                         </div>
-                                       
-                                        
+
+
 
                                         <!-- Time In / Time Out / Meter R/In / Meter R/Out -->
 
@@ -248,7 +248,7 @@
 
 
 
-                                                                <select name="customer_se{{ $i }}"
+                                                            <select name="customer_se{{ $i }}"
                                                                 class="form-control selectize"
                                                                 id="customer_se{{ $i }}"
                                                                 style="width:100%;height:30px;"

@@ -150,6 +150,18 @@
                             </li>
                         @endif
 
+                         @if (Auth::user()->hasPermission('view customer master') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.customers') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.customers') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.customers') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Customers</p>
+                                </a>
+                            </li>
+                        @endif
+
+
                     </ul>
                 </li>
 

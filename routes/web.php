@@ -38,6 +38,11 @@ Route::post('/update-vehicle', [App\Http\Controllers\Admin\MasterfilesController
 Route::post('/create-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'addDriver'])->name('Masterfile.adddriver');
 Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateDriver'])->name('Masterfile.updatedriver');
 Route::get('/incentive', [App\Http\Controllers\Admin\MasterfilesController::class, 'incentive'])->name('Masterfile.incentive');
+Route::get('/customers', [App\Http\Controllers\Admin\MasterfilesController::class, 'customers'])->name('Masterfile.customers');
+Route::post('/create-customers', [App\Http\Controllers\Admin\MasterfilesController::class, 'addcustomers'])->name('Masterfile.addcustomers');
+Route::post('/edit-customer', [App\Http\Controllers\Admin\MasterfilesController::class, 'editcustomers'])->name('Masterfile.editcustomers');
+Route::post('/create-paycondition', [App\Http\Controllers\Admin\MasterfilesController::class, 'paycondition'])->name('Masterfile.addpayment');
+Route::post('/edit-paycondition', [App\Http\Controllers\Admin\MasterfilesController::class, 'editpaycondition'])->name('Masterfile.editpayment');
 
 //permission routes
 Route::get('/permission', [App\Http\Controllers\Admin\PermissionController::class, 'permissions'])->name('permissions.view');

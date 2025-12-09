@@ -490,4 +490,133 @@ class OutwardController extends Controller
     //     return redirect()->route('outward.all')
     //         ->with('success', 'Outward updated successfully!');
     // }
+
+    public function outward_edit_t1(ShipmentController $shipmentController, $id)
+    {
+
+        // fetch all centers (active first, for example)
+        $centers = Center::orderBy('center_name', 'ASC')->get();
+        // fetch all vehicles (active first, for example)
+        $vehicles = Vehicle::orderBy('vehicle_no', 'ASC')->get();
+        // fetch all vehicles (active first, for example)
+
+        // fetch all Helpers (active first, for example)
+        $helpers = Helper::orderBy('name', 'ASC')->get();
+        // fetch all Drivers (active first, for example)
+        $drivers = Driver::orderBy('name', 'ASC')->get();
+        $outno = Outwardmodel_type1_t1::generateoutno();
+
+        $item1 = Outwardmodel_type1_t1::findOrFail($id);
+        $item2 = Outwardmodel_type1_t2::where('outward_id', $id)->get();
+
+
+        $AOD_no = $shipmentController->getShipmentsno();
+        $items = $shipmentController->getShipmentsitems();
+        $customers = $shipmentController->getShipmentscustomers();
+        return view('outward.outwardtype1_edit', compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no', 'item1', 'item2','items','customers'));
+    }
+
+    public function  editoutward_type_1(Request $request)
+    {
+
+        $hasPermission = (Auth::user()->hasPermission("Edit Outward Type 1") || Auth::user()->id == '1');
+
+        if ($hasPermission) {
+
+            $validated = $request->validate([
+                'outward_number' => ['required', 'string'],
+                'center' => ['required', 'string'],
+                'vehicle_no' => ['required', 'string'],
+                'date' => ['required', 'string'],
+                'time_in' => ['required', 'string'],
+                'driver' => ['required', 'string'],
+                'helper' => ['required', 'string'],
+                'meter_in' => ['required', 'string'],
+
+            ]);
+            // Call the insertData method and handle its response
+            $result = $this->updateData($request);
+
+            if ($result->getData()->success) {
+                if ($request->update_close == 'update_close') {
+                    return redirect()->route('outward.outward_view_All')->with('success', 'Job  Updated successfully!');
+                } else {
+                    return back()->with('success', 'Job  Updated successfully!');
+                }
+            } else {
+                return back()->with('error', 'Failed to save the Job . Please try again.');
+            }
+        } else {
+            return redirect("/not_allowed");
+        }
+    }
+
+    public function updateData(Request $request)
+    {
+
+
+
+        DB::beginTransaction();
+        try {
+
+            $this->jobupdate1($request);
+            $this->jobupdate2($request);
+
+
+            DB::commit();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    private function jobupdate1(Request $request)
+    {
+
+
+
+        $data1 = [
+
+            'outward_number' => $request->outward_number,
+            'center' => $request->center,
+            'vehicle_no' => $request->vehicle_no,
+            'date' => $request->date,
+            'driver' => $request->driver,
+            'helper' => $request->helper,
+            'vehicle_type' => $request->vehicle_type,
+            'time_in' => $request->time_in,
+            'time_out' => $request->time_out,
+            'meter_in' => $request->meter_in,
+            'meter_out' => $request->meter_out,
+            'comment' => $request->comment,
+            'status' => '1',
+            'type' => '1',
+            'created_by' => Auth::id(),
+
+        ];
+
+        $job = Outwardmodel_type1_t1::where('id', $request->id)->update($data1);
+    }
+
+    private function jobupdate2(Request $request)
+    {
+        $rowCount = $request->rowCount1;
+        Outwardmodel_type1_t2::where('outward_id', $request->id)->delete();
+        for ($i = 0; $i < $rowCount; $i++) {
+            if (!empty($request->input('aod_td' . $i))) {
+                $data3 = [
+                    'outward_id' => $request->id,
+                    'aod_td' => $request->input('aod_td' . $i),
+                    'item_se' => $request->input('item_se' . $i),
+                    'qty_se' => $request->input('qty_se' . $i),
+                    'amount_se' => $request->input('amount_se' . $i),
+                    'customer_se' => $request->input('customer_se' . $i),
+
+                ];
+                Outwardmodel_type1_t2::create($data3);
+            }
+        }
+    }
 }

@@ -263,20 +263,50 @@
                                                             </td>
                                                             <td id="item_td{{ $i }}">
 
-                                                                <input type="text" class="form-control"
-                                                                    name="item_se{{ $i }}"
+                                                                {{-- <input type="text" class="form-control"
+                                                                name="item_se{{ $i }}"
+                                                                id="item_se{{ $i }}"
+                                                                style="width:100%;height:30px;text-align: left;"> --}}
+
+                                                                <select name="item_se{{ $i }}"
+                                                                    class="form-control selectize"
                                                                     id="item_se{{ $i }}"
-                                                                    style="width:100%;height:30px;text-align: left;"
-                                                                    value="{{ $item2[$i]->item_se }}">
+                                                                    style="width:100%;height:30px;"
+                                                                    onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                    <option value="">Select Items</option>
+                                                                    @if (isset($items['value']) && is_array($items['value']))
+                                                                        @foreach ($items['value'] as $item)
+                                                                            <option value="{{ $item['ItemNumber'] }}"
+                                                                                {{ isset($item2[$i]->item_se) && $item2[$i]->item_se == $item['ItemNumber'] ? 'selected' : '' }}>
+
+                                                                                {{ $item['Description'] }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    @endif
+                                                                </select>
                                                             </td>
                                                             <td id="customer_td{{ $i }}">
 
-                                                                <input type="text" class="form-control"
-                                                                    value="{{ $item2[$i]->customer_se }}"
-                                                                    name="customer_se{{ $i }}"
+
+
+                                                                <select name="customer_se{{ $i }}"
+                                                                    class="form-control selectize"
                                                                     id="customer_se{{ $i }}"
-                                                                    style="width:100%;height:30px;text-align: left;">
+                                                                    style="width:100%;height:30px;"
+                                                                    onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                    <option value="">Select Customer</option>
+                                                                    @if (isset($customers['value']) && is_array($customers['value']))
+                                                                        @foreach ($customers['value'] as $cus)
+                                                                            <option value="{{ $cus['CustomerNumber'] }}"
+                                                                                {{ isset($item2[$i]->customer_se) && $item2[$i]->customer_se == $cus['CustomerNumber'] ? 'selected' : '' }}>
+
+                                                                                {{ $cus['CustomerName'] }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    @endif
+                                                                </select>
                                                             </td>
+
 
                                                             <td id="qty_td{{ $i }}">
                                                                 <input type="text" class="form-control"
