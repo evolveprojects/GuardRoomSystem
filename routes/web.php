@@ -55,9 +55,9 @@ Route::post('/permissions_change', [App\Http\Controllers\Admin\PermissionControl
 
 
 //not allowed route
- Route::get('/not_allowed', function () {
-        return view('errors.not_allowed');
-    });
+Route::get('/not_allowed', function () {
+    return view('errors.not_allowed');
+});
 Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateDriver'])->name('Masterfile.updateDriver');
 
 Route::post('/create-helper', [App\Http\Controllers\Admin\MasterfilesController::class, 'addHelper'])->name('Masterfile.addhelper');
@@ -79,12 +79,12 @@ Route::get('/all-outwards', [App\Http\Controllers\Admin\OutwardController::class
 //     ->name('outward.type2.update');
 
 // Keep the edit route
-Route::get('/outward/type2/edit/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'edit'])
-    ->name('outward.type2.edit');
+Route::get('/outward/type2/edit/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'edit'])->name('outward.type2.edit');
+
 
 // Use the comprehensive update method
-Route::post('/outward/type2/update', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_update'])
-    ->name('outward.type2.update');Route::get('/edit_type1/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'outward_edit_t1'])->name('outward.outward_edit_type1');
+Route::post('/outward/type2/update', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_update'])->name('outward.type2.update');
+Route::get('/edit_type1/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'outward_edit_t1'])->name('outward.outward_edit_type1');
 Route::post('/editoutward_type_1', [App\Http\Controllers\Admin\OutwardController::class, 'editoutward_type_1'])->name('outward.editoutward_type_1');
 
 
@@ -94,3 +94,7 @@ Route::get('/inward', [App\Http\Controllers\Admin\InwardController::class, 'inwa
 
 //sage300 Api
 Route::post('/sage300_aoddata', [App\Http\Controllers\Admin\ShipmentController::class, 'show_data_seq'])->name('sage300_aoddata');
+
+
+//reports
+Route::get('/intencive_report', [App\Http\Controllers\Admin\ReportController::class, 'intencive_report'])->name('report.report_intencive');

@@ -150,7 +150,7 @@
                             </li>
                         @endif
 
-                         @if (Auth::user()->hasPermission('view customer master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view customer master') || Auth::user()->id == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.customers') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.customers') ? 'active' : '' }}">
@@ -211,13 +211,30 @@
                         <p>Inward Module</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href=""
-                        class="nav-link {{ request()->routeIs('inward.view') ? 'active' : '' }}">
+                <li class="nav-item report-menu {{ request()->routeIs('report.*') ? 'menu-open' : '' }}">
+                    <a href="#"
+                        class="nav-link report-toggle {{ request()->routeIs('report.*') ? 'active' : '' }}">
                         <i
-                            class="nav-icon bi bi-cash-coin {{ request()->routeIs('inward.view') ? 'text-primary' : 'text-muted' }}"></i>
-                        <p>Incentive Module</p>
+                            class="nav-icon bi bi-file-earmark-bar-graph {{ request()->routeIs('report.*') ? 'text-primary' : 'text-muted' }}"></i>
+                        <p>
+                            Reports
+                            <i class="nav-arrow bi bi-chevron-right"></i>
+                        </p>
                     </a>
+                    <ul class="nav nav-treeview">
+
+                        @if (Auth::user()->hasPermission('incentive report') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('report.report_intencive') }}"
+                                    class="nav-link {{ request()->routeIs('report.report_intencive') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('report.report_intencive') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Intencive</p>
+                                </a>
+                            </li>
+                        @endif
+                    </ul>
+
                 </li>
 
             </ul>
@@ -251,6 +268,17 @@
     });
     document.addEventListener('DOMContentLoaded', function() {
         const toggleLinks = document.querySelectorAll('.outward-toggle');
+
+        toggleLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parentLi = link.parentElement;
+                parentLi.classList.toggle('menu-open');
+            });
+        });
+    });
+     document.addEventListener('DOMContentLoaded', function() {
+        const toggleLinks = document.querySelectorAll('.report-toggle');
 
         toggleLinks.forEach(link => {
             link.addEventListener('click', function(e) {
