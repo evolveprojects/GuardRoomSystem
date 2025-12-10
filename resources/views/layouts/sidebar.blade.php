@@ -192,12 +192,15 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('inward.view') }}"
-                        class="nav-link {{ request()->routeIs('inward.view') ? 'active' : '' }}">
+                    @if (Auth::user()->hasPermission('view all inward') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                    <a href="{{ route('inward.inward_view_All') }}"
+                        class="nav-link {{ request()->routeIs('inward.inward_view_All') ? 'active' : '' }}">
                         <i
-                            class="nav-icon bi bi-box-arrow-in-down {{ request()->routeIs('inward.view') ? 'text-primary' : 'text-muted' }}"></i>
+                            class="nav-icon bi bi-box-arrow-in-down {{ request()->routeIs('inward.inward_view_All') ? 'text-primary' : 'text-muted' }}"></i>
                         <p>Inward Module</p>
                     </a>
+                      @endif
                 </li>
                 <li class="nav-item">
                     <a href=""

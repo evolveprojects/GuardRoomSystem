@@ -50,9 +50,9 @@ Route::post('/permissions_change', [App\Http\Controllers\Admin\PermissionControl
 
 
 //not allowed route
- Route::get('/not_allowed', function () {
-        return view('errors.not_allowed');
-    });
+Route::get('/not_allowed', function () {
+    return view('errors.not_allowed');
+});
 Route::post('/update-driver', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateDriver'])->name('Masterfile.updateDriver');
 
 Route::post('/create-helper', [App\Http\Controllers\Admin\MasterfilesController::class, 'addHelper'])->name('Masterfile.addhelper');
@@ -79,13 +79,19 @@ Route::get('/outward/type2/edit/{id}', [App\Http\Controllers\Admin\OutwardContro
 
 // Use the comprehensive update method
 Route::post('/outward/type2/update', [App\Http\Controllers\Admin\OutwardController::class, 'outward_type2_update'])
-    ->name('outward.type2.update');Route::get('/edit_type1/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'outward_edit_t1'])->name('outward.outward_edit_type1');
+    ->name('outward.type2.update');
+Route::get('/edit_type1/{id}', [App\Http\Controllers\Admin\OutwardController::class, 'outward_edit_t1'])->name('outward.outward_edit_type1');
 Route::post('/editoutward_type_1', [App\Http\Controllers\Admin\OutwardController::class, 'editoutward_type_1'])->name('outward.editoutward_type_1');
 
 
 
 // inward module
 Route::get('/inward', [App\Http\Controllers\Admin\InwardController::class, 'inward_view'])->name('inward.view');
+Route::post('/inward/store', [App\Http\Controllers\Admin\InwardController::class, 'store'])->name('inward.store');
+Route::get('/inward/view-all', [App\Http\Controllers\Admin\InwardController::class, 'inward_view_All'])->name('inward.inward_view_All');
+Route::get('/edit/{id}', [App\Http\Controllers\Admin\InwardController::class, 'edit'])->name('inward.edit');
+Route::put('/update/{id}', [App\Http\Controllers\Admin\InwardController::class, 'update'])->name('inward.update');
+Route::post('/inward/vehicledata', [App\Http\Controllers\Admin\InwardController::class, 'vehicledata'])->name('vehicledata');
 
 //sage300 Api
 Route::post('/sage300_aoddata', [App\Http\Controllers\Admin\ShipmentController::class, 'show_data_seq'])->name('sage300_aoddata');
