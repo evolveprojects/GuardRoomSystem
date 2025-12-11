@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Outwardmodel_type1_t1 extends Model
 {
@@ -24,6 +25,7 @@ class Outwardmodel_type1_t1 extends Model
         'comment',
         'created_by',
         'updated_by',
+        'inward_items',
     ];
 
     public static function generateoutno()
@@ -37,4 +39,20 @@ class Outwardmodel_type1_t1 extends Model
         }
         return 'OUT-T1-' . str_pad($newId, 5, '0', STR_PAD_LEFT);
     }
+
+    public function getInwardItemsNamesAttribute()
+    {
+        if (empty($this->inward_items)) {
+            return [];
+        }
+
+        $ids = explode(',', $this->inward_items);
+
+        return DB::table('other_payments')
+            ->whereIn('id', $ids)
+            ->pluck('payment_type')
+            ->toArray();
+    }
+
+    // Usage: $item1->inward_items_names will return array of names
 }

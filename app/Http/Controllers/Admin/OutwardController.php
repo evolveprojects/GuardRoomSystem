@@ -13,12 +13,14 @@ use App\Models\Driver;
 use App\Models\Helper;
 use App\Models\Security;
 use App\Models\OutwardType2;
-
+use App\Models\outwardType2T2;
+use App\Models\OtherPayment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Outwardmodel_type1_t1;
 use App\Models\Outwardmodel_type1_t2;
 use App\Http\Controllers\Admin\ShipmentController;
-use DB;
+
+use Illuminate\Support\Facades\DB;
 
 class OutwardController extends Controller
 {
@@ -281,58 +283,58 @@ class OutwardController extends Controller
         return redirect()->back()->with('success', 'Outward Type 2 saved successfully!');
     }
 
-    public function outward_type2_t2(Request $request)
-    {
-        // Get outward_id (from merged request or route parameter)
-        $outwardId = $request->outward_id ?? $request->route('outward_id');
+    // public function outward_type2_t2(Request $request)
+    // {
+    //     // Get outward_id (from merged request or route parameter)
+    //     $outwardId = $request->outward_id ?? $request->route('outward_id');
 
-        if (!$outwardId) {
-            return redirect()->back()->with('error', 'Outward ID is required!');
-        }
+    //     if (!$outwardId) {
+    //         return redirect()->back()->with('error', 'Outward ID is required!');
+    //     }
 
-        $outward = \App\Models\OutwardType2::findOrFail($outwardId);
+    //     $outward = \App\Models\OutwardType2::findOrFail($outwardId);
 
-        // Delete existing t2 items
-        $outward->t2Items()->delete();
+    //     // Delete existing t2 items
+    //     $outward->t2Items()->delete();
 
-        // Get all input data and find all row indices
-        $savedCount = 0;
+    //     // Get all input data and find all row indices
+    //     $savedCount = 0;
 
-        // Loop through possible indices (handles non-sequential row numbers)
-        for ($i = 0; $i < 1000; $i++) {
-            // Check if this row index exists in the request
-            if (
-                $request->has("center_td{$i}") ||
-                $request->has("item_se{$i}") ||
-                $request->has("qty_se{$i}") ||
-                $request->has("amount_se{$i}")
-            ) {
+    //     // Loop through possible indices (handles non-sequential row numbers)
+    //     for ($i = 0; $i < 1000; $i++) {
+    //         // Check if this row index exists in the request
+    //         if (
+    //             $request->has("center_td{$i}") ||
+    //             $request->has("item_se{$i}") ||
+    //             $request->has("qty_se{$i}") ||
+    //             $request->has("amount_se{$i}")
+    //         ) {
 
-                $center = $request->input("center_td{$i}");
-                $item = $request->input("item_se{$i}");
-                $qty = $request->input("qty_se{$i}");
-                $amount = $request->input("amount_se{$i}");
+    //             $center = $request->input("center_td{$i}");
+    //             $item = $request->input("item_se{$i}");
+    //             $qty = $request->input("qty_se{$i}");
+    //             $amount = $request->input("amount_se{$i}");
 
-                // Only save if at least one field has data
-                if ($center || $item || $qty || $amount) {
-                    $outward->t2Items()->create([
-                        'center' => $center,
-                        'item' => $item,
-                        'quantity' => $qty ? intval($qty) : null,
-                        'amount' => $amount ? floatval(str_replace(',', '', $amount)) : null,
-                    ]);
-                    $savedCount++;
-                }
-            }
-        }
+    //             // Only save if at least one field has data
+    //             if ($center || $item || $qty || $amount) {
+    //                 $outward->t2Items()->create([
+    //                     'center' => $center,
+    //                     'item' => $item,
+    //                     'quantity' => $qty ? intval($qty) : null,
+    //                     'amount' => $amount ? floatval(str_replace(',', '', $amount)) : null,
+    //                 ]);
+    //                 $savedCount++;
+    //             }
+    //         }
+    //     }
 
-        \Log::info("Saved {$savedCount} items for outward ID: {$outwardId}");
+    //     \Log::info("Saved {$savedCount} items for outward ID: {$outwardId}");
 
-        // Only redirect if called directly (not from store method)
-        if (!$request->has('outward_id')) {
-            return redirect()->back()->with('success', "Company items saved successfully! ({$savedCount} items)");
-        }
-    }
+    //     // Only redirect if called directly (not from store method)
+    //     if (!$request->has('outward_id')) {
+    //         return redirect()->back()->with('success', "Company items saved successfully! ({$savedCount} items)");
+    //     }
+    // }
 
 
     public function allOutwards(Request $request)
@@ -398,15 +400,34 @@ class OutwardController extends Controller
             'meter_out' => 'required|numeric',
             'meter_in' => 'nullable|numeric',
             'time_in' => 'nullable',
+            'inward_items' => ['nullable', 'array'],
+            'inward_items.*' => ['exists:other_payments,id'],
         ]);
+
+        \Log::info('Update request received:', [
+            'inward_items' => $request->inward_items,
+            'has_inward_items' => $request->has('inward_items'),
+            'inward_items_is_array' => is_array($request->inward_items)
+        ]);
+
 
         $outward = OutwardType2::findOrFail($request->id);
 
-        // Determine status: Completed if time_in AND meter_in are filled
-        $status = '0'; // Default: Ongoing
-        if ($request->filled('time_in') && $request->filled('meter_in')) {
-            $status = '1'; // Completed
+        // Convert inward items array to comma-separated string
+        $inwardItems = null;
+        if ($request->has('inward_items') && is_array($request->inward_items) && count($request->inward_items) > 0) {
+            $inwardItems = implode(',', $request->inward_items);
+            \Log::info('Inward items imploded:', ['result' => $inwardItems]);
+        } else {
+            \Log::info('No inward items selected or empty array');
         }
+
+        // Determine status: Completed if time_in AND meter_in are filled
+        $status = 0; // Default: Ongoing
+        if (!empty($request->time_in) && $request->meter_in !== null && $request->meter_in !== '') {
+            $status = 1; // Completed
+        }
+
 
         // Update main record
         $updateData = [
@@ -421,6 +442,7 @@ class OutwardController extends Controller
             'meter_out' => $request->meter_out,
             'meter_in' => $request->meter_in,
             'comments' => $request->comments,
+            'inward_items' => $inwardItems,
             'status' => $status, // Add this line
             'updated_by' => Auth::id(),
         ];
@@ -463,13 +485,19 @@ class OutwardController extends Controller
         $drivers = Driver::all();
         $helpers = Helper::all();
 
+        $otherpayments = DB::table('other_payments')
+            ->select('id', 'payment_type')
+            ->orderBy('payment_type', 'ASC')
+            ->get();
+
         // return view('outward.edit_type2_page', ...) <-- old
         return view('outward.edit_type2', compact(
             'outward',
             'centers',
             'vehicles',
             'drivers',
-            'helpers'
+            'helpers',
+            'otherpayments'
         ));
     }
 
@@ -506,6 +534,11 @@ class OutwardController extends Controller
         $drivers = Driver::orderBy('name', 'ASC')->get();
         $outno = Outwardmodel_type1_t1::generateoutno();
 
+        $otherpayments = DB::table('other_payments')
+            ->select('id', 'payment_type')
+            ->orderBy('payment_type', 'ASC')
+            ->get();
+
         $item1 = Outwardmodel_type1_t1::findOrFail($id);
         $item2 = Outwardmodel_type1_t2::where('outward_id', $id)->get();
 
@@ -513,7 +546,12 @@ class OutwardController extends Controller
         $AOD_no = $shipmentController->getShipmentsno();
         $items = $shipmentController->getShipmentsitems();
         $customers = $shipmentController->getShipmentscustomers();
-        return view('outward.outwardtype1_edit', compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no', 'item1', 'item2','items','customers'));
+
+
+        return view(
+            'outward.outwardtype1_edit',
+            compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no', 'item1', 'item2', 'items', 'customers','otherpayments')
+        );
     }
 
     public function  editoutward_type_1(Request $request)
@@ -532,6 +570,8 @@ class OutwardController extends Controller
                 'driver' => ['required', 'string'],
                 'helper' => ['required', 'string'],
                 'meter_in' => ['required', 'string'],
+                'inward_items' => ['nullable', 'array'], // Add this
+                'inward_items.*' => ['exists:other_payments,id'],
 
             ]);
             // Call the insertData method and handle its response
@@ -577,8 +617,11 @@ class OutwardController extends Controller
 
 
 
-        $data1 = [
+        $inwardItems = $request->has('inward_items') && is_array($request->inward_items)
+            ? implode(',', $request->inward_items)
+            : null;
 
+        $data1 = [
             'outward_number' => $request->outward_number,
             'center' => $request->center,
             'vehicle_no' => $request->vehicle_no,
@@ -591,14 +634,16 @@ class OutwardController extends Controller
             'meter_in' => $request->meter_in,
             'meter_out' => $request->meter_out,
             'comment' => $request->comment,
+            'inward_items' => $inwardItems, // Add this
             'status' => '1',
             'type' => '1',
             'created_by' => Auth::id(),
-
+            'updated_by' => Auth::id(),
         ];
 
         $job = Outwardmodel_type1_t1::where('id', $request->id)->update($data1);
     }
+    
 
     private function jobupdate2(Request $request)
     {
@@ -619,7 +664,7 @@ class OutwardController extends Controller
             }
         }
     }
-}
+
 
     public function outward_type2_t2(Request $request)
     {
@@ -675,143 +720,143 @@ class OutwardController extends Controller
     }
 
 
-    public function allOutwards(Request $request)
-    {
-        $searchKey = $request->input('searchKey');
+    // public function allOutwards(Request $request)
+    // {
+    //     $searchKey = $request->input('searchKey');
 
-        // Fetch all outward type 2 records
-        $out_data = DB::table('outward_type2')
-            ->join('centers', 'outward_type2.center_id', '=', 'centers.id')
-            ->join('vehicles', 'outward_type2.vehicle_id', '=', 'vehicles.id')
-            ->join('drivers', 'outward_type2.driver_id', '=', 'drivers.id')
-            ->join('helpers', 'outward_type2.helper_id', '=', 'helpers.id')
-            ->join('users', 'outward_type2.created_by', '=', 'users.id')
-            ->select(
-                'outward_type2.*',
-                'centers.center_name',
-                'vehicles.vehicle_no',
-                'drivers.name as driver_name',
-                'helpers.name as helper_name',
-                'users.name as created_by_name'
-            )
-            ->when($searchKey, function ($query, $searchKey) {
-                $query->where('outward_type2.outward_no', 'like', "%$searchKey%")
-                    ->orWhere('centers.center_name', 'like', "%$searchKey%")
-                    ->orWhere('vehicles.vehicle_no', 'like', "%$searchKey%")
-                    ->orWhere('drivers.name', 'like', "%$searchKey%")
-                    ->orWhere('helpers.name', 'like', "%$searchKey%");
-            })
-            ->orderBy('outward_type2.id', 'desc')
-            ->get();
+    //     // Fetch all outward type 2 records
+    //     $out_data = DB::table('outward_type2')
+    //         ->join('centers', 'outward_type2.center_id', '=', 'centers.id')
+    //         ->join('vehicles', 'outward_type2.vehicle_id', '=', 'vehicles.id')
+    //         ->join('drivers', 'outward_type2.driver_id', '=', 'drivers.id')
+    //         ->join('helpers', 'outward_type2.helper_id', '=', 'helpers.id')
+    //         ->join('users', 'outward_type2.created_by', '=', 'users.id')
+    //         ->select(
+    //             'outward_type2.*',
+    //             'centers.center_name',
+    //             'vehicles.vehicle_no',
+    //             'drivers.name as driver_name',
+    //             'helpers.name as helper_name',
+    //             'users.name as created_by_name'
+    //         )
+    //         ->when($searchKey, function ($query, $searchKey) {
+    //             $query->where('outward_type2.outward_no', 'like', "%$searchKey%")
+    //                 ->orWhere('centers.center_name', 'like', "%$searchKey%")
+    //                 ->orWhere('vehicles.vehicle_no', 'like', "%$searchKey%")
+    //                 ->orWhere('drivers.name', 'like', "%$searchKey%")
+    //                 ->orWhere('helpers.name', 'like', "%$searchKey%");
+    //         })
+    //         ->orderBy('outward_type2.id', 'desc')
+    //         ->get();
 
-        // IMPORTANT: Manually load t2Items for each outward record
-        foreach ($out_data as $data) {
-            $data->t2Items = \App\Models\OutwardType2T2::where('outward_id', $data->id)->get();
-        }
+    //     // IMPORTANT: Manually load t2Items for each outward record
+    //     foreach ($out_data as $data) {
+    //         $data->t2Items = \App\Models\OutwardType2T2::where('outward_id', $data->id)->get();
+    //     }
 
-        // Fetch data needed for edit modals
-        $centers = \App\Models\Center::all();
-        $vehicles = \App\Models\Vehicle::all();
-        $drivers = \App\Models\Driver::all();
-        $helpers = \App\Models\Helper::all();
+    //     // Fetch data needed for edit modals
+    //     $centers = \App\Models\Center::all();
+    //     $vehicles = \App\Models\Vehicle::all();
+    //     $drivers = \App\Models\Driver::all();
+    //     $helpers = \App\Models\Helper::all();
 
-        return view('outward.all', compact('out_data', 'searchKey', 'centers', 'vehicles', 'drivers', 'helpers'));
-    }
+    //     return view('outward.all', compact('out_data', 'searchKey', 'centers', 'vehicles', 'drivers', 'helpers'));
+    // }
 
-    public function outward_type2_update(Request $request)
-    {
-        $hasPermission = Auth::user()->hasPermission("edit outward type 2") || Auth::user()->id == 1;
-        if (!$hasPermission) {
-            return redirect("/not_allowed");
-        }
+    // public function outward_type2_update(Request $request)
+    // {
+    //     $hasPermission = Auth::user()->hasPermission("edit outward type 2") || Auth::user()->id == 1;
+    //     if (!$hasPermission) {
+    //         return redirect("/not_allowed");
+    //     }
 
-        $validated = $request->validate([
-            'id' => 'required|exists:outward_type2,id',
-            'center_id' => 'required',
-            'type' => 'required',
-            'vehicle_id' => 'required',
-            'date' => 'required|date',
-            'driver_id' => 'required',
-            'helper_id' => 'required',
-            'vehicle_type' => 'required',
-            'time_out' => 'required',
-            'meter_out' => 'required|numeric',
-            'meter_in' => 'nullable|numeric',
-            'time_in' => 'nullable',
-        ]);
+    //     $validated = $request->validate([
+    //         'id' => 'required|exists:outward_type2,id',
+    //         'center_id' => 'required',
+    //         'type' => 'required',
+    //         'vehicle_id' => 'required',
+    //         'date' => 'required|date',
+    //         'driver_id' => 'required',
+    //         'helper_id' => 'required',
+    //         'vehicle_type' => 'required',
+    //         'time_out' => 'required',
+    //         'meter_out' => 'required|numeric',
+    //         'meter_in' => 'nullable|numeric',
+    //         'time_in' => 'nullable',
+    //     ]);
 
-        $outward = OutwardType2::findOrFail($request->id);
+    //     $outward = OutwardType2::findOrFail($request->id);
 
-        // Determine status: Completed if time_in AND meter_in are filled
-        $status = '0'; // Default: Ongoing
-        if ($request->filled('time_in') && $request->filled('meter_in')) {
-            $status = '1'; // Completed
-        }
+    //     // Determine status: Completed if time_in AND meter_in are filled
+    //     $status = '0'; // Default: Ongoing
+    //     if ($request->filled('time_in') && $request->filled('meter_in')) {
+    //         $status = '1'; // Completed
+    //     }
 
-        // Update main record
-        $updateData = [
-            'center_id' => $request->center_id,
-            'type' => $request->type,
-            'vehicle_id' => $request->vehicle_id,
-            'date' => $request->date,
-            'driver_id' => $request->driver_id,
-            'helper_id' => $request->helper_id,
-            'vehicle_type' => $request->vehicle_type,
-            'time_out' => $request->time_out,
-            'meter_out' => $request->meter_out,
-            'meter_in' => $request->meter_in,
-            'comments' => $request->comments,
-            'status' => $status, // Add this line
-            'updated_by' => Auth::id(),
-        ];
+    //     // Update main record
+    //     $updateData = [
+    //         'center_id' => $request->center_id,
+    //         'type' => $request->type,
+    //         'vehicle_id' => $request->vehicle_id,
+    //         'date' => $request->date,
+    //         'driver_id' => $request->driver_id,
+    //         'helper_id' => $request->helper_id,
+    //         'vehicle_type' => $request->vehicle_type,
+    //         'time_out' => $request->time_out,
+    //         'meter_out' => $request->meter_out,
+    //         'meter_in' => $request->meter_in,
+    //         'comments' => $request->comments,
+    //         'status' => $status, // Add this line
+    //         'updated_by' => Auth::id(),
+    //     ];
 
-        // Add time_in only if it has value
-        if ($request->filled('time_in')) {
-            $updateData['time_in'] = $request->time_in;
-        } else {
-            $updateData['time_in'] = null;
-        }
+    //     // Add time_in only if it has value
+    //     if ($request->filled('time_in')) {
+    //         $updateData['time_in'] = $request->time_in;
+    //     } else {
+    //         $updateData['time_in'] = null;
+    //     }
 
-        // Save the update
-        $updated = $outward->update($updateData);
+    //     // Save the update
+    //     $updated = $outward->update($updateData);
 
-        \Log::info('Update result:', ['success' => $updated, 'outward_id' => $outward->id, 'status' => $status]);
+    //     \Log::info('Update result:', ['success' => $updated, 'outward_id' => $outward->id, 'status' => $status]);
 
-        // Handle company items
-        if ($request->type === 'Company') {
-            // Delete old items
-            $outward->t2Items()->delete();
+    //     // Handle company items
+    //     if ($request->type === 'Company') {
+    //         // Delete old items
+    //         $outward->t2Items()->delete();
 
-            // Add new items if there are any
-            if ($request->has('rowCount1') && intval($request->rowCount1) > 0) {
-                $request->merge(['outward_id' => $outward->id]);
-                $this->outward_type2_t2($request);
-            }
-        } else {
-            // If changed from Company to Passenger, delete all items
-            $outward->t2Items()->delete();
-        }
+    //         // Add new items if there are any
+    //         if ($request->has('rowCount1') && intval($request->rowCount1) > 0) {
+    //             $request->merge(['outward_id' => $outward->id]);
+    //             $this->outward_type2_t2($request);
+    //         }
+    //     } else {
+    //         // If changed from Company to Passenger, delete all items
+    //         $outward->t2Items()->delete();
+    //     }
 
-        return redirect()->route('outward.all')->with('success', 'Outward updated successfully!');
-    }
-    public function edit($id)
-    {
-        $outward = OutwardType2::with('t2Items')->findOrFail($id);
+    //     return redirect()->route('outward.all')->with('success', 'Outward updated successfully!');
+    // }
+    // public function edit($id)
+    // {
+    //     $outward = OutwardType2::with('t2Items')->findOrFail($id);
 
-        $centers = Center::all();
-        $vehicles = Vehicle::all();
-        $drivers = Driver::all();
-        $helpers = Helper::all();
+    //     $centers = Center::all();
+    //     $vehicles = Vehicle::all();
+    //     $drivers = Driver::all();
+    //     $helpers = Helper::all();
 
-        // return view('outward.edit_type2_page', ...) <-- old
-        return view('outward.edit_type2', compact(
-            'outward',
-            'centers',
-            'vehicles',
-            'drivers',
-            'helpers'
-        ));
-    }
+    //     // return view('outward.edit_type2_page', ...) <-- old
+    //     return view('outward.edit_type2', compact(
+    //         'outward',
+    //         'centers',
+    //         'vehicles',
+    //         'drivers',
+    //         'helpers'
+    //     ));
+    // }
 
 
     // public function update(Request $request)

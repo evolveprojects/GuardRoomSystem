@@ -161,6 +161,17 @@
                             </li>
                         @endif
 
+                        @if (Auth::user()->hasPermission('view otherpayments master') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('Masterfile.otherpayments') }}"
+                                    class="nav-link {{ request()->routeIs('Masterfile.otherpayments') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('Masterfile.otherpayments') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Other Payments</p>
+                                </a>
+                            </li>
+                        @endif
+
 
                     </ul>
                 </li>

@@ -367,15 +367,33 @@
                                         </div>
                                     </div>
                                     <div class="card shadow-sm border-0 mt-4">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label for="inward_items"><strong>Inward Items</strong></label>
-                                                <textarea class="form-control" id="inward_items" name="inward_items" rows="4"
-                                                    placeholder="Enter your comments here..."></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-
+    <div class="card shadow-sm border-0 mt-4">
+    <div class="card-body">
+        <div class="form-group">
+            <label><strong>Inward Items</strong></label>
+            <div class="border rounded p-3 bg-light">
+                @php
+                    $selectedItems = explode(',', $item1->inward_items ?? '');
+                @endphp
+                @foreach($otherpayments as $payment)
+                    @if($payment->id >= 5 && $payment->id <= 9)
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   name="inward_items[]" 
+                                   value="{{ $payment->id }}" 
+                                   id="inward_item_{{ $payment->id }}"
+                                   {{ in_array($payment->id, $selectedItems) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="inward_item_{{ $payment->id }}">
+                                {{ $payment->payment_type }}
+                            </label>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
                                     <!-- Page-level Buttons -->
                                     <div class="mt-3 d-flex justify-content-end gap-2">
                                         <button type="submit" class="btn btn-primary" value="update"
@@ -402,6 +420,12 @@
         let rowCount = 2; // Existing rows count
 
         const MAX_QTY = 10; // Max quantity for dropdown
+
+        // Initialize Select2 on page load
+        $(document).ready(function() {
+            // Initialize other selectize dropdowns (NOT inward_items anymore)
+            $(".selectize").select2();
+        });
 
         // Populate quantity dropdown
         function populateQtyDropdown(index) {
@@ -537,6 +561,7 @@
 
             rowCount++;
             $(".selectize").select2();
+            
             countRows();
         }
 
@@ -624,6 +649,8 @@
             $('#capacity').val('');
         }
     </script>
+
+
 
 
     <style>

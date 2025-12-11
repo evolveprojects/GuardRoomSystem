@@ -68,11 +68,11 @@
                                 value="{{ $lo_cus->distance }}">
                         </div>
 
-                        <div class="col-md-4 mb-3">
+                        {{-- <div class="col-md-4 mb-3">
                             <label class="form-label">Amount</label>
                             <input type="text" name="amount" class="form-control " onblur="formatAmount(this)"
                                 value="{{ $lo_cus->amount }}" required>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="form-group mb-2">
                         <label for="status">Status <span class="text-danger">*</span></label>

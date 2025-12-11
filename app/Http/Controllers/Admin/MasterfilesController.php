@@ -13,8 +13,10 @@ use App\Models\Driver;
 use App\Models\Helper;
 use App\Models\Security;
 use App\Models\Customer;
+use App\Models\otherpayments;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\ShipmentController;
+use App\Models\OtherPayment;
 use Illuminate\Validation\Rule;
 use App\Models\Payment_con;
 // use SebastianBergmann\CodeCoverage\Driver\Driver;
@@ -793,4 +795,81 @@ class MasterfilesController extends Controller
 
         return back()->with('success', 'Payment Condition updated successfully!');
     }
+
+
+    /* ============================================================
+       OtherPayments MANAGEMENT
+       ============================================================ */
+
+    public function otherpayments(Request $request)
+    {
+
+        $searchKey = $request->searchKey;
+        $getotherpayments = OtherPayment::where('payment_type', 'like', '%' . $searchKey . '%')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(env("RECORDS_PER_PAGE"));
+
+        return view('masterfiles.otherpayments', compact(['getotherpayments', 'searchKey']));
+    }
+
+    public function addotherpayments(Request $request)
+    {
+
+        $hasPermission = (Auth::user()->hasPermission("add otherpayments") || Auth::user()->id == '1');
+
+        if ($hasPermission) {
+
+            $validated = $request->validate([
+                'payment_type' => ['required', 'string'],
+                'driver_amount' => ['required', 'numeric'],
+                'helper_amount' => ['required', 'numeric'],
+            ]);
+
+
+            $otherpayments = new OtherPayment();
+            $otherpayments->payment_type = $request->payment_type;
+            $otherpayments->driver_amount = $request->driver_amount;
+            $otherpayments->helper_amount = $request->helper_amount;
+            $otherpayments->is_active = true;
+            $otherpayments->save();
+
+            return back()->with('success', 'Payment added  successfully !');
+        } else {
+            return redirect("/not_allowed");
+        }
+    }
+
+    public function updateotherpayments(Request $request)
+    {
+
+        $hasPermission = (Auth::user()->hasPermission("edit otherpayments") || Auth::user()->id == '1');
+
+        if ($hasPermission) {
+
+            $validated = $request->validate([
+                'payment_type' => ['required', 'string'],
+                'driver_amount' => ['required', 'numeric'],
+                'helper_amount' => ['required', 'numeric'],
+            ]);
+
+            $otherpayments = OtherPayment::where('id', $request->id)->get()->first();
+
+            if ($otherpayments != null) {
+
+                $otherpayments->payment_type = $request->payment_type;
+                $otherpayments->driver_amount = $request->driver_amount;
+                $otherpayments->helper_amount = $request->helper_amount;
+                $otherpayments->is_active = true;
+                $otherpayments->save();
+
+                return back()->with('success', 'Payment updated successfully !');
+            } else {
+                return back()->with("error", "Could not find the Payment");
+            }
+        } else {
+            return redirect("/not_allowed");
+        }
+    }
+
+
 }
