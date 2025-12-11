@@ -4,7 +4,7 @@
 
 @push('styles')
     <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+        href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker3.min.css">
     <style>
         .pagination-wrapper nav {
             display: inline-block;
@@ -23,6 +23,68 @@
             border-color: #0d6efd;
             color: #fff;
         }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .export-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .toast {
+            z-index: 9999 !important;
+        }
+
+        /* Datepicker Styles - Fixed */
+        .datepicker {
+            z-index: 1055 !important;
+        }
+
+        .datepicker-dropdown {
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .datepicker table tr td,
+        .datepicker table tr th {
+            border-radius: 4px;
+            width: 35px;
+            height: 35px;
+        }
+
+        .datepicker table tr td.active,
+        .datepicker table tr td.active:hover,
+        .datepicker table tr td.active.highlighted {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: #fff !important;
+        }
+
+        .datepicker table tr td.today,
+        .datepicker table tr td.today:hover {
+            background-color: #ffc107 !important;
+            color: #000 !important;
+        }
+
+        .datepicker table tr td.day:hover {
+            background-color: #e9ecef;
+            cursor: pointer;
+        }
+
+        /* Make input clickable */
+        .datepicker-input {
+            background-color: #fff !important;
+            cursor: pointer;
+        }
     </style>
 @endpush
 
@@ -34,7 +96,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h3 class="mb-0">Incentive Report</h3>
+                        <h3 class="mb-0">Incentive Details Report</h3>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-end">
@@ -62,21 +124,48 @@
 
                                 <div class="row mb-3">
 
-                                    <!-- Search Input -->
+                                    <!-- Export Buttons -->
                                     <div class="col-md-6">
-                                        <input type="search" class="form-control" name="searchKey" placeholder="Level Name"
-                                            value="{{ $searchKey ?? '' }}">
+                                        <div class="d-flex gap-2">
+                                            <button type="button" class="btn btn-success" id="exportExcelBtn">
+                                                <i class="bi bi-file-earmark-excel"></i> Export to Excel
+                                            </button>
+                                            <button type="button" class="btn btn-danger" id="exportPdfBtn">
+                                                <i class="bi bi-file-earmark-pdf"></i> Export to PDF
+                                            </button>
+                                            <button type="button" class="btn btn-info" id="exportCsvBtn">
+                                                <i class="bi bi-filetype-csv"></i> Export to CSV
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <!-- Date Range Search -->
+                                    <!-- Date Range Search -->
+                                    <!-- Date Range Search -->
                                     <div class="col-md-6">
-                                        <form action="{{ route('Masterfile.userlevel') }}" method="get">
+                                        <form action="{{ route('report.report_intencive') }}" method="get"
+                                            id="dateFilterForm">
                                             <div class="input-group">
-                                                <input type="text" class="form-control datepicker me-2" name="from"
-                                                    placeholder="From Date" value="{{ request('from') }}">
-                                                <input type="text" class="form-control datepicker me-2" name="to"
-                                                    placeholder="To Date" value="{{ request('to') }}">
-                                                <button type="submit" class="btn btn-primary">Search</button>
+                                                <span class="input-group-text" style="cursor: pointer;">
+                                                    <i class="bi bi-calendar"></i>
+                                                </span>
+                                                <input type="text" class="form-control datepicker-input" name="from"
+                                                    placeholder="From Date (YYYY-MM-DD)" value="{{ request('from') }}"
+                                                    id="fromDate" autocomplete="off">
+
+                                                <span class="input-group-text" style="cursor: pointer;">
+                                                    <i class="bi bi-calendar"></i>
+                                                </span>
+                                                <input type="text" class="form-control datepicker-input" name="to"
+                                                    placeholder="To Date (YYYY-MM-DD)" value="{{ request('to') }}"
+                                                    id="toDate" autocomplete="off">
+
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="bi bi-search"></i> Search
+                                                </button>
+                                                <button type="button" class="btn btn-secondary" id="resetDates">
+                                                    <i class="bi bi-arrow-clockwise"></i> Reset
+                                                </button>
                                             </div>
                                         </form>
                                     </div>
@@ -125,11 +214,12 @@
                                 <!-- Data Table -->
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover table-striped align-middle mb-0"
-                                        style="width:250%;">
+                                        style="width:250%;" id="incentiveTable">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>#</th>
                                                 <th>Date</th>
+                                                <th>OUT No</th>
                                                 <th>AOD No</th>
                                                 <th>Customer Names</th>
                                                 <th>D/Trip</th>
@@ -147,12 +237,16 @@
                                                 <th>H Lunch</th>
                                                 <th>D Dinner</th>
                                                 <th>H Dinner</th>
-                                                <th>B.C./5MT</th>
-                                                <th>Good Return</th>
-                                                <th>D Night Allowance</th>
-                                                <th>H Night Allowance</th>
-                                                <th>Pallet</th>
-                                                <th>Unload</th>
+                                                <th>D B.C./5MT</th>
+                                                <th>H B.C./5MT</th>
+                                                <th>D Good Return</th>
+                                                <th>H Good Return</th>
+                                                <th>D Pallet</th>
+                                                <th>H Pallet</th>
+                                                <th>D Unload</th>
+                                                <th>H Unload</th>
+                                                <th>D N Allowance</th>
+                                                <th>H N Allowance</th>
                                                 <th>D Total</th>
                                                 <th>H Total</th>
 
@@ -166,16 +260,6 @@
                                             @endphp
                                             @forelse ($get_outward_data as $key => $data)
                                                 @php
-
-                                                    // $current_date = \Carbon\Carbon::parse($data->created_at)->format(
-                                                    //     'Y-m-d',
-                                                    // );
-
-                                                    // if ($previous_date === $current_date) {
-                                                    //     continue;
-                                                    // }
-
-
                                                     $sub_items = $all_sub_data[$data->id] ?? collect([]);
                                                     $customer_names = $sub_items
                                                         ->pluck('customers_name')
@@ -358,11 +442,143 @@
 
                                                     $h_night = $h_night_payment > 0 ? $h_night_payment : '-';
 
-                                                    // Calculate Totals (ensure all components are treated as numbers for the sum)
-                                                    // --- SAFE TOTAL CALCULATION ---
-                                                    // --- Driver Total Calculation (d_total) ---
+                                                    $h_ballclay_payment = 0;
 
-                                                    // Step 1: Clean the string variables by removing the thousand separator comma (',')
+                                                    if (!empty($data->inward_items)) {
+                                                        $items_string = trim($data->inward_items);
+                                                        $inward_items_array = array_map(
+                                                            'trim',
+                                                            explode(',', $items_string),
+                                                        );
+                                                        $target_item = '5';
+                                                        if (in_array($target_item, $inward_items_array)) {
+                                                            $h_ballclay_payment = DB::table('other_payments')
+                                                                ->where('id', $target_item)
+                                                                ->value('helper_amount');
+                                                        }
+                                                    }
+                                                    $h_ball_clay = $h_ballclay_payment > 0 ? $h_ballclay_payment : '-';
+
+                                                    $d_ballclay_payment = 0;
+
+                                                    if (!empty($data->inward_items)) {
+                                                        $items_string = trim($data->inward_items);
+                                                        $inward_items_array = array_map(
+                                                            'trim',
+                                                            explode(',', $items_string),
+                                                        );
+                                                        $target_item = '5';
+                                                        if (in_array($target_item, $inward_items_array)) {
+                                                            $d_ballclay_payment = DB::table('other_payments')
+                                                                ->where('id', $target_item)
+                                                                ->value('driver_amount');
+                                                        }
+                                                    }
+                                                    $d_ball_clay = $d_ballclay_payment > 0 ? $d_ballclay_payment : '-';
+
+                                                    $h_goodru_payment = 0;
+
+                                                    if (!empty($data->inward_items)) {
+                                                        $items_string = trim($data->inward_items);
+                                                        $inward_items_array = array_map(
+                                                            'trim',
+                                                            explode(',', $items_string),
+                                                        );
+                                                        $target_item = '6';
+                                                        if (in_array($target_item, $inward_items_array)) {
+                                                            $h_goodru_payment = DB::table('other_payments')
+                                                                ->where('id', $target_item)
+                                                                ->value('helper_amount');
+                                                        }
+                                                    }
+                                                    $h_goodru = $h_goodru_payment > 0 ? $h_goodru_payment : '-';
+
+                                                    $d_goodru_payment = 0;
+
+                                                    if (!empty($data->inward_items)) {
+                                                        $items_string = trim($data->inward_items);
+                                                        $inward_items_array = array_map(
+                                                            'trim',
+                                                            explode(',', $items_string),
+                                                        );
+                                                        $target_item = '6';
+                                                        if (in_array($target_item, $inward_items_array)) {
+                                                            $d_goodru_payment = DB::table('other_payments')
+                                                                ->where('id', $target_item)
+                                                                ->value('driver_amount');
+                                                        }
+                                                    }
+                                                    $d_goodru = $d_goodru_payment > 0 ? $d_goodru_payment : '-';
+
+                                                    $h_pallet_payment = 0;
+
+                                                    if (!empty($data->inward_items)) {
+                                                        $items_string = trim($data->inward_items);
+                                                        $inward_items_array = array_map(
+                                                            'trim',
+                                                            explode(',', $items_string),
+                                                        );
+                                                        $target_item = '8';
+                                                        if (in_array($target_item, $inward_items_array)) {
+                                                            $h_pallet_payment = DB::table('other_payments')
+                                                                ->where('id', $target_item)
+                                                                ->value('helper_amount');
+                                                        }
+                                                    }
+                                                    $h_pallet = $h_pallet_payment > 0 ? $h_pallet_payment : '-';
+
+                                                    $d_pallet_payment = 0;
+
+                                                    if (!empty($data->inward_items)) {
+                                                        $items_string = trim($data->inward_items);
+                                                        $inward_items_array = array_map(
+                                                            'trim',
+                                                            explode(',', $items_string),
+                                                        );
+                                                        $target_item = '8';
+                                                        if (in_array($target_item, $inward_items_array)) {
+                                                            $d_pallet_payment = DB::table('other_payments')
+                                                                ->where('id', $target_item)
+                                                                ->value('driver_amount');
+                                                        }
+                                                    }
+                                                    $d_pallet = $d_pallet_payment > 0 ? $d_pallet_payment : '-';
+
+                                                    $h_unload_payment = 0;
+
+                                                    if (!empty($data->inward_items)) {
+                                                        $items_string = trim($data->inward_items);
+                                                        $inward_items_array = array_map(
+                                                            'trim',
+                                                            explode(',', $items_string),
+                                                        );
+                                                        $target_item = '9';
+                                                        if (in_array($target_item, $inward_items_array)) {
+                                                            $h_unload_payment = DB::table('other_payments')
+                                                                ->where('id', $target_item)
+                                                                ->value('helper_amount');
+                                                        }
+                                                    }
+                                                    $h_unload = $h_unload_payment > 0 ? $h_unload_payment : '-';
+
+                                                    $d_unload_payment = 0;
+
+                                                    if (!empty($data->inward_items)) {
+                                                        $items_string = trim($data->inward_items);
+                                                        $inward_items_array = array_map(
+                                                            'trim',
+                                                            explode(',', $items_string),
+                                                        );
+                                                        $target_item = '9';
+                                                        if (in_array($target_item, $inward_items_array)) {
+                                                            $d_unload_payment = DB::table('other_payments')
+                                                                ->where('id', $target_item)
+                                                                ->value('driver_amount');
+                                                        }
+                                                    }
+                                                    $d_unload = $d_unload_payment > 0 ? $d_unload_payment : '-';
+
+                                                    // Calculate Totals
                                                     $trip_fee_driver_cleaned = str_replace(
                                                         ',',
                                                         '',
@@ -372,17 +588,25 @@
                                                     $d_lunch_payment_cleaned = str_replace(',', '', $d_lunch_payment);
                                                     $d_dinner_payment_cleaned = str_replace(',', '', $d_dinner_payment);
                                                     $d_night_payment_cleaned = str_replace(',', '', $d_night_payment);
-
+                                                    $d_ballclay_payment_cleaned = str_replace(
+                                                        ',',
+                                                        '',
+                                                        $d_ballclay_payment,
+                                                    );
+                                                    $d_pallet_payment_cleaned = str_replace(',', '', $d_pallet_payment);
+                                                    $d_goodru_payment_cleaned = str_replace(',', '', $d_goodru_payment);
+                                                    $d_unload_payment_cleaned = str_replace(',', '', $d_unload_payment);
                                                     $d_total =
                                                         (float) $trip_fee_driver_cleaned +
                                                         (float) $d_break_payment_cleaned +
                                                         (float) $d_lunch_payment_cleaned +
                                                         (float) $d_dinner_payment_cleaned +
+                                                        (float) $d_ballclay_payment_cleaned +
+                                                        (float) $d_pallet_payment_cleaned +
+                                                        (float) $d_goodru_payment_cleaned +
+                                                        (float) $d_unload_payment_cleaned +
                                                         (float) $d_night_payment_cleaned;
 
-                                                    // --- Helper Total Calculation (h_total) ---
-
-                                                    // Step 2: Clean the string variables for the helper calculation
                                                     $trip_fee_helper_cleaned = str_replace(
                                                         ',',
                                                         '',
@@ -392,17 +616,29 @@
                                                     $h_lunch_payment_cleaned = str_replace(',', '', $h_lunch_payment);
                                                     $h_dinner_payment_cleaned = str_replace(',', '', $h_dinner_payment);
                                                     $h_night_payment_cleaned = str_replace(',', '', $h_night_payment);
+                                                    $h_ballclay_payment_cleaned = str_replace(
+                                                        ',',
+                                                        '',
+                                                        $h_ballclay_payment,
+                                                    );
+
+                                                    $h_pallet_payment_cleaned = str_replace(',', '', $h_pallet_payment);
+                                                    $h_goodru_payment_cleaned = str_replace(',', '', $h_goodru_payment);
+                                                    $h_unload_payment_cleaned = str_replace(',', '', $h_unload_payment);
 
                                                     $h_total =
                                                         (float) $trip_fee_helper_cleaned +
                                                         (float) $h_break_payment_cleaned +
                                                         (float) $h_lunch_payment_cleaned +
                                                         (float) $h_dinner_payment_cleaned +
+                                                        (float) $h_ballclay_payment_cleaned +
+                                                        (float) $h_pallet_payment_cleaned +
+                                                        (float) $h_goodru_payment_cleaned +
+                                                        (float) $h_unload_payment_cleaned +
                                                         (float) $h_night_payment_cleaned;
-                                                    // ------------------------------
+
                                                     $grand_driver_total += $d_total;
                                                     $grand_helper_total += $h_total;
-                                                    // $previous_date = $current_date;
                                                 @endphp
 
                                                 {{-- Main Row --}}
@@ -410,6 +646,7 @@
                                                     data-bs-target="#sub_{{ $data->id }}" style="cursor: pointer;">
                                                     <td>{{ $key + 1 }}</td>
                                                     <td>{{ \Carbon\Carbon::parse($data->created_at)->format('d-m-Y') }}</td>
+                                                    <td>{{ $data->outward_number ?? '-' }}</td>
                                                     <td>{{ $aod ?: '-' }}</td>
                                                     <td>{{ $customer_names ?: '-' }}</td>
                                                     <td>{{ ordinal($data->driver_trip_no ?? null) }}</td>
@@ -428,28 +665,34 @@
                                                     <td>{{ $h_lunch ?? '-' }}</td>
                                                     <td>{{ $d_dinner ?? '-' }}</td>
                                                     <td>{{ $h_dinner ?? '-' }}</td>
-
-                                                    <td>{{ $data->bc_5mt ?? '-' }}</td>
-                                                    <td>{{ $data->good_return ?? '-' }}</td>
+                                                    <td>{{ $d_ball_clay ?? '-' }}</td>
+                                                    <td>{{ $h_ball_clay ?? '-' }}</td>
+                                                    <td>{{ $d_goodru ?? '-' }}</td>
+                                                    <td>{{ $h_goodru ?? '-' }}</td>
+                                                    <td>{{ $d_pallet ?? '-' }}</td>
+                                                    <td>{{ $h_pallet ?? '-' }}</td>
+                                                    <td>{{ $d_unload ?? '-' }}</td>
+                                                    <td>{{ $h_unload ?? '-' }}</td>
                                                     <td>{{ $d_night ?? '-' }}</td>
                                                     <td>{{ $h_night ?? '-' }}</td>
-                                                    <td>{{ $data->pallet ?? '-' }}</td>
-                                                    <td>{{ $data->unload ?? '-' }}</td>
-                                                    <td>{{ number_format($d_total, 2, '.', ',') ?? '-' }}</td>
-                                                    <td>{{ number_format($h_total, 2, '.', ',') ?? '-' }}</td>
+                                                    <td class="driver-total">
+                                                        {{ number_format($d_total, 2, '.', ',') ?? '-' }}</td>
+                                                    <td class="helper-total">
+                                                        {{ number_format($h_total, 2, '.', ',') ?? '-' }}</td>
 
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="21" class="text-center">No data available</td>
+                                                    <td colspan="32" class="text-center">No data available</td>
                                                 </tr>
                                             @endforelse
-                                              <tr class="table-success fw-bold">
-
-                                                    <td colspan="25" class="text-end">Grand Total</td>
-                                                    <td>{{ number_format($grand_driver_total, 2, '.', ',') }}</td>
-                                                    <td>{{ number_format($grand_helper_total, 2, '.', ',') }}</td>
-                                                </tr>
+                                            <tr class="table-success fw-bold" id="grandTotalRow">
+                                                <td colspan="30" class="text-end">Grand Total</td>
+                                                <td id="grandDriverTotal">
+                                                    {{ number_format($grand_driver_total, 2, '.', ',') }}</td>
+                                                <td id="grandHelperTotal">
+                                                    {{ number_format($grand_helper_total, 2, '.', ',') }}</td>
+                                            </tr>
                                         </tbody>
 
                                     </table>
@@ -477,28 +720,233 @@
 @endsection
 
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <!-- Excel export library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- PDF export library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <!-- FileSaver -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
     <script>
         $(document).ready(function() {
-            // Initialize datepicker
-            $('.datepicker').datepicker({
+            console.log('jQuery version:', $.fn.jquery);
+            console.log('Datepicker available:', typeof $.fn.datepicker !== 'undefined');
+
+            // Initialize FROM date picker
+            $('#fromDate').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
-                todayHighlight: true
+                todayHighlight: true,
+                todayBtn: 'linked',
+                clearBtn: true,
+                orientation: 'bottom auto',
+                endDate: new Date(),
+                templates: {
+                    leftArrow: '<i class="bi bi-chevron-left"></i>',
+                    rightArrow: '<i class="bi bi-chevron-right"></i>'
+                }
+            }).on('changeDate', function(e) {
+                var fromDate = $('#fromDate').datepicker('getDate');
+                if (fromDate) {
+                    $('#toDate').datepicker('setStartDate', fromDate);
+                }
+            });
+
+            // Initialize TO date picker
+            $('#toDate').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+                todayBtn: 'linked',
+                clearBtn: true,
+                orientation: 'bottom auto',
+                endDate: new Date(),
+                startDate: $('#fromDate').val() ? new Date($('#fromDate').val()) : null,
+                templates: {
+                    leftArrow: '<i class="bi bi-chevron-left"></i>',
+                    rightArrow: '<i class="bi bi-chevron-right"></i>'
+                }
+            });
+
+            // If there's already a from date value
+            if ($('#fromDate').val()) {
+                $('#toDate').datepicker('setStartDate', new Date($('#fromDate').val()));
+            }
+
+            // Calendar icon click
+            $('.input-group-text').on('click', function() {
+                $(this).next('input.datepicker-input').datepicker('show');
+            });
+
+            // Reset dates button
+            $('#resetDates').on('click', function() {
+                $('#fromDate').val('').datepicker('update');
+                $('#toDate').val('').datepicker('update').datepicker('setStartDate', null);
+                window.location.href = window.location.pathname;
             });
 
             // Form validation
-            const forms = document.querySelectorAll('.needs-validation');
-            Array.from(forms).forEach((form) => {
-                form.addEventListener('submit', (event) => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault();
-                        event.stopPropagation();
+            $('#dateFilterForm').on('submit', function(e) {
+                var fromDate = $('#fromDate').val();
+                var toDate = $('#toDate').val();
+
+                if (fromDate && toDate) {
+                    if (new Date(fromDate) > new Date(toDate)) {
+                        e.preventDefault();
+                        showToast('From date cannot be greater than To date', 'error');
+                        return false;
                     }
-                    form.classList.add('was-validated');
-                }, false);
+                }
             });
+
+            // Export buttons
+            $('#exportExcelBtn').on('click', exportTableToExcel);
+            $('#exportPdfBtn').on('click', exportTableToPDF);
+            $('#exportCsvBtn').on('click', exportTableToCSV);
         });
+
+        // ========== EXPORT FUNCTIONS ==========
+        function exportTableToExcel() {
+            try {
+                showToast('Preparing Excel file...', 'info');
+                const table = document.getElementById('incentiveTable');
+                if (!table) {
+                    showToast('Table not found!', 'error');
+                    return;
+                }
+
+                const tableClone = table.cloneNode(true);
+                $(tableClone).find('tr[data-bs-toggle="collapse"]').removeAttr('data-bs-toggle data-bs-target style');
+                $(tableClone).find('tr.collapse').remove();
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.table_to_sheet(tableClone);
+                XLSX.utils.book_append_sheet(wb, ws, "Incentive Report");
+
+                const date = new Date().toISOString().split('T')[0];
+                XLSX.writeFile(wb, `Incentive_Report_${date}.xlsx`);
+                showToast('Excel file downloaded successfully!', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error exporting to Excel', 'error');
+            }
+        }
+
+        function exportTableToCSV() {
+            try {
+                showToast('Preparing CSV file...', 'info');
+                const table = document.getElementById('incentiveTable');
+                if (!table) {
+                    showToast('Table not found!', 'error');
+                    return;
+                }
+
+                const rows = table.querySelectorAll('tr');
+                const csv = [];
+                rows.forEach(row => {
+                    const rowData = [];
+                    row.querySelectorAll('td, th').forEach(cell => {
+                        let data = cell.innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/\s+/g, ' ').trim();
+                        if (data.includes(',') || data.includes('"')) {
+                            data = '"' + data.replace(/"/g, '""') + '"';
+                        }
+                        rowData.push(data);
+                    });
+                    csv.push(rowData.join(','));
+                });
+
+                const blob = new Blob(['\ufeff' + csv.join('\n')], {
+                    type: 'text/csv;charset=utf-8;'
+                });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `Incentive_Report_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('CSV file downloaded successfully!', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error exporting to CSV', 'error');
+            }
+        }
+
+        function exportTableToPDF() {
+            try {
+                showToast('Preparing PDF file...', 'info');
+                const {
+                    jsPDF
+                } = window.jspdf;
+                const doc = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: 'a3'
+                });
+
+                doc.setFontSize(16);
+                doc.text('Incentive Report', 14, 15);
+                doc.setFontSize(10);
+                doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 22);
+
+                const table = document.getElementById('incentiveTable');
+                const headers = [];
+                const data = [];
+
+                table.querySelectorAll('thead th').forEach(cell => headers.push(cell.innerText));
+                table.querySelectorAll('tbody tr').forEach(row => {
+                    const rowData = [];
+                    row.querySelectorAll('td').forEach(cell => rowData.push(cell.innerText));
+                    if (rowData.length > 0) data.push(rowData);
+                });
+
+                doc.autoTable({
+                    head: [headers],
+                    body: data,
+                    startY: 30,
+                    theme: 'grid',
+                    styles: {
+                        fontSize: 6,
+                        cellPadding: 1
+                    },
+                    headStyles: {
+                        fillColor: [13, 110, 253],
+                        fontSize: 7
+                    },
+                    margin: {
+                        left: 5,
+                        right: 5
+                    }
+                });
+
+                doc.save(`Incentive_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+                showToast('PDF file downloaded successfully!', 'success');
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Error exporting to PDF', 'error');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            $('.toast').remove();
+            const toastClass = {
+                'success': 'bg-success',
+                'error': 'bg-danger',
+                'info': 'bg-info',
+                'warning': 'bg-warning'
+            } [type] || 'bg-info';
+            const toastId = 'toast-' + Date.now();
+            const toast = `
+                <div id="${toastId}" class="toast align-items-center text-white ${toastClass} border-0 position-fixed bottom-0 end-0 m-3" role="alert" style="z-index: 9999;">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>`;
+            $('body').append(toast);
+            const toastElement = new bootstrap.Toast(document.getElementById(toastId));
+            toastElement.show();
+            setTimeout(() => toastElement.hide(), 3000);
+        }
     </script>
 @endpush
