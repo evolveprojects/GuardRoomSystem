@@ -96,7 +96,7 @@ Route::post('/inward/store', [App\Http\Controllers\Admin\InwardController::class
 Route::get('/inward/view-all', [App\Http\Controllers\Admin\InwardController::class, 'inward_view_All'])->name('inward.inward_view_All');
 Route::get('/edit/{id}', [App\Http\Controllers\Admin\InwardController::class, 'edit'])->name('inward.edit');
 Route::put('/update/{id}', [App\Http\Controllers\Admin\InwardController::class, 'update'])->name('inward.update');
-Route::post('/inward/vehicledata', [App\Http\Controllers\Admin\InwardController::class, 'vehicledata'])->name('vehicledata');
+Route::post('/inward/vehicledata', [App\Http\Controllers\Admin\InwardController::class, 'vehicledata'])->name('in_vehicledata');
 
 //sage300 Api
 Route::post('/sage300_aoddata', [App\Http\Controllers\Admin\ShipmentController::class, 'show_data_seq'])->name('sage300_aoddata');

@@ -447,10 +447,20 @@
         </td>
          <td id="customer_td${index}">
 
-                                                            <input type="text" class="form-control"
-                                                                name="customer_se${index}"
-                                                                id="customer_se${index}"
-                                                                style="width:100%;height:30px;text-align: left;">
+                                                            <select name="customer_se{{ $i }}"
+                                                                class="form-control selectize"
+                                                                id="customer_se{{ $i }}"
+                                                                style="width:100%;height:30px;"
+                                                                onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                <option value="">Select Customer</option>
+                                                                @if (isset($customers['value']) && is_array($customers['value']))
+                                                                    @foreach ($customers['value'] as $cus)
+                                                                        <option value="{{ $cus['CustomerNumber'] }}">
+                                                                            {{ $cus['CustomerName'] }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
                                                         </td>
         <td id="qty_td${index}">
            <input type="text" class="form-control"

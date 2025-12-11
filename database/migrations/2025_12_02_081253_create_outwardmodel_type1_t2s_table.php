@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('item_se')->nullable();
             $table->string('qty_se')->nullable();
             $table->string('customer_se')->nullable();
-            $table->string('amount_se')->unique();
+            $table->string('amount_se')->nullable();
 
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
