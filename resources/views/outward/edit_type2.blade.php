@@ -302,6 +302,36 @@
                                     </div>
                                 </div>
 
+                               <!-- Inward Items Section -->
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-body">
+        <div class="form-group">
+            <label><strong>Inward Items</strong></label>
+            <div class="border rounded p-3 bg-light">
+                @php
+                    // FIX: Change $item1 to $outward
+                    $selectedItems = explode(',', $outward->inward_items ?? '');
+                @endphp
+                @foreach($otherpayments as $payment)
+                    @if($payment->id >= 5 && $payment->id <= 9)
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   name="inward_items[]" 
+                                   value="{{ $payment->id }}" 
+                                   id="inward_item_{{ $payment->id }}"
+                                   {{ in_array($payment->id, $selectedItems) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="inward_item_{{ $payment->id }}">
+                                {{ $payment->payment_type }}
+                            </label>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
                                 <!-- Page Buttons -->
                                 <div class="mt-3 d-flex justify-content-end gap-2">
                                     <button type="submit" class="btn btn-primary">Update</button>
@@ -324,6 +354,14 @@
 
 @push('scripts')
 <script>
+
+        // Initialize Select2 on page load
+        $(document).ready(function() {
+            // Initialize other selectize dropdowns (NOT inward_items anymore)
+            $(".selectize").select2();
+        });
+
+
 // Global row counter - start from the number of existing rows
 var globalRowIndex = {{ $outward->t2Items->count() > 0 ? $outward->t2Items->count() : 1 }};
 

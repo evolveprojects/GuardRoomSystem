@@ -43,7 +43,9 @@ Route::post('/create-customers', [App\Http\Controllers\Admin\MasterfilesControll
 Route::post('/edit-customer', [App\Http\Controllers\Admin\MasterfilesController::class, 'editcustomers'])->name('Masterfile.editcustomers');
 Route::post('/create-paycondition', [App\Http\Controllers\Admin\MasterfilesController::class, 'paycondition'])->name('Masterfile.addpayment');
 Route::post('/edit-paycondition', [App\Http\Controllers\Admin\MasterfilesController::class, 'editpaycondition'])->name('Masterfile.editpayment');
-
+Route::get('/otherpayments', [App\Http\Controllers\Admin\MasterfilesController::class, 'otherpayments'])->name('Masterfile.otherpayments');
+Route::post('/createotherpayments', [App\Http\Controllers\Admin\MasterfilesController::class, 'addotherpayments'])->name('Masterfile.addotherpayments');
+Route::post('/updateotherpayments', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateotherpayments'])->name('Masterfile.updateotherpayments');
 //permission routes
 Route::get('/permission', [App\Http\Controllers\Admin\PermissionController::class, 'permissions'])->name('permissions.view');
 Route::post('/createpermission', [App\Http\Controllers\Admin\PermissionController::class, 'addpermission'])->name('permissions.addpermission');

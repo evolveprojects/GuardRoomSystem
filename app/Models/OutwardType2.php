@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class OutwardType2 extends Model
 {
@@ -23,7 +24,8 @@ class OutwardType2 extends Model
         'meter_out',
         'comments',
         'status',
-        'created_by'
+        'created_by',
+        'inward_items',
     ];
 
     protected static function booted()
@@ -43,5 +45,17 @@ class OutwardType2 extends Model
         return $this->hasMany(\App\Models\OutwardType2T2::class, 'outward_id');
     }
 
-    
+    public function getInwardItemsNamesAttribute()
+    {
+        if (empty($this->inward_items)) {
+            return [];
+        }
+
+        $ids = explode(',', $this->inward_items);
+
+        return DB::table('other_payments')
+            ->whereIn('id', $ids)
+            ->pluck('payment_type')
+            ->toArray();
+    }
 }
