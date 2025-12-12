@@ -36,6 +36,11 @@
                         <div class="card shadow-sm border-0 mb-4">
                             <form action="{{ route('outward.editoutward_type_1') }}" method="POST">
                                 @csrf
+
+                                @php
+                                    $readonly = $item1->status == 1;
+                                @endphp
+
                                 <div class="card-body">
 
                                     <div class="col-md-6 d-flex align-items-center">
@@ -45,365 +50,381 @@
                                             </button></a>
                                     </div>
                                     <br>
+                                    <fieldset {{ $readonly ? 'disabled' : '' }}>
+                                        <div class="row">
 
-                                    <div class="row">
-
-                                        <!-- Outward No -->
-                                        <div class="col-sm-3 mb-3">
-                                            <div class="form-group-sm">
-                                                <label for="phone">Outward NO&nbsp;<span
-                                                        style="color:red;">*</span></label>
-                                                <input type="text" class="form-control" name="outward_number"
-                                                    style="width:100%;height:30px;text-align: left;"
-                                                    value="{{ $item1->outward_number }}" readonly>
+                                            <!-- Outward No -->
+                                            <div class="col-sm-3 mb-3">
+                                                <div class="form-group-sm">
+                                                    <label for="phone">Outward NO&nbsp;<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="text" class="form-control" name="outward_number"
+                                                        style="width:100%;height:30px;text-align: left;"
+                                                        value="{{ $item1->outward_number }}" readonly>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Center -->
-                                        <div class="col-sm-3 mb-3">
-                                            <div class="form-group-sm">
-                                                <label for="center">Center&nbsp;<span style="color:red;">*</span></label>
-                                                <select name="center" id="center" required
-                                                    class="form-control selectize">
-                                                    <option value="">Select Center:</option>
-                                                    @foreach ($centers as $c)
-                                                        <option value="{{ $c->id }}"
-                                                            {{ isset($item1->center) && $item1->center == $c->id ? 'selected' : '' }}>
-                                                            {{ $c->center_name }}
-                                                        </option>
-                                                    @endforeach
+                                            <!-- Center -->
+                                            <div class="col-sm-3 mb-3">
+                                                <div class="form-group-sm">
+                                                    <label for="center">Center&nbsp;<span
+                                                            style="color:red;">*</span></label>
+                                                    <select name="center" id="center" required
+                                                        class="form-control selectize"
+                                                        {{ $item1->status == 1 ? 'disabled' : '' }}>
+                                                        <option value="">Select Center:</option>
+                                                        @foreach ($centers as $c)
+                                                            <option value="{{ $c->id }}"
+                                                                {{ isset($item1->center) && $item1->center == $c->id ? 'selected' : '' }}>
+                                                                {{ $c->center_name }}
+                                                            </option>
+                                                        @endforeach
 
-                                                </select>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Vehicle No -->
-                                        <div class="col-sm-3 mb-3">
-                                            <div class="form-group-sm">
-                                                <label>Vehicle No&nbsp;<span style="color:red;">*</span></label>
-                                                <select name="vehicle_no" id="vehicle_no" required
-                                                    onchange="getvehicle_type()" class="form-control selectize">
-                                                    <option value="">Select Vehicle No:</option>
-                                                    @foreach ($vehicles as $v)
-                                                        <option value="{{ $v->id }}"
-                                                            {{ isset($item1->vehicle_no) && $item1->vehicle_no == $v->id ? 'selected' : '' }}>
-                                                            {{ $v->vehicle_no }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                            <!-- Vehicle No -->
+                                            <div class="col-sm-3 mb-3">
+                                                <div class="form-group-sm">
+                                                    <label>Vehicle No&nbsp;<span style="color:red;">*</span></label>
+                                                    <select name="vehicle_no" id="vehicle_no" required
+                                                        onchange="getvehicle_type()" class="form-control selectize"
+                                                        {{ $item1->status == 1 ? 'disabled' : '' }}>
+                                                        <option value="">Select Vehicle No:</option>
+                                                        @foreach ($vehicles as $v)
+                                                            <option value="{{ $v->id }}"
+                                                                {{ isset($item1->vehicle_no) && $item1->vehicle_no == $v->id ? 'selected' : '' }}>
+                                                                {{ $v->vehicle_no }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Date -->
-                                        <div class="col-sm-3 form-group-sm mb-3">
-                                            <label for="_Expectdate">Date&nbsp;<span style="color:red;">*</span></label>
-                                            <div class="input-group">
-                                                <input type="date" class="form-control date-picker"
-                                                    value="{{ $item1->date }}" data-date-format="yyyy-mm-dd"
-                                                    name="date" id="date"
-                                                    style="width:100%;height:30px;text-align: left;">
+                                            <!-- Date -->
+                                            <div class="col-sm-3 form-group-sm mb-3">
+                                                <label for="_Expectdate">Date&nbsp;<span style="color:red;">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="date" class="form-control date-picker"
+                                                        value="{{ $item1->date }}" data-date-format="yyyy-mm-dd"
+                                                        name="date" id="date"
+                                                        style="width:100%;height:30px;text-align: left;">
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Driver -->
-                                        <div class="col-sm-3 mb-3">
-                                            <div class="form-group-sm">
-                                                <label>Driver <span class="text-danger">*</span></label>
-                                                <select name="driver" id="driver" class="form-control selectize"
-                                                    required>
-                                                    <option value="">Select Driver:</option>
-                                                    @foreach ($drivers as $d)
-                                                        <option value="{{ $d->id }}"
-                                                            {{ isset($item1->driver) && $item1->driver == $d->id ? 'selected' : '' }}>
-                                                            {{ $d->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                            <!-- Driver -->
+                                            <div class="col-sm-3 mb-3">
+                                                <div class="form-group-sm">
+                                                    <label>Driver <span class="text-danger">*</span></label>
+                                                    <select name="driver" id="driver" class="form-control selectize"
+                                                        {{ $item1->status == 1 ? 'disabled' : '' }} required>
+                                                        <option value="">Select Driver:</option>
+                                                        @foreach ($drivers as $d)
+                                                            <option value="{{ $d->id }}"
+                                                                {{ isset($item1->driver) && $item1->driver == $d->id ? 'selected' : '' }}>
+                                                                {{ $d->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Helper -->
-                                        <div class="col-sm-3 mb-3">
-                                            <div class="form-group">
-                                                <label for="helper">Helper&nbsp;<span style="color:red;">*</span></label>
-                                                <select name="helper" id="helper" required
-                                                    class="form-control selectize">
-                                                    <option value="">Select Helper:</option>
-                                                    @foreach ($helpers as $h)
-                                                        <option value="{{ $h->id }}"
-                                                            {{ isset($item1->helper) && $item1->helper == $h->id ? 'selected' : '' }}>
-                                                            {{ $h->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                            <!-- Helper -->
+                                            <div class="col-sm-3 mb-3">
+                                                <div class="form-group">
+                                                    <label for="helper">Helper&nbsp;<span
+                                                            style="color:red;">*</span></label>
+                                                    <select name="helper" id="helper" required
+                                                        class="form-control selectize"
+                                                        {{ $item1->status == 1 ? 'disabled' : '' }}>
+                                                        <option value="">Select Helper:</option>
+                                                        @foreach ($helpers as $h)
+                                                            <option value="{{ $h->id }}"
+                                                                {{ isset($item1->helper) && $item1->helper == $h->id ? 'selected' : '' }}>
+                                                                {{ $h->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <input type="hidden" name="rowCount1" id="rowCount1" class="form-control"
-                                            value="{{ count($item2) }}">
-                                        <input type="hidden" name="id" id="id" class="form-control"
-                                            value="{{ $item1->id }}">
+                                            <input type="hidden" name="rowCount1" id="rowCount1" class="form-control"
+                                                value="{{ count($item2) }}">
+                                            <input type="hidden" name="id" id="id" class="form-control"
+                                                value="{{ $item1->id }}">
 
-                                        <!-- Vehicle Type -->
-                                        <div class="col-sm-3 mb-3">
-                                            <div class="form-group-sm">
-                                                <label>Vehicle Type&nbsp;<span style="color:red;">*</span></label>
-                                                <select name="vehicle_type" id="vehicle_type" required
-                                                    class="form-control selectize">
-                                                    <option value="">Select Vehicle Type:</option>
-                                                    <option value="Car"
-                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Car' ? 'selected' : '' }}>
-                                                        Car</option>
-                                                    <option value="Van"
-                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Van' ? 'selected' : '' }}>
-                                                        Van</option>
-                                                    <option value="Bus"
-                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Bus' ? 'selected' : '' }}>
-                                                        Bus</option>
-                                                    <option value="Lorry"
-                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Lorry' ? 'selected' : '' }}>
-                                                        Lorry</option>
-                                                    <option value="Bike"
-                                                        {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Bike' ? 'selected' : '' }}>
-                                                        Bike</option>
-                                                </select>
+                                            <!-- Vehicle Type -->
+                                            <div class="col-sm-3 mb-3">
+                                                <div class="form-group-sm">
+                                                    <label>Vehicle Type&nbsp;<span style="color:red;">*</span></label>
+                                                    <select name="vehicle_type" id="vehicle_type" required
+                                                        {{ $item1->status == 1 ? 'disabled' : '' }}
+                                                        class="form-control selectize">
+                                                        <option value="">Select Vehicle Type:</option>
+                                                        <option value="Car"
+                                                            {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Car' ? 'selected' : '' }}>
+                                                            Car</option>
+                                                        <option value="Van"
+                                                            {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Van' ? 'selected' : '' }}>
+                                                            Van</option>
+                                                        <option value="Bus"
+                                                            {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Bus' ? 'selected' : '' }}>
+                                                            Bus</option>
+                                                        <option value="Lorry"
+                                                            {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Lorry' ? 'selected' : '' }}>
+                                                            Lorry</option>
+                                                        <option value="Bike"
+                                                            {{ isset($item1->vehicle_type) && $item1->vehicle_type == 'Bike' ? 'selected' : '' }}>
+                                                            Bike</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                        </div><br>
+                                            <div class="col-sm-3">
+                                            </div><br>
 
-                                        <!-- Time In / Time Out / Meter R/In / Meter R/Out -->
+                                            <!-- Time In / Time Out / Meter R/In / Meter R/Out -->
 
-                                        <div class="col-sm-3">
-                                            <div class="form-group-sm">
-                                                <label for="time_out">Time Out&nbsp;<span
-                                                        style="color:red;">*</span></label>
-                                                <input type="time" id="time_out" name="time_out"
-                                                    value="{{ $item1->time_out }}" class="form-control"
-                                                    style="width:100%;height:30px;text-align: left;">
+                                            <div class="col-sm-3">
+                                                <div class="form-group-sm">
+                                                    <label for="time_out">Time Out&nbsp;<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="time" id="time_out" name="time_out"
+                                                        value="{{ $item1->time_out }}" class="form-control"
+                                                        style="width:100%;height:30px;text-align: left;">
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-sm-3">
-                                            <div class="form-group-sm">
-                                                <label for="meter_out">Meter R/Out&nbsp;<span
-                                                        style="color:red;">*</span></label>
-                                                <input type="number" id="meter_out" name="meter_out"
-                                                    value="{{ $item1->meter_out }}" class="form-control" min="0"
-                                                    style="width:100%;height:30px;text-align: left;">
+                                            <div class="col-sm-3">
+                                                <div class="form-group-sm">
+                                                    <label for="meter_out">Meter R/Out&nbsp;<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="number" id="meter_out" name="meter_out"
+                                                        value="{{ $item1->meter_out }}" class="form-control"
+                                                        min="0" style="width:100%;height:30px;text-align: left;">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group-sm">
-                                                <label for="time_in">Time in&nbsp;<span
-                                                        style="color:red;">*</span></label>
-                                                <input type="time" id="time_in" name="time_in"
-                                                    value="{{ $item1->time_in }}" class="form-control"
-                                                    style="width:100%;height:30px;text-align: left;">
+                                            <div class="col-sm-3">
+                                                <div class="form-group-sm">
+                                                    <label for="time_in">Time in&nbsp;<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="time" id="time_in" name="time_in"
+                                                        value="{{ $item1->time_in }}" class="form-control"
+                                                        style="width:100%;height:30px;text-align: left;">
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-sm-3">
-                                            <div class="form-group-sm">
-                                                <label for="meter_in">Meter R/in&nbsp;<span
-                                                        style="color:red;">*</span></label>
-                                                <input type="number" id="meter_in" name="meter_in"
-                                                    value="{{ $item1->meter_in }}" class="form-control" min="0"
-                                                    style="width:100%;height:30px;text-align: left;">
+                                            <div class="col-sm-3">
+                                                <div class="form-group-sm">
+                                                    <label for="meter_in">Meter R/in&nbsp;<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="number" id="meter_in" name="meter_in"
+                                                        value="{{ $item1->meter_in }}" class="form-control"
+                                                        min="0" style="width:100%;height:30px;text-align: left;">
+                                                </div>
                                             </div>
+
                                         </div>
+                                        <br>
 
-                                    </div>
-                                    <br>
+                                        <!-- Outward Table -->
+                                        <div class="table-responsive">
+                                            <table id="my_data_table_3inv" name="my_data_table_3invoice"
+                                                class="table table-responsive" style="margin-bottom: 10px; width: 100%;">
 
-                                    <!-- Outward Table -->
-                                    <div class="table-responsive">
-                                        <table id="my_data_table_3inv" name="my_data_table_3invoice"
-                                            class="table table-responsive" style="margin-bottom: 10px; width: 100%;">
-
-                                            <thead style="background-color: white;" class="form-group-sm">
-                                                <tr>
-                                                    <!-- <th style="width: 200px !important;">Item Code</th> -->
-                                                    <th style="">AOD No</th>
-                                                    <!-- <th style="width: 90px !important;">GSM</th> -->
-                                                    <th style="">Items</th>
-                                                    <th style="">Customer</th>
-                                                    <th style="">Quantity</th>
-                                                    <th style="">Amount</th>
-                                                    <th style="">Action</th>
+                                                <thead style="background-color: white;" class="form-group-sm">
+                                                    <tr>
+                                                        <!-- <th style="width: 200px !important;">Item Code</th> -->
+                                                        <th style="">AOD No</th>
+                                                        <!-- <th style="width: 90px !important;">GSM</th> -->
+                                                        <th style="">Items</th>
+                                                        <th style="">Customer</th>
+                                                        <th style="">Quantity</th>
+                                                        <th style="">Amount</th>
+                                                        <th style="">Action</th>
 
 
-                                                </tr>
-                                            </thead>
-                                            @if (count($item2) > 0)
-                                                <tbody>
-                                                    @php
+                                                    </tr>
+                                                </thead>
+                                                @if (count($item2) > 0)
+                                                    <tbody>
+                                                        @php
 
-                                                        $row = count($item2) > 0 ? count($item2) : 2;
-                                                    @endphp
-                                                    @for ($i = 0; $i < $row; $i++)
-                                                        <tr id="row_{{ $i }}">
+                                                            $row = count($item2) > 0 ? count($item2) : 2;
+                                                        @endphp
+                                                        @for ($i = 0; $i < $row; $i++)
+                                                            <tr id="row_{{ $i }}">
 
-                                                            <td id="aod_t{{ $i }}">
-                                                                <select name="aod_td{{ $i }}"
-                                                                    class="form-control selectize"
-                                                                    id="aod_td{{ $i }}"
-                                                                    style="width:100%;height:30px;"
-                                                                    onchange="getDataTblOtherDetails('{{ $i }}');">
-                                                                    <option value="">Select AOD</option>
-                                                                    @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
-                                                                        @foreach ($AOD_no['value'] as $aod)
-                                                                            <option value="{{ $aod['SequenceNumber'] }}"
-                                                                                {{ isset($item2[$i]->aod_td) && $item2[$i]->aod_td == $aod['SequenceNumber'] ? 'selected' : '' }}>
-                                                                                {{ $aod['ShipmentNumber'] }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    @endif
-                                                                </select>
-                                                            </td>
-                                                            <td id="item_td{{ $i }}">
+                                                                <td id="aod_t{{ $i }}">
+                                                                    <select name="aod_td{{ $i }}"
+                                                                        class="form-control selectize"
+                                                                        id="aod_td{{ $i }}"
+                                                                        style="width:100%;height:30px;"
+                                                                        onchange="getDataTblOtherDetails('{{ $i }}');"
+                                                                        {{ $item1->status == 1 ? 'disabled' : '' }}>
+                                                                        <option value="">Select AOD</option>
+                                                                        @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
+                                                                            @foreach ($AOD_no['value'] as $aod)
+                                                                                <option
+                                                                                    value="{{ $aod['SequenceNumber'] }}"
+                                                                                    {{ isset($item2[$i]->aod_td) && $item2[$i]->aod_td == $aod['SequenceNumber'] ? 'selected' : '' }}>
+                                                                                    {{ $aod['ShipmentNumber'] }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </select>
+                                                                </td>
+                                                                <td id="item_td{{ $i }}">
 
-                                                                {{-- <input type="text" class="form-control"
+                                                                    {{-- <input type="text" class="form-control"
                                                                 name="item_se{{ $i }}"
                                                                 id="item_se{{ $i }}"
                                                                 style="width:100%;height:30px;text-align: left;"> --}}
 
-                                                                <select name="item_se{{ $i }}"
-                                                                    class="form-control selectize"
-                                                                    id="item_se{{ $i }}"
-                                                                    style="width:100%;height:30px;"
-                                                                    onchange="getDataTblOtherDetails('{{ $i }}');">
-                                                                    <option value="">Select Items</option>
-                                                                    @if (isset($items['value']) && is_array($items['value']))
-                                                                        @foreach ($items['value'] as $item)
-                                                                            <option value="{{ $item['ItemNumber'] }}"
-                                                                                {{ isset($item2[$i]->item_se) && $item2[$i]->item_se == $item['ItemNumber'] ? 'selected' : '' }}>
+                                                                    <select name="item_se{{ $i }}"
+                                                                        class="form-control selectize"
+                                                                        {{ $item1->status == 1 ? 'disabled' : '' }}
+                                                                        id="item_se{{ $i }}"
+                                                                        style="width:100%;height:30px;"
+                                                                        onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                        <option value="">Select Items</option>
+                                                                        @if (isset($items['value']) && is_array($items['value']))
+                                                                            @foreach ($items['value'] as $item)
+                                                                                <option value="{{ $item['ItemNumber'] }}"
+                                                                                    {{ isset($item2[$i]->item_se) && $item2[$i]->item_se == $item['ItemNumber'] ? 'selected' : '' }}>
 
-                                                                                {{ $item['Description'] }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    @endif
-                                                                </select>
-                                                            </td>
-                                                            <td id="customer_td{{ $i }}">
-
-
-
-                                                                <select name="customer_se{{ $i }}"
-                                                                    class="form-control selectize"
-                                                                    id="customer_se{{ $i }}"
-                                                                    style="width:100%;height:30px;"
-                                                                    onchange="getDataTblOtherDetails('{{ $i }}');">
-                                                                    <option value="">Select Customer</option>
-                                                                    @if (isset($customers['value']) && is_array($customers['value']))
-                                                                        @foreach ($customers['value'] as $cus)
-                                                                            <option value="{{ $cus['CustomerNumber'] }}"
-                                                                                {{ isset($item2[$i]->customer_se) && $item2[$i]->customer_se == $cus['CustomerNumber'] ? 'selected' : '' }}>
-
-                                                                                {{ $cus['CustomerName'] }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    @endif
-                                                                </select>
-                                                            </td>
+                                                                                    {{ $item['Description'] }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </select>
+                                                                </td>
+                                                                <td id="customer_td{{ $i }}">
 
 
-                                                            <td id="qty_td{{ $i }}">
-                                                                <input type="text" class="form-control"
-                                                                    value="{{ $item2[$i]->qty_se }}"
-                                                                    name="qty_se{{ $i }}"
-                                                                    id="qty_se{{ $i }}"
-                                                                    style="width:100%;height:30px;text-align:left;">
-                                                            </td>
 
-                                                            <td id="amount_td{{ $i }}">
-                                                                <input type="text" class="form-control"
-                                                                    value="{{ $item2[$i]->amount_se }}"
-                                                                    name="amount_se{{ $i }}"
-                                                                    id="amount_se{{ $i }}"
-                                                                    style="width:100%;height:30px;text-align:left;"
-                                                                    onblur="formatAmount(this)">
-                                                            </td>
-                                                            <td class="text-blue ">
-                                                                <button class="btn btn-danger btn-sm" type="button"
-                                                                    onclick="deleteTableRow('{{ $i }}')">Delete
-                                                                    <i class="fa fa-trash fa-lg"></i>
-                                                                </button>
-                                                            </td>
+                                                                    <select name="customer_se{{ $i }}"
+                                                                        {{ $item1->status == 1 ? 'disabled' : '' }}
+                                                                        class="form-control selectize"
+                                                                        id="customer_se{{ $i }}"
+                                                                        style="width:100%;height:30px;"
+                                                                        onchange="getDataTblOtherDetails('{{ $i }}');">
+                                                                        <option value="">Select Customer</option>
+                                                                        @if (isset($customers['value']) && is_array($customers['value']))
+                                                                            @foreach ($customers['value'] as $cus)
+                                                                                <option
+                                                                                    value="{{ $cus['CustomerNumber'] }}"
+                                                                                    {{ isset($item2[$i]->customer_se) && $item2[$i]->customer_se == $cus['CustomerNumber'] ? 'selected' : '' }}>
 
-                                                        </tr>
-                                                    @endfor
-                                                </tbody>
-                                            @endif
-                                        </table>
-                                    </div>
-
-                                    <div class="col-sm-12 row ">
-
-                                        <div class="col-sm-2">
-                                            <div class="form-group-sm col-sm-12">
-
-                                                <button type="button" value="addLines" id="addLines"
-                                                    onclick="addRow(); this.disabled = true;" name="addLines"
-                                                    class="btn btn-sm btn-success pull-right">
-                                                    <i class="fa fa-eraser"></i> Add Lines
-                                                </button>
-                                                <!--<button type="button" value="addLines" id="addLines" name="addLines" class="btn btn-sm btn-success pull-right " onclick="refreshPage()"><i class="fa fa-eraser"></i> Refesh</button>-->
+                                                                                    {{ $cus['CustomerName'] }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        @endif
+                                                                    </select>
+                                                                </td>
 
 
-                                            </div>
+                                                                <td id="qty_td{{ $i }}">
+                                                                    <input type="text" class="form-control"
+                                                                        value="{{ $item2[$i]->qty_se }}"
+                                                                        name="qty_se{{ $i }}"
+                                                                        id="qty_se{{ $i }}"
+                                                                        style="width:100%;height:30px;text-align:left;">
+                                                                </td>
+
+                                                                <td id="amount_td{{ $i }}">
+                                                                    <input type="text" class="form-control"
+                                                                        value="{{ $item2[$i]->amount_se }}"
+                                                                        name="amount_se{{ $i }}"
+                                                                        id="amount_se{{ $i }}"
+                                                                        style="width:100%;height:30px;text-align:left;"
+                                                                        onblur="formatAmount(this)">
+                                                                </td>
+                                                                <td class="text-blue ">
+                                                                    <button class="btn btn-danger btn-sm" type="button"
+                                                                        onclick="deleteTableRow('{{ $i }}')">Delete
+                                                                        <i class="fa fa-trash fa-lg"></i>
+                                                                    </button>
+                                                                </td>
+
+                                                            </tr>
+                                                        @endfor
+                                                    </tbody>
+                                                @endif
+                                            </table>
                                         </div>
 
-                                    </div>
+                                        <div class="col-sm-12 row ">
 
-                                    <!-- Comment Section -->
-                                    <div class="card shadow-sm border-0 mt-4">
-                                        <div class="card-body">
-                                            <div class="form-group">
-                                                <label for="comment"><strong>Comments</strong></label>
-                                                <textarea class="form-control" id="comment" name="comment" rows="4"
-                                                    placeholder="Enter your comments here...">{{ $item1->comment }}</textarea>
+                                            <div class="col-sm-2">
+                                                <div class="form-group-sm col-sm-12">
+
+                                                    <button type="button" value="addLines" id="addLines"
+                                                        onclick="addRow(); this.disabled = true;" name="addLines"
+                                                        class="btn btn-sm btn-success pull-right">
+                                                        <i class="fa fa-eraser"></i> Add Lines
+                                                    </button>
+                                                    <!--<button type="button" value="addLines" id="addLines" name="addLines" class="btn btn-sm btn-success pull-right " onclick="refreshPage()"><i class="fa fa-eraser"></i> Refesh</button>-->
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Comment Section -->
+                                        <div class="card shadow-sm border-0 mt-4">
+                                            <div class="card-body">
+                                                <div class="form-group">
+                                                    <label for="comment"><strong>Comments</strong></label>
+                                                    <textarea class="form-control" id="comment" name="comment" rows="4"
+                                                        placeholder="Enter your comments here...">{{ $item1->comment }}</textarea>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="card shadow-sm border-0 mt-4">
-    <div class="card shadow-sm border-0 mt-4">
-    <div class="card-body">
-        <div class="form-group">
-            <label><strong>Inward Items</strong></label>
-            <div class="border rounded p-3 bg-light">
-                @php
-                    $selectedItems = explode(',', $item1->inward_items ?? '');
-                @endphp
-                @foreach($otherpayments as $payment)
-                    @if($payment->id >= 5 && $payment->id <= 9)
-                        <div class="form-check mb-2">
-                            <input class="form-check-input" 
-                                   type="checkbox" 
-                                   name="inward_items[]" 
-                                   value="{{ $payment->id }}" 
-                                   id="inward_item_{{ $payment->id }}"
-                                   {{ in_array($payment->id, $selectedItems) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="inward_item_{{ $payment->id }}">
-                                {{ $payment->payment_type }}
-                            </label>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
-        </div>
-    </div>
-</div>
-                                    <!-- Page-level Buttons -->
-                                    <div class="mt-3 d-flex justify-content-end gap-2">
-                                        <button type="submit" class="btn btn-primary" value="update"
-                                            name="update">Update</button>
-                                        <button type="submit" class="btn btn-success" value="update_close"
-                                            name="update_close">Update & Close</button>
-                                        <button type="button" class="btn btn-secondary"
-                                            onclick="window.close();">Close</button>
-                                    </div>
-
+                                        <div class="card shadow-sm border-0 mt-4">
+                                            <div class="card shadow-sm border-0 mt-4">
+                                                <div class="card-body">
+                                                    <div class="form-group">
+                                                        <label><strong>Inward Items</strong></label>
+                                                        <div class="border rounded p-3 bg-light">
+                                                            @php
+                                                                $selectedItems = explode(
+                                                                    ',',
+                                                                    $item1->inward_items ?? '',
+                                                                );
+                                                            @endphp
+                                                            @foreach ($otherpayments as $payment)
+                                                                @if ($payment->id >= 5 && $payment->id <= 9)
+                                                                    <div class="form-check mb-2">
+                                                                        <input class="form-check-input" type="checkbox"
+                                                                            name="inward_items[]"
+                                                                            value="{{ $payment->id }}"
+                                                                            id="inward_item_{{ $payment->id }}"
+                                                                            {{ in_array($payment->id, $selectedItems) ? 'checked' : '' }}>
+                                                                        <label class="form-check-label"
+                                                                            for="inward_item_{{ $payment->id }}">
+                                                                            {{ $payment->payment_type }}
+                                                                        </label>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Page-level Buttons -->
+                                            <div class="mt-3 d-flex justify-content-end gap-2">
+                                                <button type="submit" class="btn btn-danger" value="completed" id="completeBtn"
+                                                    name="completed">Complete</button>
+                                                <button type="submit" class="btn btn-primary" value="update"
+                                                    name="update">Update</button>
+                                                <button type="submit" class="btn btn-success" value="update_close"
+                                                    name="update_close">Update & Close</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    onclick="window.close();">Close</button>
+                                            </div>
+                                    </fieldset>
                                 </div>
                             </form>
                         </div>
@@ -584,7 +605,7 @@
 
             rowCount++;
             $(".selectize").select2();
-            
+
             countRows();
         }
 
@@ -673,6 +694,26 @@
         }
     </script>
 
+    @if ($readonly)
+        <script>
+            console.log('hit');
+            document.addEventListener('DOMContentLoaded', function() {
+                // Disable all selectize dropdowns
+                document.querySelectorAll('.selectize').forEach(function(select) {
+                    if (select.selectize) { // check if selectize is initialized
+                        select.selectize.disable();
+                    }
+                });
+
+                // Optional: disable Add/Delete buttons if inside fieldset doesn't work
+                document.querySelectorAll('button').forEach(function(btn) {
+                    if (!btn.classList.contains('btn-secondary')) { // leave Close button enabled
+                        btn.disabled = true;
+                    }
+                });
+            });
+        </script>
+    @endif
 
 
 
@@ -715,3 +756,29 @@
             background-color: #c82333;
         }
     </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const completeBtn = document.getElementById('completeBtn');
+            const form = completeBtn.closest('form');
+
+            completeBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // prevent immediate form submission
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Once completed, you won't be able to edit this form!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, complete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>

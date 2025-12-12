@@ -216,14 +216,14 @@
                 </li>
                 <li class="nav-item">
                     @if (Auth::user()->hasPermission('view all inward') || Auth::user()->id == '1')
-                            <li class="nav-item">
+                <li class="nav-item">
                     <a href="{{ route('inward.inward_view_All') }}"
                         class="nav-link {{ request()->routeIs('inward.inward_view_All') ? 'active' : '' }}">
                         <i
                             class="nav-icon bi bi-box-arrow-in-down {{ request()->routeIs('inward.inward_view_All') ? 'text-primary' : 'text-muted' }}"></i>
                         <p>Inward Module</p>
                     </a>
-                      @endif
+                    @endif
                 </li>
                 <li class="nav-item report-menu {{ request()->routeIs('report.*') ? 'menu-open' : '' }}">
                     <a href="#"
@@ -254,6 +254,16 @@
                                     <i
                                         class="nav-icon bi bi-circle {{ request()->routeIs('report.report_intencive_summary') ? 'text-primary' : 'text-muted' }}"></i>
                                     <p>Intencive Summary</p>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::user()->hasPermission('Lorry Usage detail report') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('report.report_lorryusage_detail') }}"
+                                    class="nav-link {{ request()->routeIs('report.report_lorryusage_detail') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('report.report_lorryusage_detail') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Lorry Usage Detail</p>
                                 </a>
                             </li>
                         @endif
@@ -301,7 +311,7 @@
             });
         });
     });
-     document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const toggleLinks = document.querySelectorAll('.report-toggle');
 
         toggleLinks.forEach(link => {

@@ -8,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="{{route('Masterfile.addvehicle')}}" method="post">
+            <form action="{{ route('Masterfile.addvehicle') }}" method="post">
                 {{ csrf_field() }}
 
                 <div class="modal-body">
@@ -48,10 +48,14 @@
                             <label class="form-label">Color</label>
                             <input type="text" name="color" class="form-control">
                         </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Max weight</label>
+                            <input type="text" name="max_weight" class="form-control" placeholder="MT">
+                        </div>
                     </div>
 
-                      <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Fuel Type <span class="text-danger">*</span></label>
                             <select name="fuel_type" class="form-control" required>
                                 <option>Petrol</option>
@@ -71,16 +75,16 @@
                                 <option>Maintenance</option>
                             </select>
                         </div>
-                </div>
+                    </div>
 
-                <!-- Modal Footer -->
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-save">Save</button>
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-save">Save</button>
 
-                     <button type="reset" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-1"></i> Cancel
-                    </button>
-                </div>
+                        <button type="reset" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i> Cancel
+                        </button>
+                    </div>
 
             </form>
 

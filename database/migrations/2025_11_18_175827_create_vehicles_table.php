@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->string('brand')->nullable();
                 $table->string('model')->nullable();
                 $table->string('color')->nullable();
+                $table->string('max_weight')->nullable();
                 $table->string('fuel_type');
                 $table->enum('status', ['Active', 'Inactive', 'Maintenance'])->default('Active');
 

@@ -157,4 +157,48 @@ class ReportController extends Controller
     }
 
 
+    public function report_lorryusage_detail(Request $request)
+    {
+        $from = $request->from;
+        $to = $request->to;
+
+        $query = DB::table('Outwardmodel_type1_t1s')
+
+            ->leftJoin('vehicles', 'vehicles.id', '=', 'Outwardmodel_type1_t1s.vehicle_no')
+            ->select(
+                'Outwardmodel_type1_t1s.*',
+                'vehicles.vehicle_no as vehicle_no',
+                'vehicles.type as v_type',
+
+            )
+            ->selectRaw('COUNT(*) OVER(PARTITION BY Outwardmodel_type1_t1s.vehicle_no, CAST(Outwardmodel_type1_t1s.created_at AS DATE)) as vehicle_count')
+
+            ->selectRaw('ROW_NUMBER() OVER(PARTITION BY Outwardmodel_type1_t1s.vehicle_no, CAST(Outwardmodel_type1_t1s.created_at AS DATE) ORDER BY Outwardmodel_type1_t1s.created_at) as vehicle_trip_no')
+
+            ->where('Outwardmodel_type1_t1s.status', '1');
+
+        // Apply date range filter
+        if ($from && $to) {
+            $query->whereDate('Outwardmodel_type1_t1s.created_at', '>=', $from)
+                ->whereDate('Outwardmodel_type1_t1s.created_at', '<=', $to);
+        } elseif ($from) {
+            $query->whereDate('Outwardmodel_type1_t1s.created_at', '>=', $from);
+        } elseif ($to) {
+            $query->whereDate('Outwardmodel_type1_t1s.created_at', '<=', $to);
+        }
+
+        $get_outward_data = $query->orderByDesc('Outwardmodel_type1_t1s.created_at')
+            ->paginate(env("RECORDS_PER_PAGE"))
+            ->withQueryString();
+
+        // Get all sub table data for these main records
+        $mainIds = $get_outward_data->pluck('id')->toArray();
+
+        $sub_data = DB::table('Outwardmodel_type1_t2s')
+            ->whereIn('outward_id', $mainIds)
+            ->get()
+            ->groupBy('outward_id');
+
+        return view('report.lorryusage_detail_report', compact('get_outward_data', 'sub_data', 'from', 'to'));
+    }
 }

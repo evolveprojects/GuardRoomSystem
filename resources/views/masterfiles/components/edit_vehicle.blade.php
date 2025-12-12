@@ -1,5 +1,5 @@
 <!-- Edit Vehicle Button -->
-<button type="button" class="btn btn-success btn-sm text-white w-100" 
+<button type="button" class="btn btn-success btn-sm text-white w-100"
         data-bs-toggle="modal"
         data-bs-target="{{ '#edit-vehicle-modal-' . $vehicle->id }}">
     <i class="ri-add-circle-line align-bottom"></i> Edit
@@ -23,7 +23,7 @@
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <label class="form-label">Vehicle No <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="vehicle_no" 
+                            <input type="text" class="form-control" name="vehicle_no"
                                    value="{{ $vehicle->vehicle_no }}" required>
                         </div>
 
@@ -43,18 +43,22 @@
                     <div class="row mb-2">
                         <div class="col-md-4">
                             <label class="form-label">Brand</label>
-                            <input type="text" class="form-control" name="brand" 
+                            <input type="text" class="form-control" name="brand"
                                    value="{{ $vehicle->brand }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Model</label>
-                            <input type="text" class="form-control" name="model" 
+                            <input type="text" class="form-control" name="model"
                                    value="{{ $vehicle->model }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Color</label>
-                            <input type="text" class="form-control" name="color" 
+                            <input type="text" class="form-control" name="color"
                                    value="{{ $vehicle->color }}">
+                        </div>
+                         <div class="col-md-4 mb-3">
+                            <label class="form-label">Max weight</label>
+                            <input type="text" name="max_weight" class="form-control" placeholder="MT" value="{{ $vehicle->max_weight}}">
                         </div>
                     </div>
 

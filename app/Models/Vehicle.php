@@ -17,6 +17,7 @@ class Vehicle extends Model
         'model',
         'color',
         'fuel_type',
+        'max_weight',
         'status',
         'created_by',
         'updated_by',

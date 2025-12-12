@@ -107,4 +107,4 @@ Route::post('/sage300_aoddata', [App\Http\Controllers\Admin\ShipmentController::
 //reports
 Route::get('/intencive_report', [App\Http\Controllers\Admin\ReportController::class, 'intencive_report'])->name('report.report_intencive');
 Route::get('/intencive_report_summary', [App\Http\Controllers\Admin\ReportController::class, 'intencive_report_summary'])->name('report.report_intencive_summary');
-
+Route::get('/report_lorryusage_detail', [App\Http\Controllers\Admin\ReportController::class, 'report_lorryusage_detail'])->name('report.report_lorryusage_detail');

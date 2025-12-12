@@ -146,7 +146,7 @@
                                         <div class="col-sm-3 mb-3">
                                             <div class="form-group-sm">
                                                 <label>Weight (kg)&nbsp;<span style="color:red;">*</span></label>
-                                                <input type="number" class="form-control" name="weight" id="weight"
+                                                <input type="number" class="form-control" name="weight" id="weight" readonly
                                                     min="0" step="0.01"
                                                     style="width:100%;height:30px;text-align: left;"
                                                     placeholder="Enter weight in kg">

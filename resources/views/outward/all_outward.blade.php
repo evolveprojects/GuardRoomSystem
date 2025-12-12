@@ -130,11 +130,10 @@
                                                                         style="padding-top: 8px; padding-bottom: unset;">
                                                                         {{-- @include('masterfiles.components.edit_center') --}}
                                                                         <a href="{{ route('outward.outward_edit_type1', $data->id) }}"
-                                                                            class="btn btn-success btn-sm text-white w-100">
+                                                                            class="btn btn-success btn-sm text-white w-100 mb-2">
                                                                             <i class="ri-add-circle-line align-bottom"></i>
                                                                             Edit
                                                                         </a>
-
                                                                         <br>
                                                                     </div>
 

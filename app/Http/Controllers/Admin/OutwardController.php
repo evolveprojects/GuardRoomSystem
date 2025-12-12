@@ -29,9 +29,12 @@ class OutwardController extends Controller
         // fetch all centers (active first, for example)
         $centers = Center::orderBy('center_name', 'ASC')->get();
         // fetch all vehicles (active first, for example)
-        $vehicles = Vehicle::orderBy('vehicle_no', 'ASC')->get();
+        $vehicles = Vehicle::where('type', 'Lorry')
+            ->orderBy('vehicle_no', 'ASC')
+            ->get();
+
         // fetch all vehicles (active first, for example)
-        $vehicles = Vehicle::orderBy('type', 'ASC')->get();
+
         // fetch all Helpers (active first, for example)
         $helpers = Helper::orderBy('name', 'ASC')->get();
         // fetch all Drivers (active first, for example)
@@ -526,7 +529,9 @@ class OutwardController extends Controller
         // fetch all centers (active first, for example)
         $centers = Center::orderBy('center_name', 'ASC')->get();
         // fetch all vehicles (active first, for example)
-        $vehicles = Vehicle::orderBy('vehicle_no', 'ASC')->get();
+        $vehicles = Vehicle::where('type', 'Lorry')
+            ->orderBy('vehicle_no', 'ASC')
+            ->get();
         // fetch all vehicles (active first, for example)
 
         // fetch all Helpers (active first, for example)
@@ -551,7 +556,7 @@ class OutwardController extends Controller
 
         return view(
             'outward.outwardtype1_edit',
-            compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no', 'item1', 'item2',  'items',  'customers','otherpayments')
+            compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no', 'item1', 'item2',  'items',  'customers', 'otherpayments')
         );
     }
 
@@ -562,24 +567,32 @@ class OutwardController extends Controller
 
         if ($hasPermission) {
 
-            $validated = $request->validate([
+            $rules = [
                 'outward_number' => ['required', 'string'],
                 'center' => ['required', 'string'],
                 'vehicle_no' => ['required', 'string'],
                 'date' => ['required', 'string'],
-                'time_in' => ['required', 'string'],
                 'driver' => ['required', 'string'],
                 'helper' => ['required', 'string'],
-                'meter_in' => ['required', 'string'],
-                'inward_items' => ['nullable', 'array'], // Add this
+                'inward_items' => ['nullable', 'array'],
                 'inward_items.*' => ['exists:other_payments,id'],
+            ];
 
-            ]);
+            // Add conditional rules if completed
+            if ($request->completed == 'completed') {
+                $rules['meter_in'] = ['required', 'string'];
+                $rules['time_in'] = ['required', 'string'];
+            }
+
+            // Validate request
+            $validated = $request->validate($rules);
             // Call the insertData method and handle its response
             $result = $this->updateData($request);
 
             if ($result->getData()->success) {
-                if ($request->update_close == 'update_close') {
+                if ($request->completed == 'completed') {
+                    return redirect()->route('outward.outward_view_All')->with('success', 'Job  Completed successfully!');
+                } elseif ($request->update_close == 'update_close') {
                     return redirect()->route('outward.outward_view_All')->with('success', 'Job  Updated successfully!');
                 } else {
                     return back()->with('success', 'Job  Updated successfully!');
@@ -635,12 +648,14 @@ class OutwardController extends Controller
             'meter_in' => $request->meter_in,
             'meter_out' => $request->meter_out,
             'comment' => $request->comment,
-            'inward_items' => $inwardItems, // Add this
-            'status' => '1',
+            'inward_items' => $inwardItems,
             'type' => '1',
             'created_by' => Auth::id(),
             'updated_by' => Auth::id(),
         ];
+        if ($request->completed == 'completed') {
+            $data1['status'] = '1';
+        }
 
         $job = Outwardmodel_type1_t1::where('id', $request->id)->update($data1);
     }
@@ -665,7 +680,6 @@ class OutwardController extends Controller
                 Outwardmodel_type1_t2::create($data3);
             }
         }
-
     }
 
     public function outward_type2_t2(Request $request)
