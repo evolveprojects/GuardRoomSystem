@@ -144,14 +144,16 @@
                                         </div>
                                         <!-- Weight Field - Added after Vehicle Type -->
                                         <div class="col-sm-3 mb-3">
-                                            <div class="form-group-sm">
-                                                <label>Weight (kg)&nbsp;<span style="color:red;">*</span></label>
-                                                <input type="number" class="form-control" name="weight" id="weight"
-                                                    min="0" step="0.01"
-                                                    style="width:100%;height:30px;text-align: left;"
-                                                    placeholder="Enter weight in kg">
-                                            </div>
-                                        </div>
+                                    <div class="form-group-sm">
+                                        <label>Weight (mt)&nbsp;<span style="color:red;">*</span></label>
+                                        <input type="number" 
+                                            class="form-control" 
+                                            name="weight" 
+                                            id="weight"
+                                            style="width:100%;height:30px;background-color:#e9ecef;"
+                                            readonly>
+                                    </div>
+                                </div>
 
 
 
@@ -265,10 +267,14 @@
                                                         </td>
 
                                                         <td id="qty_td{{ $i }}">
-                                                            <input type="text" class="form-control"
-                                                                name="qty_se{{ $i }}"
-                                                                id="qty_se{{ $i }}"
-                                                                style="width:100%;height:30px;text-align:left;">
+                                                            <input type="number" 
+                                                                    class="form-control"
+                                                                    name="qty_se{{ $i }}"
+                                                                    id="qty_se{{ $i }}"
+                                                                    style="width:100%;height:30px;text-align:left;"
+                                                                    min="0"
+                                                                    step="1"
+                                                                    oninput="calculateWeight()">
                                                         </td>
 
                                                         <td id="amount_td{{ $i }}">
@@ -361,6 +367,7 @@
             </button>
 
             `;
+
             }
 
             // Check last row; if it has value, add new row
@@ -372,6 +379,7 @@
             countRows();
             getother_details(index);
 
+            calculateWeight(); 
         }
 
 
@@ -463,7 +471,7 @@
                                                             </select>
                                                         </td>
         <td id="qty_td${index}">
-           <input type="text" class="form-control"
+           <input type="number" oninput="calculateWeight()" class="form-control"
                                                                 name="qty_se${index}"
                                                                 id="qty_se${index}"
                                                                 style="width:100%;height:30px;text-align:left;">
@@ -571,6 +579,19 @@
             $('#owner_name').val('');
             $('#capacity').val('');
         }
+
+        function calculateWeight() {
+    let totalQuantity = 0;
+    const qtyInputs = document.querySelectorAll('[id^="qty_se"]');
+    
+    qtyInputs.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        totalQuantity += value;
+    });
+    
+    const weight = totalQuantity / 1000;
+    document.getElementById('weight').value = weight.toFixed(2);
+}
     </script>
 
 
