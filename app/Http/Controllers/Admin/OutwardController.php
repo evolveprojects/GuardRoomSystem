@@ -397,8 +397,8 @@ class OutwardController extends Controller
             'helper_id' => 'required',
             'vehicle_type' => 'required',
             'time_out' => 'required',
-            'meter_out' => 'required|numeric',
-            'meter_in' => 'nullable|numeric',
+            'meter_out' => ['required', 'numeric', 'min:0'],
+            'meter_in' => ['required', 'numeric', 'gt:meter_out'],
             'time_in' => 'nullable',
             'inward_items' => ['nullable', 'array'],
             'inward_items.*' => ['exists:other_payments,id'],
@@ -569,8 +569,9 @@ class OutwardController extends Controller
                 'time_in' => ['required', 'string'],
                 'driver' => ['required', 'string'],
                 'helper' => ['required', 'string'],
-                'meter_in' => ['required', 'string'],
-                'inward_items' => ['nullable', 'array'], // Add this
+                'meter_out' => ['required', 'numeric', 'min:0'],          
+                'meter_in' => ['required', 'numeric', 'gt:meter_out'],
+                'inward_items' => ['nullable', 'array'], 
                 'inward_items.*' => ['exists:other_payments,id'],
 
             ]);
