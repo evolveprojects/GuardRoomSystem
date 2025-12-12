@@ -476,6 +476,7 @@ class OutwardController extends Controller
 
         return redirect()->route('outward.all')->with('success', 'Outward updated successfully!');
     }
+
     public function edit($id)
     {
         $outward = OutwardType2::with('t2Items')->findOrFail($id);
@@ -550,7 +551,7 @@ class OutwardController extends Controller
 
         return view(
             'outward.outwardtype1_edit',
-            compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no', 'item1', 'item2', 'items', 'customers','otherpayments')
+            compact('centers', 'vehicles', 'helpers', 'drivers', 'outno', 'AOD_no', 'item1', 'item2',  'items',  'customers','otherpayments')
         );
     }
 
@@ -644,11 +645,12 @@ class OutwardController extends Controller
 
         $job = Outwardmodel_type1_t1::where('id', $request->id)->update($data1);
     }
-    
+
 
     private function jobupdate2(Request $request)
     {
         $rowCount = $request->rowCount1;
+
         Outwardmodel_type1_t2::where('outward_id', $request->id)->delete();
         for ($i = 0; $i < $rowCount; $i++) {
             if (!empty($request->input('aod_td' . $i))) {
@@ -664,8 +666,8 @@ class OutwardController extends Controller
                 Outwardmodel_type1_t2::create($data3);
             }
         }
-    }
 
+    }
 
     public function outward_type2_t2(Request $request)
     {

@@ -18,15 +18,16 @@ return new class extends Migration
             $table->string('vehicle_no')->nullable();
             $table->string('date')->nullable();
             $table->string('helper')->nullable();
-              $table->string('driver')->nullable();
+            $table->string('driver')->nullable();
             $table->string('vehicle_type')->nullable();
             $table->string('time_in')->nullable();
             $table->string('time_out')->nullable();
             $table->string('meter_in')->nullable();
             $table->string('meter_out')->nullable();
             $table->string('status')->nullable();
-             $table->string('type')->nullable();
+            $table->string('type')->nullable();
             $table->string('comment')->nullable();
+            $table->string('Weight')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();

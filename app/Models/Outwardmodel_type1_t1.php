@@ -23,6 +23,7 @@ class Outwardmodel_type1_t1 extends Model
         'status',
         'type',
         'comment',
+         'weight',
         'created_by',
         'updated_by',
         'inward_items',

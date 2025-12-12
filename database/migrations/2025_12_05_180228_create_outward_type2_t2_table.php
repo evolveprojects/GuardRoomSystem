@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('no')->nullable();                  // No column (like aod_td)
             $table->string('item')->nullable();
             $table->integer('quantity')->nullable();
-            $table->decimal('amount', 12, 2)->nullable();
+            $table->string('amount')->nullable();
             $table->timestamps();
 
             $table->foreign('outward_id')

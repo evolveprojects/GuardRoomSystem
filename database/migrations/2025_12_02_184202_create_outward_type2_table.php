@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('meter_in');
             $table->integer('meter_out');
             $table->text('comments')->nullable();
+         
             $table->timestamps();
         });
     }

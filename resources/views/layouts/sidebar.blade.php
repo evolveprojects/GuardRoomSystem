@@ -237,13 +237,23 @@
                     </a>
                     <ul class="nav nav-treeview">
 
-                        @if (Auth::user()->hasPermission('incentive report') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('incentive report details') || Auth::user()->id == '1')
                             <li class="nav-item">
                                 <a href="{{ route('report.report_intencive') }}"
                                     class="nav-link {{ request()->routeIs('report.report_intencive') ? 'active' : '' }}">
                                     <i
                                         class="nav-icon bi bi-circle {{ request()->routeIs('report.report_intencive') ? 'text-primary' : 'text-muted' }}"></i>
-                                    <p>Intencive</p>
+                                    <p>Intencive Details</p>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::user()->hasPermission('incentive report summary') || Auth::user()->id == '1')
+                            <li class="nav-item">
+                                <a href="{{ route('report.report_intencive_summary') }}"
+                                    class="nav-link {{ request()->routeIs('report.report_intencive_summary') ? 'active' : '' }}">
+                                    <i
+                                        class="nav-icon bi bi-circle {{ request()->routeIs('report.report_intencive_summary') ? 'text-primary' : 'text-muted' }}"></i>
+                                    <p>Intencive Summary</p>
                                 </a>
                             </li>
                         @endif
