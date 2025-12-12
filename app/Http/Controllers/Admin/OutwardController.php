@@ -573,7 +573,7 @@ class OutwardController extends Controller
                 'meter_in' => ['required', 'numeric', 'gt:meter_out'],
                 'inward_items' => ['nullable', 'array'], 
                 'inward_items.*' => ['exists:other_payments,id'],
-
+                
             ]);
             // Call the insertData method and handle its response
             $result = $this->updateData($request);
