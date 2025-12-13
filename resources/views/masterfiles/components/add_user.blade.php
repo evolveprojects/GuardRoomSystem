@@ -9,7 +9,7 @@
             </div>
 
             <!-- Form -->
-            <form method="POST" action="{{ route('register') }}" >
+            <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="modal-body">
@@ -25,9 +25,10 @@
                             <label>User Type <span class="text-danger">*</span></label>
                             <select name="usertype" class="form-control select2" required>
                                 <option value="">Select</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Guard">Guard</option>
-                                <option value="Manager">Manager</option>
+                                @foreach ($getuserlevels as $h)
+                                    <option value="{{ $h->id }}">{{ $h->level_name }}</option>
+                                @endforeach
+
                             </select>
                         </div>
 
@@ -42,10 +43,10 @@
                         </div>
                     </div>
 
-                    <div class="form-group mb-2">
+                    {{-- <div class="form-group mb-2">
                         <label>Username <span class="text-danger">*</span></label>
-                        <input type="text" name="username" class="form-control" required>
-                    </div>
+                        <input type="text" name="username" class="form-control" >
+                    </div> --}}
 
                     <div class="form-group mb-2">
                         <label>Email <span class="text-danger">*</span></label>
@@ -72,8 +73,8 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-save">Save</button>
-                   
-                     <button type="reset" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
+
+                    <button type="reset" class="btn btn-secondary ms-2" data-bs-dismiss="modal">
                         <i class="bi bi-x-circle me-1"></i> Cancel
                     </button>
                 </div>
@@ -85,15 +86,15 @@
 
 <!-- Select2 Script -->
 <script>
-    $(document).ready(function () {
-        $('#add-user-modal').on('shown.bs.modal', function () {
+    $(document).ready(function() {
+        $('#add-user-modal').on('shown.bs.modal', function() {
             $('.select2').select2({
                 dropdownParent: $('#add-user-modal .modal-content'),
                 width: '100%'
             });
         });
 
-        $('#add-user-modal').on('hidden.bs.modal', function () {
+        $('#add-user-modal').on('hidden.bs.modal', function() {
             $('.select2').select2('destroy');
         });
     });

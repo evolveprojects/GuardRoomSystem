@@ -38,7 +38,13 @@ class MasterfilesController extends Controller
     public function users(Request $request)
     {
         $searchKey = $request->searchKey;
-        $user = User::where('name', 'like', '%' . $searchKey . '%')
+        $user = User::select('users.*', 'userlevels.level_name') // select columns explicitly
+            ->leftJoin('userlevels', 'users.user_type', '=', 'userlevels.id')
+            ->where('users.name', 'like', '%' . $searchKey . '%') // specify table
+            ->orderBy('users.created_at', 'DESC') // specify table to avoid ambiguity
+            ->paginate(env('RECORDS_PER_PAGE'));
+
+        $getuserlevels = Userlevel::where('status', '1')
             ->orderBy('created_at', 'DESC')
             ->paginate(env("RECORDS_PER_PAGE"));
 
@@ -51,7 +57,7 @@ class MasterfilesController extends Controller
             ->groupBy('permission_type')
             ->toArray();
 
-        return view('masterfiles.users', compact(['user', 'searchKey', 'permissions']));
+        return view('masterfiles.users', compact(['user', 'searchKey', 'permissions','getuserlevels']));
     }
 
     public function centers(Request $request)
@@ -114,7 +120,7 @@ class MasterfilesController extends Controller
     public function adduserlevel(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("add userlevel") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("add userlevel") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -144,7 +150,7 @@ class MasterfilesController extends Controller
     public function updateuserlevel(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("edit userlevel") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("edit userlevel") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -181,7 +187,7 @@ class MasterfilesController extends Controller
 
     public function addCenter(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("add center ") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("add center ") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -207,7 +213,7 @@ class MasterfilesController extends Controller
 
     public function updateCenter(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("edit center") || Auth::user()->id == 1);
+        $hasPermission = (Auth::user()->hasPermission("edit center") || Auth::user()->user_type == 1);
 
         if (!$hasPermission) {
             return redirect("/not_allowed");
@@ -241,7 +247,7 @@ class MasterfilesController extends Controller
        ============================================================ */
     public function addVehicle(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("add vehicle") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("add vehicle") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -271,7 +277,7 @@ class MasterfilesController extends Controller
 
     public function updateVehicle(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("edit vehicle") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("edit vehicle") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -310,7 +316,7 @@ class MasterfilesController extends Controller
        ============================================================ */
     public function addDriver(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("add driver") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("add driver") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -349,7 +355,7 @@ class MasterfilesController extends Controller
 
     public function updateDriver(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("edit driver") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("edit driver") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -397,7 +403,7 @@ class MasterfilesController extends Controller
        ============================================================ */
     public function addHelper(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("add helper") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("add helper") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -436,7 +442,7 @@ class MasterfilesController extends Controller
 
     public function updateHelper(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("edit helper") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("edit helper") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -483,7 +489,7 @@ class MasterfilesController extends Controller
        ============================================================ */
     public function addSecurity(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("add security") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("add security") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -520,7 +526,7 @@ class MasterfilesController extends Controller
 
     public function updateSecurity(Request $request)
     {
-        $hasPermission = (Auth::user()->hasPermission("edit security") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("edit security") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -590,7 +596,7 @@ class MasterfilesController extends Controller
     {
 
         // Check permission - note: using == '1' for ID comparison is not secure
-        $hasPermission = Auth::user()->hasPermission("add customer") || Auth::user()->id == 1;
+        $hasPermission = Auth::user()->hasPermission("add customer") || Auth::user()->user_type == 1;
 
         if (!$hasPermission) {
             return redirect("/not_allowed");
@@ -629,7 +635,7 @@ class MasterfilesController extends Controller
     public function editcustomers(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("edit customer") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("edit customer") || Auth::user()->user_type == '1');
 
         if (!$hasPermission) {
             return redirect("/not_allowed");
@@ -670,7 +676,7 @@ class MasterfilesController extends Controller
     {
 
         // Check permission - note: using == '1' for ID comparison is not secure
-        $hasPermission = Auth::user()->hasPermission("add payment condition") || Auth::user()->id == 1;
+        $hasPermission = Auth::user()->hasPermission("add payment condition") || Auth::user()->user_type == 1;
 
         if (!$hasPermission) {
             return redirect("/not_allowed");
@@ -757,7 +763,7 @@ class MasterfilesController extends Controller
     public function editpaycondition(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("edit payment condition") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("edit payment condition") || Auth::user()->user_type == '1');
 
         if (!$hasPermission) {
             return redirect("/not_allowed");
@@ -815,7 +821,7 @@ class MasterfilesController extends Controller
     public function addotherpayments(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("add otherpayments") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("add otherpayments") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -842,7 +848,7 @@ class MasterfilesController extends Controller
     public function updateotherpayments(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("edit otherpayments") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("edit otherpayments") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -870,6 +876,4 @@ class MasterfilesController extends Controller
             return redirect("/not_allowed");
         }
     }
-
-
 }

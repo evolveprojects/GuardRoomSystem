@@ -34,7 +34,7 @@
                         <!-- Card -->
                         <div class="card shadow-sm border-0 mb-4">
                             <div class="card-body">
-                                
+
                                 <!-- Add User Button and Search Bar in Same Row -->
                                 <div class="row mb-3">
                                     <div class="col-md-6 d-flex align-items-center">
@@ -71,7 +71,7 @@
                                                 <th>Name</th>
                                                 <th>User Type</th>
                                                 <th>EPF Number</th>
-                                                <th>Username</th>
+
                                                 <th>Email</th>
                                                 <th>Phone</th>
                                                 <th>Status</th>
@@ -84,12 +84,18 @@
                                                 <tr>
                                                     <td>{{ $user->id }}</td>
                                                     <td>{{ $user->name }}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{ $user->level_name }}</td>
+                                                    <td>{{ $user->epf_number }}</td>
+
                                                     <td>{{ $user->email }}</td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{ $user->phone }}</td>
+                                                   <td>
+                                                    @if ($user->status == 1)
+                                                        <span class="badge bg-success">Active</span>
+                                                    @else
+                                                        <span class="badge bg-danger">Inactive</span>
+                                                    @endif
+                                                </td>
 
                                                     <td>
                                                         <div class="accordion accordion-flush"

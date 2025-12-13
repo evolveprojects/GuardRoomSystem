@@ -109,7 +109,7 @@ class PermissionController extends Controller
     public function addpermission_type(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("Add Permission Type")|| Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("Add Permission Type")|| Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -134,12 +134,12 @@ class PermissionController extends Controller
         }
     }
 
- 
+
 
     public function updatepermission_type(Request $request)
     {
         // Check Permission
-        $hasPermission = (Auth::user()->hasPermission("Edit Permission Type") || Auth::user()->id == 1);
+        $hasPermission = (Auth::user()->hasPermission("Edit Permission Type") || Auth::user()->user_type == 1);
 
         if ($hasPermission) {
 

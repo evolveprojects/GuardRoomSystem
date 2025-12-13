@@ -25,7 +25,7 @@
                     <ul class="nav nav-treeview">
                         <!-- User Levels -->
 
-                        @if (Auth::user()->hasPermission('View Permission Type') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('View Permission Type') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('permissions.type') }}"
                                     class="nav-link {{ request()->routeIs('permissions.type') ? 'active' : '' }}">
@@ -35,7 +35,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if (Auth::user()->hasPermission('View Permission Settings') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('View Permission Settings') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('permissions.view') }}"
                                     class="nav-link {{ request()->routeIs('permissions.view') ? 'active' : '' }}">
@@ -61,7 +61,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <!-- User Levels -->
-                        @if (Auth::user()->hasPermission('view userlevel master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view userlevel master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.userlevel') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.userlevel') ? 'active' : '' }}">
@@ -72,7 +72,7 @@
                             </li>
                         @endif
                         <!-- Users -->
-                        @if (Auth::user()->hasPermission('view user master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view user master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.users') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.users') ? 'active' : '' }}">
@@ -84,7 +84,7 @@
                         @endif
 
                         <!-- Centers -->
-                        @if (Auth::user()->hasPermission('view center master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view center master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.centers') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.centers') ? 'active' : '' }}">
@@ -95,7 +95,7 @@
                             </li>
                         @endif
                         <!-- Vehicles -->
-                        @if (Auth::user()->hasPermission('view vehicle master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view vehicle master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.vehicles') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.vehicles') ? 'active' : '' }}">
@@ -106,7 +106,7 @@
                             </li>
                         @endif
                         <!-- Drivers -->
-                        @if (Auth::user()->hasPermission('view driver master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view driver master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.drivers') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.drivers') ? 'active' : '' }}">
@@ -117,7 +117,7 @@
                             </li>
                         @endif
                         <!-- Helpers -->
-                        @if (Auth::user()->hasPermission('view helper master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view helper master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.helpers') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.helpers') ? 'active' : '' }}">
@@ -128,7 +128,7 @@
                             </li>
                         @endif
                         <!-- Security -->
-                        @if (Auth::user()->hasPermission('view security master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view security master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.securities') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.securities') ? 'active' : '' }}">
@@ -139,7 +139,7 @@
                             </li>
                         @endif
                         <!-- Incentive -->
-                        @if (Auth::user()->hasPermission('view payment master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view payment master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.incentive') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.incentive') ? 'active' : '' }}">
@@ -150,7 +150,7 @@
                             </li>
                         @endif
 
-                        @if (Auth::user()->hasPermission('view customer master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view customer master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.customers') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.customers') ? 'active' : '' }}">
@@ -161,7 +161,7 @@
                             </li>
                         @endif
 
-                        @if (Auth::user()->hasPermission('view otherpayments master') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view otherpayments master') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('Masterfile.otherpayments') }}"
                                     class="nav-link {{ request()->routeIs('Masterfile.otherpayments') ? 'active' : '' }}">
@@ -189,7 +189,7 @@
                     </a>
                     <ul class="nav nav-treeview">
 
-                        @if (Auth::user()->hasPermission('View Outward all') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('View Outward all') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('outward.outward_view_All') }}"
                                     class="nav-link {{ request()->routeIs('outward.outward_view_All') ? 'active' : '' }}">
@@ -202,7 +202,7 @@
                     </ul>
                     <ul class="nav nav-treeview">
 
-                        @if (Auth::user()->hasPermission('view all outward type 2') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('view all outward type 2') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('outward.all') }}"
                                     class="nav-link {{ request()->routeIs('outward.all') ? 'active' : '' }}">
@@ -215,7 +215,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    @if (Auth::user()->hasPermission('view all inward') || Auth::user()->id == '1')
+                    @if (Auth::user()->hasPermission('view all inward') || Auth::user()->user_type == '1')
                 <li class="nav-item">
                     <a href="{{ route('inward.inward_view_All') }}"
                         class="nav-link {{ request()->routeIs('inward.inward_view_All') ? 'active' : '' }}">
@@ -237,7 +237,7 @@
                     </a>
                     <ul class="nav nav-treeview">
 
-                        @if (Auth::user()->hasPermission('incentive report details') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('incentive report details') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('report.report_intencive') }}"
                                     class="nav-link {{ request()->routeIs('report.report_intencive') ? 'active' : '' }}">
@@ -247,7 +247,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if (Auth::user()->hasPermission('incentive report summary') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('incentive report summary') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('report.report_intencive_summary') }}"
                                     class="nav-link {{ request()->routeIs('report.report_intencive_summary') ? 'active' : '' }}">
@@ -257,7 +257,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if (Auth::user()->hasPermission('Lorry Usage detail report') || Auth::user()->id == '1')
+                        @if (Auth::user()->hasPermission('Lorry Usage detail report') || Auth::user()->user_type == '1')
                             <li class="nav-item">
                                 <a href="{{ route('report.report_lorryusage_detail') }}"
                                     class="nav-link {{ request()->routeIs('report.report_lorryusage_detail') ? 'active' : '' }}">

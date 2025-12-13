@@ -19,6 +19,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+// routes/web.php
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::post('/admin/users/store', [App\Http\Controllers\Admin\UserController::class, 'store'])
+        ->name('admin.users.store');
+});
+
 require __DIR__ . '/auth.php';
 
 // masterfiles

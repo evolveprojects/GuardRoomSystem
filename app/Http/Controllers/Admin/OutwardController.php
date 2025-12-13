@@ -51,7 +51,7 @@ class OutwardController extends Controller
 
     public function outward_view_t2(Request $request)
     {
-        $hasPermission = Auth::user()->hasPermission("add outward type 2") || Auth::user()->id == 1;
+        $hasPermission = Auth::user()->hasPermission("add outward type 2") || Auth::user()->user_type == 1;
         if (!$hasPermission) {
             return redirect("/not_allowed");
         }
@@ -78,7 +78,7 @@ class OutwardController extends Controller
     public function saveoutward_type_1(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("Save Outward Type 1") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("Save Outward Type 1") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
@@ -238,7 +238,7 @@ class OutwardController extends Controller
 
     public function outward_type2_store(Request $request)
     {
-        $hasPermission = Auth::user()->hasPermission("add outward type 2") || Auth::user()->id == 1;
+        $hasPermission = Auth::user()->hasPermission("add outward type 2") || Auth::user()->user_type == 1;
         if (!$hasPermission) {
             return redirect("/not_allowed");
         }
@@ -385,7 +385,7 @@ class OutwardController extends Controller
 
     public function outward_type2_update(Request $request)
     {
-        $hasPermission = Auth::user()->hasPermission("edit outward type 2") || Auth::user()->id == 1;
+        $hasPermission = Auth::user()->hasPermission("edit outward type 2") || Auth::user()->user_type == 1;
         if (!$hasPermission) {
             return redirect("/not_allowed");
         }
@@ -563,7 +563,7 @@ class OutwardController extends Controller
     public function  editoutward_type_1(Request $request)
     {
 
-        $hasPermission = (Auth::user()->hasPermission("Edit Outward Type 1") || Auth::user()->id == '1');
+        $hasPermission = (Auth::user()->hasPermission("Edit Outward Type 1") || Auth::user()->user_type == '1');
 
         if ($hasPermission) {
 
