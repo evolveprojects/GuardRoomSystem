@@ -180,8 +180,21 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
-                                            </div><br>
+                                             <!-- Weight Field - Added after Vehicle Type -->
+                                            <div class="col-sm-3 mb-3">
+                                                <div class="form-group-sm">
+                                                    <label>Weight (mt)&nbsp;<span style="color:red;">*</span></label>
+                                                    <input type="number"
+                                                        class="form-control"
+                                                        name="weight"
+                                                        id="weight"
+                                                        value="{{ $item1->weight ?? '' }}"
+                                                        style="width:100%;height:30px;background-color:#e9ecef;"
+                                                        readonly>
+                                                </div>
+                                            </div>
+                                            {{-- <div class="col-sm-3">
+                                            </div><br> --}}
 
                                             <!-- Time In / Time Out / Meter R/In / Meter R/Out -->
 
@@ -325,11 +338,14 @@
 
 
                                                                 <td id="qty_td{{ $i }}">
-                                                                    <input type="text" class="form-control"
+                                                                    <input type="number" class="form-control"
                                                                         value="{{ $item2[$i]->qty_se }}"
                                                                         name="qty_se{{ $i }}"
                                                                         id="qty_se{{ $i }}"
-                                                                        style="width:100%;height:30px;text-align:left;">
+                                                                        style="width:100%;height:30px;text-align:left;"
+                                                                        min="0"
+                                                                        step="1"
+                                                                        oninput="calculateWeight()">
                                                                 </td>
 
                                                                 <td id="amount_td{{ $i }}">
@@ -438,282 +454,263 @@
 
 @section('scripts')
     <script>
-        let rowCount = 2; // Existing rows count
+        let rowCount = {{ count($item2) }}; // Existing rows count from database
 
-        const MAX_QTY = 10; // Max quantity for dropdown
+const MAX_QTY = 10; // Max quantity for dropdown
 
-        // Initialize Select2 on page load
-        $(document).ready(function() {
-            // Initialize other selectize dropdowns (NOT inward_items anymore)
-            $(".selectize").select2();
-        });
+// Initialize Select2 on page load
+$(document).ready(function() {
+    // Initialize other selectize dropdowns
+    $(".selectize").select2();
+    
+    // Calculate initial weight on page load
+    calculateWeight();
+});
 
-        // Populate quantity dropdown
-        function populateQtyDropdown(index) {
-            const select = document.getElementById(`qty_se${index}`);
-            if (!select) return;
-            select.innerHTML = '<option value="">Select Qty</option>';
-            for (let i = 1; i <= MAX_QTY; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.text = i;
-                select.appendChild(option);
-            }
-        }
+// Populate quantity dropdown
+function populateQtyDropdown(index) {
+    const select = document.getElementById(`qty_se${index}`);
+    if (!select) return;
+    select.innerHTML = '<option value="">Select Qty</option>';
+    for (let i = 1; i <= MAX_QTY; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        select.appendChild(option);
+    }
+}
 
-        // Initialize existing rows
-        for (let i = 0; i < rowCount; i++) {
-            populateQtyDropdown(i);
-        }
+// Initialize existing rows
+for (let i = 0; i < rowCount; i++) {
+    populateQtyDropdown(i);
+}
 
-        // Function called when AOD changes
-        function getDataTblOtherDetails(index) {
-            const aodSelect = document.getElementById(`aod_td${index}`);
-            const aodValue = aodSelect.value;
+// Function called when AOD changes
+function getDataTblOtherDetails(index) {
+    const aodSelect = document.getElementById(`aod_td${index}`);
+    const aodValue = aodSelect.value;
 
-            // Show delete button
-            const actionCell = document.getElementById(`row_${index}`).querySelector('td:last-child');
-            if (aodValue && actionCell.innerHTML.trim() === '') {
-                actionCell.innerHTML = `
-                <button class="btn btn-danger btn-sm" type="button" onclick="deleteTableRow(${index})">
+    // Show delete button
+    const actionCell = document.getElementById(`row_${index}`).querySelector('td:last-child');
+    if (aodValue && actionCell.innerHTML.trim() === '') {
+        actionCell.innerHTML = `
+            <button class="btn btn-danger btn-sm" type="button" onclick="deleteTableRow(${index})">
                 Delete
             </button>
+        `;
+    }
 
-            `;
-            }
+    // Check last row; if it has value, add new row
+    const lastRow = document.querySelector('#my_data_table_3inv tbody tr:last-child');
+    const lastRowAOD = lastRow.querySelector('select');
+    if (lastRowAOD.value !== '') {
+        addRow();
+    }
+    countRows();
+    getother_details(index);
+    calculateWeight(); // Recalculate weight when AOD changes
+}
 
-            // Check last row; if it has value, add new row
-            const lastRow = document.querySelector('#my_data_table_3inv tbody tr:last-child');
-            const lastRowAOD = lastRow.querySelector('select');
-            if (lastRowAOD.value !== '') {
-                addRow();
-            }
-            countRows();
-            getother_details(index);
+function getother_details(index) {
+    var cmbSelectVal = document.getElementById('aod_td' + index).value;
 
+    $.ajax({
+        url: "{{ route('sage300_aoddata') }}",
+        type: 'POST',
+        data: {
+            _token: "{{ csrf_token() }}",
+            cmbSelectVal: cmbSelectVal,
+        },
+        success: function(data) {
+            console.log(data);
+            // Update fields with the retrieved data
+            // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
+
+            // Refresh Select2 dropdowns
+            $(".selectize").select2();
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error: ", status, error);
         }
+    });
+}
 
+// Add new row dynamically - FIXED VERSION
+function addRow() {
+    const tableBody = document.querySelector('#my_data_table_3inv tbody');
+    const index = rowCount;
 
-
-        function getother_details(index) {
-            var cmbSelectVal = document.getElementById('aod_td' + index).value;
-
-            $.ajax({
-
-                url: "{{ route('sage300_aoddata') }}",
-                type: 'POST',
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    cmbSelectVal: cmbSelectVal,
-
-
-                },
-                success: function(data) {
-
-                    console.log(data);
-                    // Update fields with the retrieved data
-                    // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
-
-
-
-                    // Refresh Select2 dropdowns
-                    $(".selectize").select2();
-
-                },
-                error: function(xhr, status, error) {
-                    console.error("AJAX Error: ", status, error); // Handle AJAX errors
-                }
-            });
-
-        }
-
-
-        // Add new row dynamically
-        function addRow() {
-            const tableBody = document.querySelector('#my_data_table_3inv tbody');
-            const index = rowCount;
-
-            const row = document.createElement('tr');
-            row.id = `row_${index-1}`;
-            row.innerHTML = `
-        <td id="aod_t${index-1}">
-            <select name="aod_td${index-1}" class="form-control selectize" id="aod_td${index-1}" style="width:100%;height:35px;" onchange="getDataTblOtherDetails(${index-1});">
+    const row = document.createElement('tr');
+    row.id = `row_${index}`;
+    row.innerHTML = `
+        <td id="aod_t${index}">
+            <select name="aod_td${index}" class="form-control selectize" id="aod_td${index}" style="width:100%;height:35px;" onchange="getDataTblOtherDetails(${index});">
                 <option value="">Select AOD</option>
-               @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
-                                                                    @foreach ($AOD_no['value'] as $aod)
-                                                                        <option value="{{ $aod['SequenceNumber'] }}">
-                                                                            {{ $aod['ShipmentNumber'] }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                @endif
+                @if (isset($AOD_no['value']) && is_array($AOD_no['value']))
+                    @foreach ($AOD_no['value'] as $aod)
+                        <option value="{{ $aod['SequenceNumber'] }}">
+                            {{ $aod['ShipmentNumber'] }}
+                        </option>
+                    @endforeach
+                @endif
             </select>
         </td>
-       <td id="item_td${index}">
-            <select name="item_se{{ $i }}"
-                                                                class="form-control selectize"
-                                                                id="item_se{{ $i }}"
-                                                                style="width:100%;height:30px;"
-                                                                onchange="getDataTblOtherDetails('{{ $i }}');">
-                                                                <option value="">Select Items</option>
-                                                                @if (isset($items['value']) && is_array($items['value']))
-                                                                    @foreach ($items['value'] as $item)
-                                                                        <option value="{{ $item['ItemNumber'] }}">
-                                                                            {{ $item['Description'] }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                @endif
-                                                            </select>
+        <td id="item_td${index}">
+            <select name="item_se${index}" class="form-control selectize" id="item_se${index}" style="width:100%;height:30px;" onchange="getDataTblOtherDetails(${index});">
+                <option value="">Select Items</option>
+                @if (isset($items['value']) && is_array($items['value']))
+                    @foreach ($items['value'] as $item)
+                        <option value="{{ $item['ItemNumber'] }}">
+                            {{ $item['Description'] }}
+                        </option>
+                    @endforeach
+                @endif
+            </select>
         </td>
-         <td id="customer_td${index}">
-
-                                                            <select name="customer_se{{ $i }}"
-                                                                class="form-control selectize"
-                                                                id="customer_se{{ $i }}"
-                                                                style="width:100%;height:30px;"
-                                                                onchange="getDataTblOtherDetails('{{ $i }}');">
-                                                                <option value="">Select Customer</option>
-                                                                @if (isset($customers['value']) && is_array($customers['value']))
-                                                                    @foreach ($customers['value'] as $cus)
-                                                                        <option value="{{ $cus['CustomerNumber'] }}">
-                                                                            {{ $cus['CustomerName'] }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                @endif
-                                                            </select>
-                                                        </td>
-        <td id="qty_td${index-1}">
-           <input type="text" class="form-control"
-                                                                name="qty_se${index-1}"
-                                                                id="qty_se${index-1}"
-                                                                style="width:100%;height:30px;text-align:left;">
+        <td id="customer_td${index}">
+            <select name="customer_se${index}" class="form-control selectize" id="customer_se${index}" style="width:100%;height:30px;" onchange="getDataTblOtherDetails(${index});">
+                <option value="">Select Customer</option>
+                @if (isset($customers['value']) && is_array($customers['value']))
+                    @foreach ($customers['value'] as $cus)
+                        <option value="{{ $cus['CustomerNumber'] }}">
+                            {{ $cus['CustomerName'] }}
+                        </option>
+                    @endforeach
+                @endif
+            </select>
         </td>
-        <td id="amount_td${index-1}">
-            <input type="text" class="form-control" name="amount_se${index-1}" id="amount_se${index-1}" style="width:100%;height:30px;text-align:left;"  onblur="formatAmount(this)">
+        <td id="qty_td${index}">
+            <input type="number" class="form-control" name="qty_se${index}" id="qty_se${index}" style="width:100%;height:30px;text-align:left;" min="0" step="1" oninput="calculateWeight()">
+        </td>
+        <td id="amount_td${index}">
+            <input type="text" class="form-control" name="amount_se${index}" id="amount_se${index}" style="width:100%;height:30px;text-align:left;" onblur="formatAmount(this)">
         </td>
         <td class="text-blue">
-        <button class="btn btn-danger btn-sm" type="button" onclick="deleteTableRow(${index-1})">
-        Delete
-        </button>
-
+            <button class="btn btn-danger btn-sm" type="button" onclick="deleteTableRow(${index})">
+                Delete
+            </button>
         </td>
+    `;
+    
+    tableBody.appendChild(row);
 
-        `;
-            tableBody.appendChild(row);
+    // Initialize Select2 for the new row's dropdowns
+    $(`#aod_td${index}`).select2();
+    $(`#item_se${index}`).select2();
+    $(`#customer_se${index}`).select2();
 
-            // Populate quantity dropdown
-            populateQtyDropdown(index);
+    rowCount++;
+    countRows();
+}
 
-            rowCount++;
-            $(".selectize").select2();
+// Delete row - FIXED VERSION
+function deleteTableRow(num) {
+    // Clear all fields
+    const aod = document.getElementById('aod_td' + num);
+    const item = document.getElementById('item_se' + num);
+    const customer = document.getElementById('customer_se' + num);
+    const qty = document.getElementById('qty_se' + num);
+    const amount = document.getElementById('amount_se' + num);
 
-            countRows();
-        }
+    if (aod) {
+        aod.selectedIndex = 0;
+        $(`#aod_td${num}`).val('').trigger('change');
+    }
+    if (item) {
+        item.value = '';
+        $(`#item_se${num}`).val('').trigger('change');
+    }
+    if (customer) {
+        customer.value = '';
+        $(`#customer_se${num}`).val('').trigger('change');
+    }
+    if (qty) {
+        qty.value = '';
+    }
+    if (amount) {
+        amount.value = '';
+    }
 
-        // // Delete row
-        // function deleteTableRow(index) {
-        //     const row = document.getElementById(`row_${index}`);
-        //     if (row) row.remove();
-        // }
+    countRows();
+    calculateWeight(); // Recalculate weight after deletion
+}
 
-        function deleteTableRow(num) {
+function countRows() {
+    var descElements = document.querySelectorAll('[id^="aod_td"]');
+    var count = descElements.length;
+    document.getElementById('rowCount1').value = count;
+    console.log("Updated count of desc_td elements: " + count);
+}
 
-            document.getElementById('aod_td' + num).selectedIndex = 0; // Clear textarea
-            document.getElementById('item_se' + num).value = ''; // Clear input
-            document.getElementById('qty_se' + num).value = '';
-            document.getElementById('customer_se' + num).value = ''; // Reset select to default option
-            document.getElementById('amount_se' + num).value = ''; // Clear input
+function getvehicle_type() {
+    var vehicle_no = $('#vehicle_no').val();
 
-            // countRows()
+    // Validate input before sending
+    if (!vehicle_no || vehicle_no.trim() === '') {
+        alert('Please enter a vehicle number');
+        return;
+    }
 
-            $(".selectize").select2();
-            countRows();
+    $.ajax({
+        url: "{{ route('vehicledata') }}",
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            vehicle_no: vehicle_no
+        },
+        beforeSend: function() {
+            $('#loading').show();
+        },
+        success: function(response) {
+            console.log(response);
 
-        }
-
-        function countRows() {
-
-            var descElements = document.querySelectorAll('[id^="aod_td"]');
-            var count = descElements.length;
-            document.getElementById('rowCount1').value = count;
-            console.log("Updated count of desc_td elements: " + count);
-        }
-
-        function getvehicle_type() {
-            var vehicle_no = $('#vehicle_no').val();
-
-            // Validate input before sending
-            if (!vehicle_no || vehicle_no.trim() === '') {
-                alert('Please enter a vehicle number');
-                return;
+            if (response.status === 'success' && response.vehicle) {
+                $('#vehicle_type').val(response.vehicle.vehicle_type).trigger('change');
+            } else {
+                alert("Vehicle not found.");
+                clearVehicleFields();
             }
+        },
+        error: function(xhr) {
+            var errorMessage = xhr.responseJSON && xhr.responseJSON.message ?
+                xhr.responseJSON.message :
+                'An error occurred while processing your request.';
 
-            $.ajax({
-                url: "{{ route('vehicledata') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    vehicle_no: vehicle_no
-                },
-                beforeSend: function() {
-                    // Optional: Show loading indicator
-                    $('#loading').show();
-                },
-                success: function(response) {
-                    console.log(response);
-
-                    if (response.status === 'success' && response.vehicle) {
-
-                        $('#vehicle_type').val(response.vehicle.vehicle_type).trigger('change');
-
-                    } else {
-                        alert("Vehicle not found.");
-                        clearVehicleFields();
-                    }
-                },
-                error: function(xhr) {
-                    var errorMessage = xhr.responseJSON && xhr.responseJSON.message ?
-                        xhr.responseJSON.message :
-                        'An error occurred while processing your request.';
-
-                    alert('Error: ' + errorMessage);
-                    clearVehicleFields();
-                },
-                complete: function() {
-                    // Optional: Hide loading indicator
-                    $('#loading').hide();
-                }
-            });
+            alert('Error: ' + errorMessage);
+            clearVehicleFields();
+        },
+        complete: function() {
+            $('#loading').hide();
         }
+    });
+}
 
-        // Helper function to clear fields
-        function clearVehicleFields() {
-            $('#vehicle_id').val('');
-            $('#vehicle_type').val('');
-            $('#owner_name').val('');
-            $('#capacity').val('');
-        }
-    </script>
+// Helper function to clear fields
+function clearVehicleFields() {
+    $('#vehicle_id').val('');
+    $('#vehicle_type').val('');
+    $('#owner_name').val('');
+    $('#capacity').val('');
+}
 
-    @if ($readonly)
-        <script>
-            console.log('hit');
-            document.addEventListener('DOMContentLoaded', function() {
-                // Disable all selectize dropdowns
-                document.querySelectorAll('.selectize').forEach(function(select) {
-                    if (select.selectize) { // check if selectize is initialized
-                        select.selectize.disable();
-                    }
-                });
+// Weight calculation function - NEW
+function calculateWeight() {
+    let totalQuantity = 0;
+    const qtyInputs = document.querySelectorAll('[id^="qty_se"]');
 
-                // Optional: disable Add/Delete buttons if inside fieldset doesn't work
-                document.querySelectorAll('button').forEach(function(btn) {
-                    if (!btn.classList.contains('btn-secondary')) { // leave Close button enabled
-                        btn.disabled = true;
-                    }
-                });
-            });
+    qtyInputs.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        totalQuantity += value;
+    });
+
+    const weight = totalQuantity / 1000;
+    const weightField = document.getElementById('weight');
+    if (weightField) {
+        weightField.value = weight.toFixed(2);
+    }
+}
         </script>
-    @endif
+   
 
 
 

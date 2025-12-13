@@ -576,6 +576,7 @@ class OutwardController extends Controller
                 'helper' => ['required', 'string'],
                 'inward_items' => ['nullable', 'array'],
                 'inward_items.*' => ['exists:other_payments,id'],
+                'weight' => ['nullable', 'numeric', 'min:0'],
             ];
 
             // Add conditional rules if completed
@@ -648,6 +649,7 @@ class OutwardController extends Controller
             'meter_in' => $request->meter_in,
             'meter_out' => $request->meter_out,
             'comment' => $request->comment,
+            'weight' => $request->weight,
             'inward_items' => $inwardItems,
             'type' => '1',
             'created_by' => Auth::id(),
