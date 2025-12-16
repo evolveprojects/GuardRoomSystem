@@ -180,17 +180,13 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                             <!-- Weight Field - Added after Vehicle Type -->
+                                            <!-- Weight Field - Added after Vehicle Type -->
                                             <div class="col-sm-3 mb-3">
                                                 <div class="form-group-sm">
                                                     <label>Weight (mt)&nbsp;<span style="color:red;">*</span></label>
-                                                    <input type="number"
-                                                        class="form-control"
-                                                        name="weight"
-                                                        id="weight"
-                                                        value="{{ $item1->weight ?? '' }}"
-                                                        style="width:100%;height:30px;background-color:#e9ecef;"
-                                                        readonly>
+                                                    <input type="number" class="form-control" name="weight"
+                                                        id="weight" value="{{ $item1->weight ?? '' }}"
+                                                        style="width:100%;height:30px;background-color:#e9ecef;" readonly>
                                                 </div>
                                             </div>
                                             {{-- <div class="col-sm-3">
@@ -343,8 +339,7 @@
                                                                         name="qty_se{{ $i }}"
                                                                         id="qty_se{{ $i }}"
                                                                         style="width:100%;height:30px;text-align:left;"
-                                                                        min="0"
-                                                                        step="1"
+                                                                        min="0" step="1"
                                                                         oninput="calculateWeight()">
                                                                 </td>
 
@@ -429,10 +424,11 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <input type="text" name=completed id='hidden_completed' hidden>
                                             <!-- Page-level Buttons -->
                                             <div class="mt-3 d-flex justify-content-end gap-2">
-                                                <button type="submit" class="btn btn-danger" value="completed" id="completeBtn"
-                                                    name="completed">Complete</button>
+                                                <button type="submit" class="btn btn-danger" value="completed"
+                                                    id="completeBtn" name="completed">Complete</button>
                                                 <button type="submit" class="btn btn-primary" value="update"
                                                     name="update">Update</button>
                                                 <button type="submit" class="btn btn-success" value="update_close"
@@ -456,93 +452,93 @@
     <script>
         let rowCount = {{ count($item2) }}; // Existing rows count from database
 
-const MAX_QTY = 10; // Max quantity for dropdown
+        const MAX_QTY = 10; // Max quantity for dropdown
 
-// Initialize Select2 on page load
-$(document).ready(function() {
-    // Initialize other selectize dropdowns
-    $(".selectize").select2();
-    
-    // Calculate initial weight on page load
-    calculateWeight();
-});
+        // Initialize Select2 on page load
+        $(document).ready(function() {
+            // Initialize other selectize dropdowns
+            $(".selectize").select2();
 
-// Populate quantity dropdown
-function populateQtyDropdown(index) {
-    const select = document.getElementById(`qty_se${index}`);
-    if (!select) return;
-    select.innerHTML = '<option value="">Select Qty</option>';
-    for (let i = 1; i <= MAX_QTY; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.text = i;
-        select.appendChild(option);
-    }
-}
+            // Calculate initial weight on page load
+            calculateWeight();
+        });
 
-// Initialize existing rows
-for (let i = 0; i < rowCount; i++) {
-    populateQtyDropdown(i);
-}
+        // Populate quantity dropdown
+        function populateQtyDropdown(index) {
+            const select = document.getElementById(`qty_se${index}`);
+            if (!select) return;
+            select.innerHTML = '<option value="">Select Qty</option>';
+            for (let i = 1; i <= MAX_QTY; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.text = i;
+                select.appendChild(option);
+            }
+        }
 
-// Function called when AOD changes
-function getDataTblOtherDetails(index) {
-    const aodSelect = document.getElementById(`aod_td${index}`);
-    const aodValue = aodSelect.value;
+        // Initialize existing rows
+        for (let i = 0; i < rowCount; i++) {
+            populateQtyDropdown(i);
+        }
 
-    // Show delete button
-    const actionCell = document.getElementById(`row_${index}`).querySelector('td:last-child');
-    if (aodValue && actionCell.innerHTML.trim() === '') {
-        actionCell.innerHTML = `
+        // Function called when AOD changes
+        function getDataTblOtherDetails(index) {
+            const aodSelect = document.getElementById(`aod_td${index}`);
+            const aodValue = aodSelect.value;
+
+            // Show delete button
+            const actionCell = document.getElementById(`row_${index}`).querySelector('td:last-child');
+            if (aodValue && actionCell.innerHTML.trim() === '') {
+                actionCell.innerHTML = `
             <button class="btn btn-danger btn-sm" type="button" onclick="deleteTableRow(${index})">
                 Delete
             </button>
         `;
-    }
+            }
 
-    // Check last row; if it has value, add new row
-    const lastRow = document.querySelector('#my_data_table_3inv tbody tr:last-child');
-    const lastRowAOD = lastRow.querySelector('select');
-    if (lastRowAOD.value !== '') {
-        addRow();
-    }
-    countRows();
-    getother_details(index);
-    calculateWeight(); // Recalculate weight when AOD changes
-}
-
-function getother_details(index) {
-    var cmbSelectVal = document.getElementById('aod_td' + index).value;
-
-    $.ajax({
-        url: "{{ route('sage300_aoddata') }}",
-        type: 'POST',
-        data: {
-            _token: "{{ csrf_token() }}",
-            cmbSelectVal: cmbSelectVal,
-        },
-        success: function(data) {
-            console.log(data);
-            // Update fields with the retrieved data
-            // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
-
-            // Refresh Select2 dropdowns
-            $(".selectize").select2();
-        },
-        error: function(xhr, status, error) {
-            console.error("AJAX Error: ", status, error);
+            // Check last row; if it has value, add new row
+            const lastRow = document.querySelector('#my_data_table_3inv tbody tr:last-child');
+            const lastRowAOD = lastRow.querySelector('select');
+            if (lastRowAOD.value !== '') {
+                addRow();
+            }
+            countRows();
+            getother_details(index);
+            calculateWeight(); // Recalculate weight when AOD changes
         }
-    });
-}
 
-// Add new row dynamically - FIXED VERSION
-function addRow() {
-    const tableBody = document.querySelector('#my_data_table_3inv tbody');
-    const index = rowCount;
+        function getother_details(index) {
+            var cmbSelectVal = document.getElementById('aod_td' + index).value;
 
-    const row = document.createElement('tr');
-    row.id = `row_${index}`;
-    row.innerHTML = `
+            $.ajax({
+                url: "{{ route('sage300_aoddata') }}",
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    cmbSelectVal: cmbSelectVal,
+                },
+                success: function(data) {
+                    console.log(data);
+                    // Update fields with the retrieved data
+                    // document.getElementById('amount_txt' + no).value = data.slab.sell_price;
+
+                    // Refresh Select2 dropdowns
+                    $(".selectize").select2();
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: ", status, error);
+                }
+            });
+        }
+
+        // Add new row dynamically - FIXED VERSION
+        function addRow() {
+            const tableBody = document.querySelector('#my_data_table_3inv tbody');
+            const index = rowCount;
+
+            const row = document.createElement('tr');
+            row.id = `row_${index}`;
+            row.innerHTML = `
         <td id="aod_t${index}">
             <select name="aod_td${index}" class="form-control selectize" id="aod_td${index}" style="width:100%;height:35px;" onchange="getDataTblOtherDetails(${index});">
                 <option value="">Select AOD</option>
@@ -591,126 +587,126 @@ function addRow() {
             </button>
         </td>
     `;
-    
-    tableBody.appendChild(row);
 
-    // Initialize Select2 for the new row's dropdowns
-    $(`#aod_td${index}`).select2();
-    $(`#item_se${index}`).select2();
-    $(`#customer_se${index}`).select2();
+            tableBody.appendChild(row);
 
-    rowCount++;
-    countRows();
-}
+            // Initialize Select2 for the new row's dropdowns
+            $(`#aod_td${index}`).select2();
+            $(`#item_se${index}`).select2();
+            $(`#customer_se${index}`).select2();
 
-// Delete row - FIXED VERSION
-function deleteTableRow(num) {
-    // Clear all fields
-    const aod = document.getElementById('aod_td' + num);
-    const item = document.getElementById('item_se' + num);
-    const customer = document.getElementById('customer_se' + num);
-    const qty = document.getElementById('qty_se' + num);
-    const amount = document.getElementById('amount_se' + num);
-
-    if (aod) {
-        aod.selectedIndex = 0;
-        $(`#aod_td${num}`).val('').trigger('change');
-    }
-    if (item) {
-        item.value = '';
-        $(`#item_se${num}`).val('').trigger('change');
-    }
-    if (customer) {
-        customer.value = '';
-        $(`#customer_se${num}`).val('').trigger('change');
-    }
-    if (qty) {
-        qty.value = '';
-    }
-    if (amount) {
-        amount.value = '';
-    }
-
-    countRows();
-    calculateWeight(); // Recalculate weight after deletion
-}
-
-function countRows() {
-    var descElements = document.querySelectorAll('[id^="aod_td"]');
-    var count = descElements.length;
-    document.getElementById('rowCount1').value = count;
-    console.log("Updated count of desc_td elements: " + count);
-}
-
-function getvehicle_type() {
-    var vehicle_no = $('#vehicle_no').val();
-
-    // Validate input before sending
-    if (!vehicle_no || vehicle_no.trim() === '') {
-        alert('Please enter a vehicle number');
-        return;
-    }
-
-    $.ajax({
-        url: "{{ route('vehicledata') }}",
-        type: "POST",
-        data: {
-            _token: "{{ csrf_token() }}",
-            vehicle_no: vehicle_no
-        },
-        beforeSend: function() {
-            $('#loading').show();
-        },
-        success: function(response) {
-            console.log(response);
-
-            if (response.status === 'success' && response.vehicle) {
-                $('#vehicle_type').val(response.vehicle.vehicle_type).trigger('change');
-            } else {
-                alert("Vehicle not found.");
-                clearVehicleFields();
-            }
-        },
-        error: function(xhr) {
-            var errorMessage = xhr.responseJSON && xhr.responseJSON.message ?
-                xhr.responseJSON.message :
-                'An error occurred while processing your request.';
-
-            alert('Error: ' + errorMessage);
-            clearVehicleFields();
-        },
-        complete: function() {
-            $('#loading').hide();
+            rowCount++;
+            countRows();
         }
-    });
-}
 
-// Helper function to clear fields
-function clearVehicleFields() {
-    $('#vehicle_id').val('');
-    $('#vehicle_type').val('');
-    $('#owner_name').val('');
-    $('#capacity').val('');
-}
+        // Delete row - FIXED VERSION
+        function deleteTableRow(num) {
+            // Clear all fields
+            const aod = document.getElementById('aod_td' + num);
+            const item = document.getElementById('item_se' + num);
+            const customer = document.getElementById('customer_se' + num);
+            const qty = document.getElementById('qty_se' + num);
+            const amount = document.getElementById('amount_se' + num);
 
-// Weight calculation function - NEW
-function calculateWeight() {
-    let totalQuantity = 0;
-    const qtyInputs = document.querySelectorAll('[id^="qty_se"]');
+            if (aod) {
+                aod.selectedIndex = 0;
+                $(`#aod_td${num}`).val('').trigger('change');
+            }
+            if (item) {
+                item.value = '';
+                $(`#item_se${num}`).val('').trigger('change');
+            }
+            if (customer) {
+                customer.value = '';
+                $(`#customer_se${num}`).val('').trigger('change');
+            }
+            if (qty) {
+                qty.value = '';
+            }
+            if (amount) {
+                amount.value = '';
+            }
 
-    qtyInputs.forEach(input => {
-        const value = parseFloat(input.value) || 0;
-        totalQuantity += value;
-    });
+            countRows();
+            calculateWeight(); // Recalculate weight after deletion
+        }
 
-    const weight = totalQuantity / 1000;
-    const weightField = document.getElementById('weight');
-    if (weightField) {
-        weightField.value = weight.toFixed(2);
-    }
-}
-        </script>
-   
+        function countRows() {
+            var descElements = document.querySelectorAll('[id^="aod_td"]');
+            var count = descElements.length;
+            document.getElementById('rowCount1').value = count;
+            console.log("Updated count of desc_td elements: " + count);
+        }
+
+        function getvehicle_type() {
+            var vehicle_no = $('#vehicle_no').val();
+
+            // Validate input before sending
+            if (!vehicle_no || vehicle_no.trim() === '') {
+                alert('Please enter a vehicle number');
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('vehicledata') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    vehicle_no: vehicle_no
+                },
+                beforeSend: function() {
+                    $('#loading').show();
+                },
+                success: function(response) {
+                    console.log(response);
+
+                    if (response.status === 'success' && response.vehicle) {
+                        $('#vehicle_type').val(response.vehicle.vehicle_type).trigger('change');
+                    } else {
+                        alert("Vehicle not found.");
+                        clearVehicleFields();
+                    }
+                },
+                error: function(xhr) {
+                    var errorMessage = xhr.responseJSON && xhr.responseJSON.message ?
+                        xhr.responseJSON.message :
+                        'An error occurred while processing your request.';
+
+                    alert('Error: ' + errorMessage);
+                    clearVehicleFields();
+                },
+                complete: function() {
+                    $('#loading').hide();
+                }
+            });
+        }
+
+        // Helper function to clear fields
+        function clearVehicleFields() {
+            $('#vehicle_id').val('');
+            $('#vehicle_type').val('');
+            $('#owner_name').val('');
+            $('#capacity').val('');
+        }
+
+        // Weight calculation function - NEW
+        function calculateWeight() {
+            let totalQuantity = 0;
+            const qtyInputs = document.querySelectorAll('[id^="qty_se"]');
+
+            qtyInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                totalQuantity += value;
+            });
+
+            const weight = totalQuantity / 1000;
+            const weightField = document.getElementById('weight');
+            if (weightField) {
+                weightField.value = weight.toFixed(2);
+            }
+        }
+    </script>
+
 
 
 
@@ -759,6 +755,7 @@ function calculateWeight() {
             const completeBtn = document.getElementById('completeBtn');
             const form = completeBtn.closest('form');
 
+            $('#hidden_completed').val('completed');
             completeBtn.addEventListener('click', function(e) {
                 e.preventDefault(); // prevent immediate form submission
 

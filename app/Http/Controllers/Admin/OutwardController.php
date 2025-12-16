@@ -591,6 +591,7 @@ class OutwardController extends Controller
             $result = $this->updateData($request);
 
             if ($result->getData()->success) {
+               
                 if ($request->completed == 'completed') {
                     return redirect()->route('outward.outward_view_All')->with('success', 'Job  Completed successfully!');
                 } elseif ($request->update_close == 'update_close') {
