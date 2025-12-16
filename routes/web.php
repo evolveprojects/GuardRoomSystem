@@ -54,6 +54,9 @@ Route::post('/edit-paycondition', [App\Http\Controllers\Admin\MasterfilesControl
 Route::get('/otherpayments', [App\Http\Controllers\Admin\MasterfilesController::class, 'otherpayments'])->name('Masterfile.otherpayments');
 Route::post('/createotherpayments', [App\Http\Controllers\Admin\MasterfilesController::class, 'addotherpayments'])->name('Masterfile.addotherpayments');
 Route::post('/updateotherpayments', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateotherpayments'])->name('Masterfile.updateotherpayments');
+Route::post('/update-user', [App\Http\Controllers\Admin\MasterfilesController::class, 'updateUser'])->name('Masterfile.updateuser');
+
+
 //permission routes
 Route::get('/permission', [App\Http\Controllers\Admin\PermissionController::class, 'permissions'])->name('permissions.view');
 Route::post('/createpermission', [App\Http\Controllers\Admin\PermissionController::class, 'addpermission'])->name('permissions.addpermission');

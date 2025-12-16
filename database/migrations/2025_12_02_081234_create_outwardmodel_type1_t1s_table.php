@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('comment')->nullable();
             $table->string('Weight')->nullable();
+            $table->string('inward_items')->nullable(); 
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();

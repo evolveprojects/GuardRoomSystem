@@ -17,10 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('usertype');
+            $table->string('user_type');
             $table->string('epf_number');
             $table->string('phone');
             $table->string('image');
+            $table->tinyInteger('status')->default(1)->comment('1 = Active, 0 = Inactive');
             $table->rememberToken();
             $table->timestamps();
         });

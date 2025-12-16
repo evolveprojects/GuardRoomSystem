@@ -40,6 +40,10 @@ class InwardController extends Controller
 
     public function store(Request $request)
     {
+        $hasPermission = Auth::user()->hasPermission("Add inward") || Auth::user()->user_type == 1;
+        if (!$hasPermission) {
+            return redirect("/not_allowed");
+        }
         // Get the row count from hidden field
         $rowCount = $request->input('rowCount1', 0);
 
@@ -80,6 +84,7 @@ class InwardController extends Controller
         }
 
         // Save Inward
+       
         $inward = Inward::create([
             'center_id' => $request->center,
             'type' => $request->type,
@@ -177,6 +182,12 @@ class InwardController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        $hasPermission = Auth::user()->hasPermission("Edit inward") || Auth::user()->user_type == 1;
+        if (!$hasPermission) {
+            return redirect("/not_allowed");
+        }
+
         $inward = Inward::findOrFail($id);
 
         // 🔥 FIXED: Match your FORM field names exactly
