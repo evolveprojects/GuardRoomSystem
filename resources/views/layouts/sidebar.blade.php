@@ -6,6 +6,7 @@
             <span class="brand-text fw-light">Lanmic</span>
         </a>
     </div>
+                   <!-- User Levels -->
 
     <div class="sidebar-wrapper">
         <nav class="mt-2">
@@ -23,7 +24,6 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <!-- User Levels -->
 
                         @if (Auth::user()->hasPermission('View Permission Type') || Auth::user()->user_type == '1')
                             <li class="nav-item">

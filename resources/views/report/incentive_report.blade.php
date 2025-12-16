@@ -379,15 +379,29 @@
                                                     }
 
                                                     $h_break = $h_break_payment > 0 ? $h_break_payment : '-';
-
                                                     $dinner_hour = '20:00';
+                                                    $dinner_start = '20:00';
+                                                    $dinner_end = '00:00'; // midnight
                                                     $d_dinner_payment = 0; // Initialize dinner payment
 
                                                     if (!empty($data->time_in) && !empty($data->time_out)) {
-                                                        if (
-                                                            $data->time_in >= $dinner_hour &&
-                                                            $data->time_out <= $dinner_hour
-                                                        ) {
+                                                        $timeIn = strtotime($data->time_in);
+                                                        $timeOut = strtotime($data->time_out);
+
+                                                        // Convert dinner start to today
+                                                        $dinnerStartTime = strtotime($dinner_start);
+                                                        $dinnerEndTime = strtotime($dinner_end);
+
+                                                        // Handle the case where dinner_end is after midnight
+                                                        if ($dinnerEndTime < $dinnerStartTime) {
+                                                            $dinnerEndTime += 24 * 60 * 60; // add 24 hours
+                                                            if ($timeOut < $timeIn) {
+                                                                $timeOut += 24 * 60 * 60; // add 24 hours if shift goes past midnight
+                                                            }
+                                                        }
+
+                                                        // Check if any part of the shift overlaps dinner time
+                                                        if ($timeIn < $dinnerEndTime && $timeOut > $dinnerStartTime) {
                                                             $d_dinner_payment = DB::table('other_payments')
                                                                 ->where('payment_type', 'Dinner')
                                                                 ->value('driver_amount');
