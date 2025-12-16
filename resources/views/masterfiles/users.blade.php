@@ -80,7 +80,7 @@
                                         </thead>
 
                                         <tbody>
-                                            @foreach ($user as $index => $user)
+                                           @foreach ($users as $index => $user)
                                                 <tr>
                                                     <td>{{ $user->id }}</td>
                                                     <td>{{ $user->name }}</td>
@@ -117,10 +117,17 @@
                                                                     class="accordion-collapse collapse"
                                                                     aria-labelledby="flush-heading{{ $user->id }}"
                                                                     data-bs-parent="#accordionFlush{{ $user->id }}">
+                                                                    @if(auth()->user()->user_type == 1)
+                                                                        <div class="accordion-body"
+                                                                            style="padding-top: 8px;padding-bottom: unset;">
+                                                                            @include('permission.components.change_permission') <br>
+                                                                        </div>
+                                                                    @endif
                                                                     <div class="accordion-body"
-                                                                        style="padding-top: 8px;padding-bottom: unset;">
-                                                                        @include('permission.components.change_permission') <br>
-                                                                    </div>
+                                                                    style="padding-top: 8px;padding-bottom: unset;">
+                                                                    @include('masterfiles.components.edit_users')
+                                                                    <br>
+                                                                </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -135,12 +142,12 @@
                                 <!-- End Users Table -->
 
 
-                                {{-- <!-- Pagination -->
+                                <!-- Pagination -->
                             <div class="d-flex justify-content-end mt-4">
                                 <div class="pagination-wrapper">
                                     {{ $users->onEachSide(1)->links('pagination::bootstrap-5') }}
                                 </div>
-                            </div> --}}
+                            </div>
 
                             </div>
                         </div>

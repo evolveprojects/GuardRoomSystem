@@ -20,13 +20,17 @@ return new class extends Migration
             $table->date('date');
             $table->foreignId('driver_id')->constrained('drivers');
             $table->foreignId('helper_id')->constrained('helpers');
-            $table->foreignId('vehicle_type_id')->constrained('vehicles'); // if using vehicles table for types
+            $table->string('vehicle_type')->nullable();
             $table->time('time_in');
             $table->time('time_out');
             $table->integer('meter_in');
             $table->integer('meter_out');
             $table->text('comments')->nullable();
-         
+
+            $table->integer('created_by')->default(0);
+            $table->integer('status')->default(0);
+            $table->text('inward_items')->nullable();
+
             $table->timestamps();
         });
     }

@@ -151,11 +151,11 @@
                                 </div>
 
                                 <!-- Pagination -->
-                                <div class="d-flex justify-content-end mt-4">
-                                    <div class="pagination-wrapper">
-                                        {{-- {{ $centers->onEachSide(1)->links('pagination::bootstrap-5') }} --}}
-                                    </div>
+                            <div class="d-flex justify-content-end mt-4">
+                                <div class="pagination-wrapper">
+                                    {{$out_data->onEachSide(1)->links('pagination::bootstrap-5') }}
                                 </div>
+                            </div>
 
                             </div>
                         </div>

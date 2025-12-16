@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('outward_id')->index(); // FK to outward_type2
             $table->string('no')->nullable();                  // No column (like aod_td)
+            $table->string('center')->nullable();
             $table->string('item')->nullable();
             $table->integer('quantity')->nullable();
             $table->string('amount')->nullable();

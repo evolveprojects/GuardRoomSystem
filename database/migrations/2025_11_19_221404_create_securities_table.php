@@ -18,6 +18,7 @@ return new class extends Migration
                 $table->string('email')->nullable();
                 $table->string('phone')->nullable();
                 $table->string('image')->nullable();
+                $table->boolean('status')->default(1)->comment('1 = Active, 0 = Inactive');
                 $table->unsignedBigInteger('created_by')->nullable();
                 $table->unsignedBigInteger('updated_by')->nullable();
 

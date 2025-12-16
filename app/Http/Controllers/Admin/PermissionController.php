@@ -174,11 +174,10 @@ class PermissionController extends Controller
 
 
 
-        // $hasPermission = Auth::user()->hasPermission('add_permissions');
-
-
-
-        // if($hasPermission){
+        $hasPermission = Auth::user()->hasPermission("Change User Permissions") || Auth::user()->user_type == 1;
+        if (!$hasPermission) {
+            return redirect("/not_allowed");
+        }
 
 
 
@@ -199,8 +198,6 @@ class PermissionController extends Controller
                 ErrorLogger::logAdminError($exception);
                 return back()->with('error','Error occured - '.$exception->getMessage().' - line - '.$exception->getLine());
             }
-    //     }else{
-    //         return redirect('admin/not_allowed');
-    //    }
+
     }
 }

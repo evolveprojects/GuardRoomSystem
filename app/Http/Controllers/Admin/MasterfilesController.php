@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ShipmentController;
 use App\Models\OtherPayment;
 use Illuminate\Validation\Rule;
 use App\Models\Payment_con;
+use Illuminate\Support\Facades\Hash;
 // use SebastianBergmann\CodeCoverage\Driver\Driver;
 
 class MasterfilesController extends Controller
@@ -38,15 +39,15 @@ class MasterfilesController extends Controller
     public function users(Request $request)
     {
         $searchKey = $request->searchKey;
-        $user = User::select('users.*', 'userlevels.level_name') // select columns explicitly
+        $users = User::select('users.*', 'userlevels.level_name') // Changed to $users (plural)
             ->leftJoin('userlevels', 'users.user_type', '=', 'userlevels.id')
-            ->where('users.name', 'like', '%' . $searchKey . '%') // specify table
-            ->orderBy('users.created_at', 'DESC') // specify table to avoid ambiguity
-            ->paginate(env('RECORDS_PER_PAGE'));
+            ->where('users.name', 'like', '%' . $searchKey . '%')
+            ->orderBy('users.created_at', 'DESC')
+            ->paginate(10);// Changed from paginate to get() for now
 
         $getuserlevels = Userlevel::where('status', '1')
             ->orderBy('created_at', 'DESC')
-            ->paginate(env("RECORDS_PER_PAGE"));
+            ->get(); // Changed to get()
 
         $permissions = Permission::select(
             'permissions.*',
@@ -57,7 +58,7 @@ class MasterfilesController extends Controller
             ->groupBy('permission_type')
             ->toArray();
 
-        return view('masterfiles.users', compact(['user', 'searchKey', 'permissions','getuserlevels']));
+        return view('masterfiles.users', compact(['users', 'searchKey', 'permissions', 'getuserlevels']));
     }
 
     public function centers(Request $request)
@@ -180,6 +181,48 @@ class MasterfilesController extends Controller
         }
     }
 
+
+
+    /* ============================================================
+      USER MANAGEMENT
+       ============================================================ */
+    public function updateUser(Request $request)
+    {
+        $hasPermission = Auth::user()->hasPermission("edit user") || Auth::user()->user_type == 1;
+        if (!$hasPermission) {
+            return redirect("/not_allowed");
+        }
+
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $request->user_id,
+            'user_type' => 'required|exists:userlevels,id',
+            'epf_number' => 'required|string|unique:users,epf_number,' . $request->user_id,
+            'phone' => 'nullable|string|max:20',
+            'status' => 'required|in:0,1',
+            'password' => 'nullable|min:8|confirmed',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->user_type = $request->user_type;
+        $user->epf_number = $request->epf_number;
+        $user->phone = $request->phone;
+        $user->status = $request->status;
+
+        // Only update password if provided
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect()->route('Masterfile.users')->with('success', 'User updated successfully!');
+        
+    }
 
     /* ============================================================
        CENTER MANAGEMENT

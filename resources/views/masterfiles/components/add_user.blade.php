@@ -68,6 +68,10 @@
                         <input type="password" name="password" class="form-control" required>
                     </div>
 
+                    <div class="form-group mb-2">
+                        <label>Confirm Password <span class="text-danger">*</span></label>
+                        <input type="password" name="password_confirmation" class="form-control" required>
+                    </div>
                 </div>
 
                 <!-- Modal Footer -->

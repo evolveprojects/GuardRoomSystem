@@ -367,7 +367,7 @@ class OutwardController extends Controller
                     ->orWhere('helpers.name', 'like', "%$searchKey%");
             })
             ->orderBy('outward_type2.id', 'desc')
-            ->get();
+            ->paginate(config('app.records_per_page', 10));
 
         // IMPORTANT: Manually load t2Items for each outward record
         foreach ($out_data as $data) {
