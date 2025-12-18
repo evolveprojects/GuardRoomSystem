@@ -271,6 +271,7 @@
                                                                     class="form-control"
                                                                     name="qty_se{{ $i }}"
                                                                     id="qty_se{{ $i }}"
+                                                                    placeholder="Enter quantity in MT"
                                                                     style="width:100%;height:30px;text-align:left;"
                                                                     min="0"
                                                                     step="1"
@@ -448,7 +449,7 @@ function addRow() {
             </select>
         </td>
         <td id="qty_td${index}">
-            <input type="number" oninput="calculateWeight()" class="form-control" name="qty_se${index}" id="qty_se${index}" style="width:100%;height:30px;text-align:left;" min="0" step="1">
+            <input type="number" oninput="calculateWeight()" class="form-control" name="qty_se${index}" id="qty_se${index}" style="width:100%;height:30px;text-align:left;" min="0" step="1" placeholder="Enter quantity in MT">
         </td>
         <td id="amount_td${index}">
             <input type="text" class="form-control" name="amount_se${index}" id="amount_se${index}" style="width:100%;height:30px;text-align:left;" onblur="formatAmount(this)">

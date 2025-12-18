@@ -184,9 +184,13 @@
                                             <div class="col-sm-3 mb-3">
                                                 <div class="form-group-sm">
                                                     <label>Weight (mt)&nbsp;<span style="color:red;">*</span></label>
-                                                    <input type="number" class="form-control" name="weight"
-                                                        id="weight" value="{{ $item1->weight ?? '' }}"
-                                                        style="width:100%;height:30px;background-color:#e9ecef;" readonly>
+                                                    <input type="number"
+                                                        class="form-control"
+                                                        name="weight"
+                                                        id="weight"
+                                                        value="{{ $item1->Weight ?? '' }}"
+                                                        style="width:100%;height:30px;background-color:#e9ecef;"
+                                                        readonly>
                                                 </div>
                                             </div>
                                             {{-- <div class="col-sm-3">

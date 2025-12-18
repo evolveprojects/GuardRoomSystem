@@ -581,8 +581,8 @@ class OutwardController extends Controller
 
             // Add conditional rules if completed
             if ($request->completed == 'completed') {
-                $rules['meter_in'] = ['required', 'string'];
-                $rules['time_in'] = ['required', 'string'];
+                $rules['meter_in'] = ['required', 'numeric', 'gt:meter_out'];
+                $rules['time_in'] = ['required'];
             }
 
             // Validate request
