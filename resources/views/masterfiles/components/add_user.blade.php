@@ -14,32 +14,61 @@
 
                 <div class="modal-body">
 
+                    <!-- Global validation errors -->
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
+                    <!-- Full Name -->
                     <div class="form-group mb-2">
                         <label>Full Name <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control" required>
+                        <input type="text" name="name"
+                               class="form-control @error('name') is-invalid @enderror"
+                               value="{{ old('name') }}" required>
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Row with User Type and EPF Number -->
                     <div class="row mb-2">
                         <div class="col-md-6">
                             <label>User Type <span class="text-danger">*</span></label>
-                            <select name="usertype" class="form-control select2" required>
+                            <select name="usertype"
+                                    class="form-control select2 @error('usertype') is-invalid @enderror"
+                                    required>
                                 <option value="">Select</option>
                                 @foreach ($getuserlevels as $h)
-                                    <option value="{{ $h->id }}">{{ $h->level_name }}</option>
+                                    <option value="{{ $h->id }}"
+                                        {{ old('usertype') == $h->id ? 'selected' : '' }}>
+                                        {{ $h->level_name }}
+                                    </option>
                                 @endforeach
-
                             </select>
+                            @error('usertype')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="col-md-6">
                             <label>EPF Number <span class="text-danger">*</span></label>
-                            <select name="epf_number" class="form-control select2" required>
+                            <select name="epf_number"
+                                    class="form-control select2 @error('epf_number') is-invalid @enderror"
+                                    required>
                                 <option value="">Select EPF Number</option>
-                                <option value="EPF001">EPF001</option>
-                                <option value="EPF002">EPF002</option>
-                                <option value="EPF003">EPF003</option>
+                                <option value="EPF001" {{ old('epf_number') == 'EPF001' ? 'selected' : '' }}>EPF001</option>
+                                <option value="EPF002" {{ old('epf_number') == 'EPF002' ? 'selected' : '' }}>EPF002</option>
+                                <option value="EPF003" {{ old('epf_number') == 'EPF003' ? 'selected' : '' }}>EPF003</option>
                             </select>
+                            @error('epf_number')
+                                <div class="text-danger small">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
 
@@ -48,30 +77,60 @@
                         <input type="text" name="username" class="form-control" >
                     </div> --}}
 
+                     <!-- Email -->
                     <div class="form-group mb-2">
                         <label>Email <span class="text-danger">*</span></label>
-                        <input type="email" name="email" class="form-control" required>
+                        <input type="email" name="email"
+                               class="form-control @error('email') is-invalid @enderror"
+                               value="{{ old('email') }}" required>
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
+                    <!-- Phone -->
                     <div class="form-group mb-2">
                         <label>Phone</label>
-                        <input type="text" name="phone" class="form-control">
+                        <input type="text" name="phone"
+                               class="form-control @error('phone') is-invalid @enderror"
+                               value="{{ old('phone') }}">
+                        @error('phone')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
+                    <!-- Image -->
                     <div class="form-group mb-2">
                         <label>Image</label>
-                        <input type="file" name="image" class="form-control">
+                        <input type="file" name="image"
+                               class="form-control @error('image') is-invalid @enderror">
+                        @error('image')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
+                    <!-- Password -->
                     <div class="form-group mb-2">
                         <label>Password <span class="text-danger">*</span></label>
-                        <input type="password" name="password" class="form-control" required>
+                        <input type="password" name="password"
+                               class="form-control @error('password') is-invalid @enderror"
+                               required>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
+                    <!-- Confirm Password -->
                     <div class="form-group mb-2">
                         <label>Confirm Password <span class="text-danger">*</span></label>
-                        <input type="password" name="password_confirmation" class="form-control" required>
+                        <input type="password" name="password_confirmation"
+                               class="form-control @error('password_confirmation') is-invalid @enderror"
+                               required>
+                        @error('password_confirmation')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
+
                 </div>
 
                 <!-- Modal Footer -->
@@ -87,6 +146,20 @@
         </div>
     </div>
 </div>
+
+@if ($errors->any())
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalEl = document.getElementById('add-user-modal');
+        var modal = new bootstrap.Modal(modalEl, {
+            backdrop: 'static',
+            keyboard: false
+        });
+        modal.show();
+    });
+</script>
+@endif
+
 
 <!-- Select2 Script -->
 <script>

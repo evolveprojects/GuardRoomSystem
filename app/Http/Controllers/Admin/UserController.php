@@ -15,12 +15,12 @@ class UserController extends Controller
 
         // Validate the request
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required','string','max:255','regex:/^[A-Za-z\s]+$/',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'usertype' => 'required|in:Admin,Guard,Manager',
             'epf_number' => 'required|string',
-            'phone' => 'nullable|string',
+            'phone' => 'nullable|digits:10',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 

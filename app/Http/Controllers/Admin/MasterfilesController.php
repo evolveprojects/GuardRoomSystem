@@ -126,9 +126,10 @@ class MasterfilesController extends Controller
         if ($hasPermission) {
 
             $validated = $request->validate([
-                'level_code' => ['required', 'string'],
-                'level_name' => ['required', 'string'],
+                'level_code' => ['required', 'string', 'max:20','regex:/^[A-Z_]+$/','unique:userlevels,level_code'],
+                'level_name' => ['required', 'string','max:100','regex:/^[a-zA-Z\s]+$/'],
                 'status' => ['required', 'string'],
+                'description'  => 'required|string',
             ]);
 
 
@@ -168,7 +169,7 @@ class MasterfilesController extends Controller
                 $userlevel->level_name = $request->level_name;
                 $userlevel->level_code = $request->level_code;
                 $userlevel->description = $request->description;
-                $userlevel->status = 1;
+                $userlevel->status = $request->status;
                 $userlevel->updated_by = Auth::id();
                 $userlevel->save();
 
@@ -199,7 +200,7 @@ class MasterfilesController extends Controller
             'email' => 'required|email|unique:users,email,' . $request->user_id,
             'user_type' => 'required|exists:userlevels,id',
             'epf_number' => 'required|string|unique:users,epf_number,' . $request->user_id,
-            'phone' => 'nullable|string|max:20',
+            'phone' => 'nullable|digits:10',
             'status' => 'required|in:0,1',
             'password' => 'nullable|min:8|confirmed',
         ]);
@@ -367,7 +368,7 @@ class MasterfilesController extends Controller
                 'name' => ['required', 'string'],
                 'epf_number' => ['required', 'string', 'unique:drivers,epf_number'],
                 'email' => ['nullable', 'email'],
-                'phone' => ['nullable', 'string'],
+                'phone' => ['nullable', 'digits:10'],
                 'image' => ['nullable', 'image', 'max:2048'],
                 'status' => ['required', 'in:0,1'],
 
@@ -407,7 +408,7 @@ class MasterfilesController extends Controller
                 'name' => ['required', 'string'],
                 'epf_number' => ['required', 'string', 'unique:drivers,epf_number,' . $request->id],
                 'email' => ['nullable', 'email'],
-                'phone' => ['nullable', 'string'],
+                'phone' => ['nullable', 'digits:10'],
                 'image' => ['nullable', 'image', 'max:2048'],
                 'status' => ['required', 'in:0,1'],
 
@@ -454,7 +455,7 @@ class MasterfilesController extends Controller
                 'name' => ['required', 'string'],
                 'epf_number' => ['required', 'string', 'unique:helpers,epf_number'],
                 'email' => ['nullable', 'email'],
-                'phone' => ['nullable', 'string'],
+                'phone' => ['nullable', 'digits:10'],
                 'image' => ['nullable', 'image', 'max:2048'],
                 'status' => ['required', 'in:0,1'],
 
@@ -494,7 +495,7 @@ class MasterfilesController extends Controller
                 'name' => ['required', 'string'],
                 'epf_number' => ['required', 'string', 'unique:helpers,epf_number,' . $request->id],
                 'email' => ['nullable', 'email'],
-                'phone' => ['nullable', 'string'],
+                'phone' => ['nullable', 'digits:10'],
                 'image' => ['nullable', 'image', 'max:2048'],
                 'status' => ['required', 'in:0,1'],
 
@@ -540,7 +541,7 @@ class MasterfilesController extends Controller
                 'name' => ['required', 'string'],
                 'epf_number' => ['required', 'string', 'unique:securities,epf_number'],
                 'email' => ['nullable', 'email'],
-                'phone' => ['nullable', 'string'],
+                'phone' => ['nullable', 'digits:10'],
                 'image' => ['nullable', 'image', 'max:2048'],
                 'status' => ['required', 'in:0,1'],
             ]);
@@ -578,7 +579,7 @@ class MasterfilesController extends Controller
                 'name' => ['required', 'string'],
                 'epf_number' => ['required', 'string', 'unique:securities,epf_number,' . $request->id],
                 'email' => ['nullable', 'email'],
-                'phone' => ['nullable', 'string'],
+                'phone' => ['nullable', 'digits:10'],
                 'image' => ['nullable', 'image', 'max:2048'],
                 'status' => ['required', 'in:0,1'],
             ]);
